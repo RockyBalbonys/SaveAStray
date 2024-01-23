@@ -1,34 +1,13 @@
-import { useState } from 'react'
-import Navbar from '../Components/Navbar'
-import Content from '../Components/Content'
-import axios from 'axios';
+// create your assigned pages e.g. Login, Signup, Landing Page, and;
+// import your created pages here in the app: `import LandingPage from './LandingPage.jsx';`
 
 function App() {
-  // Function to send a ping to the server
-  const sendPing = async () => {
-      try {
-          // Make a POST request using Axios
-          const response = await axios.post('http://localhost:3001/api/ping', {
-              key1: 'value1',
-              key2: 'value2',
-              // Add other data properties as needed
-          });
-
-          // Handle the response from the server (optional)
-          console.log('Server response:', response.data);
-      } catch (error) {
-          // Handle errors
-          console.error('Error sending ping:', error);
-      }
-  };
-
   return (
-      <div>
-          {/* Trigger the sendPing function on a button click */}
-          <button type="button" onClick={sendPing}>
-              Send Ping
-          </button>
-      </div>
+    <>
+      <h1 className="text-green-600 text-6xl underline text-center flex items-center h-screen justify-center">
+        Hello World!
+      </h1>
+    </>
   );
 }
 
