@@ -10,7 +10,7 @@ mongoose.connect(uri)
     .then(() => {
         console.log("Connected to db");
     }).catch(() => {
-        console.log("error putang ina");
+        console.log("error");
     });
 
 app.use(cors());
@@ -22,11 +22,11 @@ app.get('/', (req, res) => {
     res.send('Hello world!');
 });
 
-app.post('/api/ping', (req, res) => {
-    console.log("Received a POST request!");
-    console.log("Received data:", req.body); // Assuming you are sending JSON data
-    res.json({ message: 'POST request received!' });
-});
+app.post('/api/register', (req, res) => {
+    console.log(req.body);
+    res.json({ status: 'ok '})
+})
+
 
 app.listen(port, () => {
     console.log("Connected to PORT ", port);
