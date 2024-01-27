@@ -6,11 +6,15 @@ import axios from 'axios';
 //change handlers, 
 //post requests using axios,
 //changed tag name for convenience
+// -confirm password function (inaantay ko na lang yung ayos) / 
+// -other datas / 
+// -isave sa database /
 
 // mga gagawin pa: 
-// -confirm password function
-// -other datas
-// -isave sa database
+//disabled effect sa button
+//hashing/salting
+
+
 
 function Signup() {
   const [ formData, setFormData ] = useState({
@@ -28,13 +32,13 @@ function Signup() {
   };
 
   const regSubmit = async (event) => {
-    event.preventDefault(); // Prevents the default form submission behavior
+  event.preventDefault(); // Prevents the default form submission behavior
 
     try {
       const response = await axios.post('http://localhost:3001/api/register', {
-        name: "",
+        userID: "",
         email: formData.regEmail,
-        password: formData.regPassword,
+        password: formData.regPass,
         role: "Adoptive Parent",
         verified: false
       });
@@ -45,6 +49,10 @@ function Signup() {
       console.error('Error:', error);
     }
   }
+
+  const passwordsMatch = formData.regPass === formData.regConfirmPass;
+
+  
 
   return (
     <div className="flex flex-col h-screen justify-center items-center">
@@ -87,6 +95,7 @@ function Signup() {
           <button
             type="submit"
             className="bg-orange-500 text-white p-2 rounded-xl"
+            disabled={!passwordsMatch}
           >
             Get Started
           </button>
