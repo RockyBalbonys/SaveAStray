@@ -11,6 +11,7 @@ import axios from 'axios';
 // -isave sa database /
 
 // mga gagawin pa: 
+// include roles to the post request
 //disabled effect sa button
 //hashing/salting
 
@@ -80,7 +81,7 @@ function Signup() {
             id="password"
             name="regPass"
             className="border-2 p-2"
-            value={formData.regPassword} 
+            value={formData.regPass} 
             onChange={handleChange}
           />
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -89,7 +90,7 @@ function Signup() {
             id="confirmPassword"
             name="regConfirmPass"
             className="border-2 p-2"
-            value={formData.regConfirmPassword} 
+            value={formData.regConfirmPass} 
             onChange={handleChange}
           />
           <button
