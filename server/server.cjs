@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const app = express();
 const port = 3001;
 const uri = 'mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB';
@@ -24,11 +25,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/register', async (req, res) => {
+
+  const email = req.body.email;
+  const pass =  req.body.pass;
+  const role = req.body.role;
+
     try {
         const newUser = new User({
-          email: req.body.email,
-          password: req.body.password,
-          role: req.body.role,
+          email: email,
+          password: await bcrypt.hash(pass, 12),
+          role: role,
         });
     
         const savedUser = await newUser.save();
@@ -36,9 +42,9 @@ app.post('/api/register', async (req, res) => {
     
         res.json({
           status: 'ok',
-          email: req.body.email,
-          password: req.body.password,
-          role: req.body.role,
+          email: email,
+          password: pass,
+          role: role,
         });
       } catch (error) {
         console.error('Error saving user:', error);
@@ -55,12 +61,21 @@ app.post('/api/login', async (req, res) => {
       
       if (!user) {
           console.log('User not found');
-          return res.status(404).send('User not found');
+          res.status(404).json({ status: 404, message: "User not found!" });
       } else {
-        if (user.password  === loginPass) {
-          console.log('Found user:', user);
-          res.send('Login successful');
-        }}
+        bcrypt.compare(loginPass, user.password, (err, data) => {
+          if (err) {
+            console.log(err);
+            res.send(err)
+          }
+          if (data) {
+            res.status(200).send("Log in successful!")
+          } else {
+            res.send("wrong pass!");
+          }
+        })
+    
+      }
   } catch (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');

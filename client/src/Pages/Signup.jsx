@@ -2,6 +2,7 @@ import React from 'react';
 import {useState} from 'react';
 import axios from 'axios';
 
+
 //mga dinagdag: 
 //change handlers, 
 //post requests using axios,
@@ -9,11 +10,15 @@ import axios from 'axios';
 // -confirm password function (inaantay ko na lang yung ayos) / 
 // -other datas / 
 // -isave sa database /
+// include roles to the post request /
+// hashing/salting /
+// bcrypt compare /
 
 // mga gagawin pa: 
-// include roles to the post request
-//disabled effect sa button
-//hashing/salting
+// sign in from google aralin
+// disabled effect sa button
+// role optimization
+// test
 
 
 
@@ -39,8 +44,8 @@ function Signup() {
       const response = await axios.post('http://localhost:3001/api/register', {
         userID: "",
         email: formData.regEmail,
-        password: formData.regPass,
-        role: "Adoptive Parent",
+        pass: formData.regPass,
+        role: formData.regRole,
         verified: false
       });
 
@@ -59,13 +64,14 @@ function Signup() {
     <div className="flex flex-col h-screen justify-center items-center">
       <div className="border-2 border-black p-10 rounded-lg">
         <h1 className="text-2xl">Create Account</h1>
+        
+        <form onSubmit={regSubmit} className="flex flex-col mt-10 space-y-5">
         <div className="flex space-x-4 mt-8">
-          <input type="radio" name="clientType" id="adoptiveParent" />
+          <input type="radio" name="regRole" id="adoptiveParent" value="Adoptive Parent" onChange={handleChange}/>
           <label htmlFor="adoptiveParent">Adoptive Parent</label>
-          <input type="radio" name="clientType" id="rescueShelter" />
+          <input type="radio" name="regRole" id="rescueShelter" value="Rescue Shelter"onChange={handleChange}/>
           <label htmlFor="rescueShelter">Rescue Shelter</label>
         </div>
-        <form onSubmit={regSubmit} className="flex flex-col mt-10 space-y-5">
           <label htmlFor="email">Email</label>
           <input
             type="email"
