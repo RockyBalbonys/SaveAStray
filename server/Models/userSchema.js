@@ -13,9 +13,13 @@ const userSchema = new mongoose.Schema(
           },
           role: {
             type: String,
-            enum: ['Adoptive Parent', 'Adoption Center'], // Use an enumeration to define allowed roles
-            default: 'Adoptive Parent', // Default role is set to 'user'
+            required: true
           },
+          verified: {
+            type: Boolean,
+            default: false,
+            required: true
+          }
     }
 )
 
