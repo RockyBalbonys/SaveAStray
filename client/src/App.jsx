@@ -12,6 +12,7 @@ import Animals from "./Pages/Animals";
 import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
+import SignupP from "./Pages/SignupP";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<SignupP />} />
         <Route path="/about" element={<About />} />
         <Route path="/animals" element={<Animals />} />
         <Route path="/learn" element={<Learn />} />
