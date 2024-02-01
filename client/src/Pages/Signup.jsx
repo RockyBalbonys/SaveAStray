@@ -15,7 +15,7 @@ import axios from 'axios';
 // bcrypt compare /
 
 // mga gagawin pa: 
-// sign in from google aralin
+// sign in from google aralin - google oauth
 // disabled effect sa button
 // role optimization
 // test
