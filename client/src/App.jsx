@@ -12,6 +12,7 @@ import Animals from "./Pages/Animals";
 import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
+import SignupP from "./Pages/SignupP";
 
 function App() {
   return (
