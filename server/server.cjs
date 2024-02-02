@@ -1,14 +1,10 @@
-require("dotenv").config;
 const express = require('express');
-const passport = require('passport');
-const passportSetup = require('./passport')
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const app = express();
 const port = 3001;
 const uri = 'mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB';
-const authRoute = require('./routes/auth')
 const User = require('./Models/userSchema.js');
 
 //db connection >>
@@ -19,7 +15,6 @@ mongoose.connect(uri)
         console.log("error");
     });
 
-app.use(passport.initialize())
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 

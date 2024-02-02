@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-//mga dinagdag:
-//change handlers,
+
+//mga dinagdag: 
+//change handlers, 
 //post requests using axios,
 //changed tag name for convenience
 // -confirm password function (inaantay ko na lang yung ayos) /
@@ -12,8 +13,8 @@ import axios from "axios";
 // hashing/salting /
 // bcrypt compare /
 
-// mga gagawin pa:
-// sign in from google aralin - google oauth
+// mga gagawin pa: 
+// sign in from google aralin
 // disabled effect sa button
 // role optimization
 // test
@@ -42,7 +43,7 @@ function Signup() {
         email: formData.regEmail,
         pass: formData.regPass,
         role: formData.regRole,
-        verified: false,
+        verified: false
       });
 
       // Handle the response if needed
@@ -80,26 +81,14 @@ function Signup() {
     <div className="flex flex-col mt-28 justify-center items-center">
       <div className="border-2 border-black p-10 rounded-lg">
         <h1 className="text-2xl">Create Account</h1>
-
+        
         <form onSubmit={regSubmit} className="flex flex-col mt-10 space-y-5">
-          <div className="flex space-x-4 mt-8">
-            <input
-              type="radio"
-              name="regRole"
-              id="adoptiveParent"
-              value="Adoptive Parent"
-              onChange={handleChange}
-            />
-            <label htmlFor="adoptiveParent">Adoptive Parent</label>
-            <input
-              type="radio"
-              name="regRole"
-              id="rescueShelter"
-              value="Rescue Shelter"
-              onChange={handleChange}
-            />
-            <label htmlFor="rescueShelter">Rescue Shelter</label>
-          </div>
+        <div className="flex space-x-4 mt-8">
+          <input type="radio" name="regRole" id="adoptiveParent" value="Adoptive Parent" onChange={handleChange}/>
+          <label htmlFor="adoptiveParent">Adoptive Parent</label>
+          <input type="radio" name="regRole" id="rescueShelter" value="Rescue Shelter"onChange={handleChange}/>
+          <label htmlFor="rescueShelter">Rescue Shelter</label>
+        </div>
           <label htmlFor="email">Email</label>
           <input
             type="email"
