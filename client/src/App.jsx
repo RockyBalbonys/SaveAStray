@@ -14,11 +14,14 @@ import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
 import SignupP from "./Pages/SignupP";
 import Pricing from "./Pages/Pricing";
+import { createTheme } from "@mui/material";
+import logo from "./assets/icons/SAS_Logo4.png";
+import { pages } from "./constants/landingPage";
 
 function App() {
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar pages={pages} logo={logo} />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />

@@ -1,32 +1,33 @@
 import {
-  AppBar,
   Box,
   Container,
-  Toolbar,
   Stack,
   Typography,
-  IconButton,
-  Link,
   Button,
   Card,
   CardContent,
   CardActions,
   Grid,
   Paper,
-  Divider,
 } from "@mui/material";
 import logo from "../assets/icons/SAS_Logo4.png";
 import heroImage from "../assets/images/image_13.png";
 import catImage from "../assets/images/Cats.png";
 import dogImage from "../assets/images/Dogs.png";
-import donateImage from "../assets/images/image_donate.png";
 import aboutImage from "../assets/images/image_14.png";
-import facebook_icon from "../assets/icons/facebook.png";
-import email_icon from "../assets/icons/email.png";
-import telegram_icon from "../assets/icons/telegram.png";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Link as RouterLink } from "react-router-dom";
+import Navbar from "../Components/Navbar";
+import Donate from "../Components/Donate";
+import Footer from "../Components/Footer";
+import {
+  pages,
+  legal,
+  contacts,
+  cardContent,
+  helpContent,
+  filter,
+} from "../constants/landingPage";
 
 const headerImage = {
   backgroundImage: `url(${heroImage})`,
@@ -35,121 +36,44 @@ const headerImage = {
   height: "80vh",
 };
 
-const donateBackground = {
-  position: "relative",
-  backgroundImage: `url(${donateImage})`,
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  height: "60vh",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-};
-
-const filter = {
-  position: "absolute",
-  width: "100%",
-  height: "100%",
-  background: "rgba(213, 127, 46, 0.5)",
-};
-
-const pages = ["About", "Animals", "Learn", "Donate", "Contact"];
-const legal = ["Terms of Services", "Privacy Policy", "Data Privacy Act"];
-const contacts = [
-  "University of Caloocan City - North Congress",
-  "+63-994-478-639",
-  "lyfiesupport@gmail.com",
-];
-const cardContent = [
-  {
-    title: "Save A Life",
-    description:
-      "By adopting from a local shelter, you are directly pulling an animal at risk of euthanasia.",
-  },
-  {
-    title: "Support Your Community",
-    description:
-      "Shelters rely on community support to function and care for their animals.",
-  },
-  {
-    title: "Discover Fur-ever Friend",
-    description:
-      "Shelters are home to a wonderful animals, with unique personalities waiting to be discovered. ",
-  },
-];
-const helpContent = [
-  {
-    title: "Donate",
-    description:
-      "Shelters need money to cover the costs of food, shelter, and medical care for the animals",
-  },
-  {
-    title: "Adopt",
-    description:
-      "There are so many animals in shelters waiting for loving homes",
-  },
-  {
-    title: "Volunteer",
-    description:
-      "Rescue shelters are always in need of volunteers to help with a variety of tasks",
-  },
-  {
-    title: "Sponsor",
-    description:
-      "If you can't adopt an animal permanently, you can consider sponsoring one",
-  },
-  {
-    title: "Advocate",
-    description:
-      "Help animal adoption centers by advocating for animal welfare laws and policies.",
-  },
-  {
-    title: "Spread The Word",
-    description:
-      "Tell your friends about your local animal adoption center and encourage them to help out",
-  },
-];
-
 export const LandingPage = () => {
   return (
     <>
-      <Grid container>
+      <Grid container component="main">
         <Grid item xs={12} position="relative">
           <Box sx={headerImage}>
             <div style={filter}></div>
             <Box position="absolute" width="100%">
               <Stack direction="column" rowGap={18}>
-                <Navbar />
                 <HeroContent />
                 <HeroCard />
-                <Stack direction="column" rowGap={13.5}>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ paddingLeft: 13.5, paddingRight: 13.5 }}
-                  >
-                    <AboutContent />
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sx={{ background: "#FAFAFB" }}
-                    padding={13.5}
-                  >
-                    <HelpContent />
-                    <HelpCard />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <MeetTheRescues />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Donate />
-                  </Grid>
-                </Stack>
+
+                <Grid item xs={12} sx={{ paddingLeft: 3, paddingRight: 3 }}>
+                  <AboutContent />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sx={{ background: "#FAFAFB" }}
+                  padding={13.5}
+                >
+                  <HelpContent />
+                  <HelpCard />
+                </Grid>
+                <Grid item xs={12}>
+                  <MeetTheRescues />
+                </Grid>
+                <Grid item xs={12}>
+                  <Donate />
+                </Grid>
               </Stack>
               <Grid item xs={12}>
-                <Footer />
+                <Footer
+                  pages={pages}
+                  legal={legal}
+                  contacts={contacts}
+                  logo={logo}
+                />
               </Grid>
             </Box>
           </Box>
@@ -161,63 +85,11 @@ export const LandingPage = () => {
 
 export default LandingPage;
 
-function Navbar() {
-  return (
-    <>
-      <AppBar
-        position="static"
-        sx={{
-          background: "transparent",
-          boxShadow: "none",
-        }}
-      >
-        <Container maxWidth="xl">
-          <Toolbar>
-            <Box
-              display="flex"
-              alignItems="center"
-              component="nav"
-              width="100%"
-            >
-              <IconButton>
-                <img src={logo} alt="logo" width={46} height={46} />
-              </IconButton>
-              <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
-                SaveAStary
-              </Typography>
-              <Stack spacing={3} direction="row" alignItems="center">
-                {pages.map((page, index) => (
-                  <Link
-                    key={index}
-                    underline="hover"
-                    color="inherit"
-                    to={page}
-                    component={RouterLink}
-                  >
-                    {page}
-                  </Link>
-                ))}
-                <Button
-                  variant="contained"
-                  size="small"
-                  component={RouterLink}
-                  to="signup"
-                >
-                  Get Started
-                </Button>
-              </Stack>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </>
-  );
-}
-
 function HeroContent() {
   return (
     <Container maxWidth="md">
       <Stack
+        mt={15}
         direction="column"
         textAlign="center"
         spacing={4}
@@ -466,121 +338,5 @@ function MeetTheRescues() {
         </Grid>
       </Box>
     </Container>
-  );
-}
-
-function Donate() {
-  return (
-    <Box sx={donateBackground} component="section">
-      <div style={filter}></div>
-      <Box
-        position="absolute"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 7.8,
-        }}
-      >
-        <Typography variant="h5" fontWeight="bold" color="white">
-          Help SaveAStray to end animal loneliness
-        </Typography>
-        <Button variant="contained" size="large">
-          Donate Now
-        </Button>
-      </Box>
-    </Box>
-  );
-}
-
-function Footer() {
-  return (
-    <Box
-      sx={{
-        padding: 6,
-        backgroundColor: "rgb(38, 58, 71)",
-        color: "rgba(255, 161, 52, 1)",
-      }}
-    >
-      <Container maxWidth="xl">
-        <Grid container spacing={2}>
-          <Grid item md={6}>
-            <Stack direction="column" rowGap={2}>
-              <Box display="flex" alignItems="center" gap={1}>
-                <img src={logo} width={85} height={85} alt="Logo" />
-                <Typography sx={{ fontSize: "36px", fontWeight: "bold" }}>
-                  SaveAStray
-                </Typography>
-              </Box>
-              <Box>
-                <Typography>Rescue. Adopt. Love</Typography>
-                <Typography>
-                  They deserve a place to call home. Be the reason their tail
-                  wags again. Join the pack. Make a difference. Save a stray.
-                </Typography>
-                <Stack direction="row" columnGap={3}>
-                  <IconButton>
-                    <img src={facebook_icon} alt="facebook icon" width="26px" />
-                  </IconButton>
-                  <IconButton>
-                    <img src={email_icon} alt="email icon" width="26px" />
-                  </IconButton>
-                  <IconButton>
-                    <img src={telegram_icon} alt="telegram icon" width="26px" />
-                  </IconButton>
-                </Stack>
-              </Box>
-            </Stack>
-          </Grid>
-          <Grid item md={6}>
-            <Stack direction="row" columnGap={11.8} marginBottom={3}>
-              <LinksItem items={pages} category="Websites" />
-              <LinksItem items={legal} category="Legal" />
-              <LinksItem items={contacts} category="Contacts" />
-            </Stack>
-          </Grid>
-          <Divider
-            orientation="horizontal"
-            width="100%"
-            sx={{ bgcolor: "rgba(255, 161, 52, 1)", marginTop: 3 }}
-          />
-          <Box
-            width="100%"
-            textAlign="center"
-            sx={{
-              padding: "32px 0 0 0",
-            }}
-          >
-            <Typography
-              variant="body2"
-              sx={{ color: "rgba(255, 255, 255, 0.7)" }}
-            >
-              © 2024 SaveAStray by Lyfie Tech 🧡
-            </Typography>
-          </Box>
-        </Grid>
-      </Container>
-    </Box>
-  );
-}
-
-function LinksItem({ items, category }) {
-  return (
-    <Stack direction="column" columnGap={1} rowGap={1}>
-      <Typography fontWeight="bold" gutterBottom>
-        {category}
-      </Typography>
-      {items.map((page, index) => (
-        <Link
-          underline="hover"
-          key={index}
-          sx={{ color: "rgba(255, 161, 52, 1)" }}
-          href={page}
-        >
-          {page}
-        </Link>
-      ))}
-    </Stack>
   );
 }
