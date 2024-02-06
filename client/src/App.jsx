@@ -13,11 +13,12 @@ import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
 import SignupP from "./Pages/SignupP";
+import Pricing from "./Pages/Pricing";
 
 function App() {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
