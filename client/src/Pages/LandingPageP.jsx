@@ -120,10 +120,19 @@ export const LandingPageP = () => {
                 <HeroContent />
                 <HeroCard />
                 <Stack direction="column" rowGap={13.5}>
-                  <Grid item xs={12}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ paddingLeft: 13.5, paddingRight: 13.5 }}
+                  >
                     <AboutContent />
                   </Grid>
-                  <Grid item xs={12} sx={{ background: "#FAFAFB" }}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ background: "#FAFAFB" }}
+                    padding={13.5}
+                  >
                     <HelpContent />
                     <HelpCard />
                   </Grid>
@@ -363,7 +372,13 @@ function HelpCard() {
           <Grid item key={index} maxWidth="300px">
             <Card sx={{ padding: "32px", height: "100%" }} elevation={4}>
               <CardContent sx={{ padding: 0 }}>
-                <Stack spacing="12px" direction="column">
+                <Stack
+                  spacing="12px"
+                  direction="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  textAlign="center"
+                >
                   <Box
                     sx={{
                       display: "inline-block",
@@ -382,12 +397,14 @@ function HelpCard() {
                 </Stack>
               </CardContent>
               <CardActions>
-                <Button
-                  sx={{ padding: 0, margin: 0 }}
-                  endIcon={<ChevronRightIcon />}
-                >
-                  Read more
-                </Button>
+                <Box textAlign="center" width="100%">
+                  <Button
+                    sx={{ padding: 0, margin: 0 }}
+                    endIcon={<ChevronRightIcon />}
+                  >
+                    Read more
+                  </Button>
+                </Box>
               </CardActions>
             </Card>
           </Grid>
@@ -480,7 +497,7 @@ function Footer() {
       }}
     >
       <Container maxWidth="xl">
-        <Grid container>
+        <Grid container spacing={2}>
           <Grid item md={6}>
             <Stack direction="column" rowGap={2}>
               <Box display="flex" alignItems="center" gap={1}>
@@ -499,12 +516,28 @@ function Footer() {
             </Stack>
           </Grid>
           <Grid item md={6}>
-            <Stack direction="row" columnGap={11.8}>
+            <Stack direction="row" columnGap={11.8} marginBottom={3}>
               <LinksItem items={pages} category="Websites" />
               <LinksItem items={legal} category="Legal" />
               <LinksItem items={contacts} category="Contacts" />
             </Stack>
           </Grid>
+          <Box
+            width="100%"
+            textAlign="center"
+            sx={{
+              borderTop: "1px solid rgba(255, 161, 52, 1)",
+              marginTop: 3,
+              padding: "32px 0 0 0",
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+            >
+              © 2024 SaveAStray by Lyfie Tech 🧡
+            </Typography>
+          </Box>
         </Grid>
       </Container>
     </Box>
@@ -518,7 +551,14 @@ function LinksItem({ items, category }) {
         {category}
       </Typography>
       {items.map((page, index) => (
-        <Typography key={index}>{page}</Typography>
+        <Link
+          underline="hover"
+          key={index}
+          sx={{ color: "rgba(255, 161, 52, 1)" }}
+          href={page}
+        >
+          {page}
+        </Link>
       ))}
     </Stack>
   );
