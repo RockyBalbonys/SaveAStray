@@ -21,8 +21,12 @@ import catImage from "../assets/images/Cats.png";
 import dogImage from "../assets/images/Dogs.png";
 import donateImage from "../assets/images/image_donate.png";
 import aboutImage from "../assets/images/image_14.png";
+import facebook_icon from "../assets/icons/facebook.png";
+import email_icon from "../assets/icons/email.png";
+import telegram_icon from "../assets/icons/telegram.png";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { Link as RouterLink } from "react-router-dom";
 
 const headerImage = {
   backgroundImage: `url(${heroImage})`,
@@ -185,12 +189,18 @@ function Navbar() {
                     key={index}
                     underline="hover"
                     color="inherit"
-                    href={page}
+                    to={page}
+                    component={RouterLink}
                   >
                     {page}
                   </Link>
                 ))}
-                <Button variant="contained" size="small">
+                <Button
+                  variant="contained"
+                  size="small"
+                  component={RouterLink}
+                  to="signup"
+                >
                   Get Started
                 </Button>
               </Stack>
@@ -512,6 +522,17 @@ function Footer() {
                   They deserve a place to call home. Be the reason their tail
                   wags again. Join the pack. Make a difference. Save a stray.
                 </Typography>
+                <Stack direction="row" columnGap={3}>
+                  <IconButton>
+                    <img src={facebook_icon} alt="facebook icon" width="26px" />
+                  </IconButton>
+                  <IconButton>
+                    <img src={email_icon} alt="email icon" width="26px" />
+                  </IconButton>
+                  <IconButton>
+                    <img src={telegram_icon} alt="telegram icon" width="26px" />
+                  </IconButton>
+                </Stack>
               </Box>
             </Stack>
           </Grid>
@@ -522,12 +543,15 @@ function Footer() {
               <LinksItem items={contacts} category="Contacts" />
             </Stack>
           </Grid>
+          <Divider
+            orientation="horizontal"
+            width="100%"
+            sx={{ bgcolor: "rgba(255, 161, 52, 1)", marginTop: 3 }}
+          />
           <Box
             width="100%"
             textAlign="center"
             sx={{
-              borderTop: "1px solid rgba(255, 161, 52, 1)",
-              marginTop: 3,
               padding: "32px 0 0 0",
             }}
           >
@@ -546,7 +570,7 @@ function Footer() {
 
 function LinksItem({ items, category }) {
   return (
-    <Stack direction="column" columnGap={1}>
+    <Stack direction="column" columnGap={1} rowGap={1}>
       <Typography fontWeight="bold" gutterBottom>
         {category}
       </Typography>
