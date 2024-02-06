@@ -1,24 +1,59 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import {
+  AppBar,
+  Container,
+  Toolbar,
+  Box,
+  IconButton,
+  Typography,
+  Stack,
+  Link,
+  Button,
+} from "@mui/material";
 
-export default function Navbar() {
+export default function Navbar({ pages, logo }) {
   return (
-    <header>
-      <nav className="bg-yellow-500 text-white">
-        <ul className="flex space-x-6 justify-center p-4 items-center">
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/animals">Animals</Link>
-          <Link to="/learn">Learn</Link>
-          <Link to="/donate">Donate</Link>
-          <Link to="/contact">Contact</Link>
-          <Link to="/signup">
-            <button className="bg-blue-950 px-4 py-2 text-sm rounded-lg">
-              Get Started
-            </button>
-          </Link>
-        </ul>
-      </nav>
-    </header>
+    <AppBar
+      position="static"
+      sx={{
+        background: "darkOrange",
+        boxShadow: "none",
+      }}
+      component="header"
+    >
+      <Container maxWidth="xl">
+        <Toolbar component="nav">
+          <Box display="flex" alignItems="center" component="nav" width="100%">
+            <IconButton>
+              <img src={logo} alt="logo" width={46} height={46} />
+            </IconButton>
+            <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
+              SaveAStary
+            </Typography>
+            <Stack spacing={3} direction="row" alignItems="center">
+              {pages.map((page, index) => (
+                <Link
+                  key={index}
+                  underline="hover"
+                  color="inherit"
+                  to={page}
+                  component={RouterLink}
+                >
+                  {page}
+                </Link>
+              ))}
+              <Button
+                variant="contained"
+                size="small"
+                component={RouterLink}
+                to="signup"
+              >
+                Get Started
+              </Button>
+            </Stack>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
