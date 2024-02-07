@@ -10,8 +10,8 @@ const User = require('./Models/userSchema.js');
 mongoose.connect(uri)
     .then(() => {
         console.log("Connected to db");
-    }).catch(() => {
-        console.log("error");
+    }).catch((err) => {
+        console.log("error:" + err.message);
     });
 
 app.use(cors());
