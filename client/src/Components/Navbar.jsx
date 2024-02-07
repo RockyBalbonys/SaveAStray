@@ -25,7 +25,9 @@ export default function Navbar({ pages, logo }) {
         <Toolbar component="nav">
           <Box display="flex" alignItems="center" component="nav" width="100%">
             <IconButton>
-              <img src={logo} alt="logo" width={46} height={46} />
+              <Link to="/" component={RouterLink}>
+                <img src={logo} alt="logo" width={46} height={46} />
+              </Link>
             </IconButton>
             <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
               SaveAStary
