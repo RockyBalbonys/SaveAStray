@@ -14,6 +14,9 @@ import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
 import logo from "./assets/icons/SAS_Logo4.png";
 import { pages } from "./constants/landingPage";
+import UploadImage from "./Pages/UploadImage";
+
+
 
 function App() {
   return (
@@ -28,6 +31,7 @@ function App() {
         <Route path="/learn" element={<Learn />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/uploadImage" element={<UploadImage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
