@@ -1,7 +1,8 @@
+import { Container } from "@mui/material";
 import React from "react";
 
 const Contact = () => {
-  return <div>Contact - WIP... :D</div>;
+  return <Container maxWidth="lg"></Container>;
 };
 
 export default Contact;
