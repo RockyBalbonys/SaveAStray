@@ -63,6 +63,7 @@ export default function EmptyTextarea() {
 
   return (
     <Textarea
+      sx={{ resize: "none" }}
       minRows={10}
       aria-label="empty textarea"
       placeholder="Tell some suggestions or just say hi..."

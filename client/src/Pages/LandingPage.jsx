@@ -21,14 +21,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Donate from "../Components/Donate";
 import Footer from "../Components/Footer";
-import {
-  pages,
-  legal,
-  contacts,
-  cardContent,
-  helpContent,
-  filter,
-} from "../constants/landingPage";
+import { cardContent, helpContent, filter } from "../constants/landingPage";
 
 const headerImage = {
   backgroundImage: `url(${heroImage})`,

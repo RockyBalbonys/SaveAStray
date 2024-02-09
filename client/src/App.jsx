@@ -1,7 +1,4 @@
-// create your assigned pages e.g. Login, Signup, Landing Page, and;
-// import your created pages here in the app: `import LandingPage from './LandingPage.jsx';`
-
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import LandingPage from "./Pages/LandingPage";
@@ -12,19 +9,26 @@ import Animals from "./Pages/Animals";
 import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
-import logo from "./assets/icons/SAS_Logo4.png";
-import { pages } from "./constants/landingPage";
 import UploadImage from "./Pages/UploadImage";
-
-
+import MyLogin from "./Pages/MyLogin";
 
 function App() {
+  const location = useLocation();
+
+  const renderNavbar = () => {
+    const { pathname } = location;
+    if (pathname === "/login" || pathname === "/signup") {
+      return null;
+    }
+    return <Navbar />;
+  };
+
   return (
     <>
-      <Navbar pages={pages} logo={logo} />
+      {renderNavbar()}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<MyLogin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/about" element={<About />} />
         <Route path="/animals" element={<Animals />} />

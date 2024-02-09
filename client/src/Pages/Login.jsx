@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import "./LoginP.css";
+
 //check password if correct
 //
 

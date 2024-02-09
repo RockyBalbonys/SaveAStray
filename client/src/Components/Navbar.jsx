@@ -10,8 +10,10 @@ import {
   Link,
   Button,
 } from "@mui/material";
+import logo from "../assets/icons/SAS_Logo4.png";
+import { pages } from "../constants/landingPage";
 
-export default function Navbar({ pages, logo }) {
+export default function Navbar() {
   return (
     <AppBar
       position="static"
@@ -40,6 +42,7 @@ export default function Navbar({ pages, logo }) {
                   color="inherit"
                   to={page}
                   component={RouterLink}
+                  aria-label={page}
                 >
                   {page}
                 </Link>
