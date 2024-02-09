@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -18,23 +20,22 @@ mongoose.connect(uri)
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 
-app.get('/', (req, res) => {
-    console.log("Hello world!");
-    console.log(req.url);
-    res.send('Hello world!');
-});
+// functions:
 
 app.post('/api/register', async (req, res) => {
+  
+  function generateVerificationToken() {
+    return crypto.randomBytes(16).toString('hex');
+  }
 
-  const email = req.body.email;
-  const pass =  req.body.pass;
-  const role = req.body.role;
-
+  const { email, pass, role } = req.body;
     try {
+        const verificationToken = generateVerificationToken()
         const newUser = new User({
           email: email,
           password: await bcrypt.hash(pass, 12),
           role: role,
+          verificationToken: verificationToken
         });
     
         const savedUser = await newUser.save();
@@ -45,6 +46,7 @@ app.post('/api/register', async (req, res) => {
           email: email,
           password: pass,
           role: role,
+          verificationToken: verificationToken
         });
       } catch (error) {
         console.error('Error saving user:', error);
@@ -55,8 +57,7 @@ app.post('/api/register', async (req, res) => {
 
 app.post('/api/login', async (req, res) => {
   try {
-      const loginEmail = req.body.email;
-      const loginPass = req.body.password
+      const { loginEmail, loginPass } = req.body;
       const user = await User.findOne({ email: loginEmail }).exec();
       
       if (!user) {
