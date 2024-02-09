@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Route, Link as RouterLink } from "react-router-dom";
 import {
   AppBar,
   Container,
@@ -30,7 +30,7 @@ export default function Navbar({ pages, logo }) {
               </Link>
             </IconButton>
             <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
-              SaveAStary
+              SaveAStray
             </Typography>
             <Stack spacing={3} direction="row" alignItems="center">
               {pages.map((page, index) => (

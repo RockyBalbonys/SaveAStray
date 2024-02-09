@@ -69,12 +69,7 @@ export const LandingPage = () => {
                 </Grid>
               </Stack>
               <Grid item xs={12}>
-                <Footer
-                  pages={pages}
-                  legal={legal}
-                  contacts={contacts}
-                  logo={logo}
-                />
+                <Footer />
               </Grid>
             </Box>
           </Box>
