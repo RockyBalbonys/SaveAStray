@@ -9,7 +9,9 @@ import {
   CardActions,
   Grid,
   Paper,
+  Link,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import logo from "../assets/icons/SAS_Logo4.png";
 import heroImage from "../assets/images/image_13.png";
 import catImage from "../assets/images/Cats.png";
@@ -17,7 +19,6 @@ import dogImage from "../assets/images/Dogs.png";
 import aboutImage from "../assets/images/image_14.png";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Navbar from "../Components/Navbar";
 import Donate from "../Components/Donate";
 import Footer from "../Components/Footer";
 import {
@@ -109,8 +110,12 @@ function HeroContent() {
           shelter! Adopt a pup and fill your life with pawsitive memories.
         </Typography>
         <Stack direction="row" spacing={2}>
-          <Button variant="contained">I am a Pawrent</Button>
-          <Button variant="contained">I am a Rescue Shelter</Button>
+          <Link to="/login" component={RouterLink}>
+            <Button variant="contained">I am a Pawrent</Button>
+          </Link>
+          <Link to="/login" component={RouterLink}>
+            <Button variant="contained">I am a Rescue Shelter</Button>
+          </Link>
         </Stack>
       </Stack>
     </Container>

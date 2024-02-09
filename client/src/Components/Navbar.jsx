@@ -24,11 +24,11 @@ export default function Navbar({ pages, logo }) {
       <Container maxWidth="xl">
         <Toolbar component="nav">
           <Box display="flex" alignItems="center" component="nav" width="100%">
-            <Link to="/" component={RouterLink}>
-              <IconButton>
+            <IconButton>
+              <Link to="/" component={RouterLink}>
                 <img src={logo} alt="logo" width={46} height={46} />
-              </IconButton>
-            </Link>
+              </Link>
+            </IconButton>
             <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
               SaveAStray
             </Typography>

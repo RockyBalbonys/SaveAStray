@@ -12,11 +12,11 @@ import Animals from "./Pages/Animals";
 import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
-import SignupP from "./Pages/SignupP";
-import Pricing from "./Pages/Pricing";
-import { createTheme } from "@mui/material";
 import logo from "./assets/icons/SAS_Logo4.png";
 import { pages } from "./constants/landingPage";
+import UploadImage from "./Pages/UploadImage";
+
+
 
 function App() {
   return (
@@ -31,6 +31,7 @@ function App() {
         <Route path="/learn" element={<Learn />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/uploadImage" element={<UploadImage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
