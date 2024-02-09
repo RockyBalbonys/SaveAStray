@@ -41,6 +41,18 @@ const team = [
   },
 ];
 
+const sectionContent = [
+  {
+    title: "About SaveAStray",
+    p1: "More Than Coding, We're Pawsitive Changemakers",
+    p2: "We're not just student coders, we're a band of passionate hearts united by a furry mission: to be the bridge between the yearning gazes of abandoned paws and the welcoming arms of loving homes. We dream of a world where adoption is seamless, joyful, and accessible to all.",
+    p3: "Imagine - no more endless shelter visits, no more uncertainty, just a vibrant platform teeming with wagging tails and soulful eyes waiting to be discovered. That's what we're building - a one-stop shop for adoption journeys, powered by the magic of technology and fueled by our unwavering love for animals.",
+    p4: "Hundreds of furry souls, each with a unique story and a heart full of hope, wait patiently for their second chance. We believe adoption is not just about giving a dog a home, it's about finding the perfect missing piece for both human and animal. Through our platform, we facilitate meaningful connections, ensuring every match is a love story waiting to be written.",
+    p5: "We're not just building a platform, we're building a community. A community of paw-rents who understand the unconditional love and unwavering loyalty a dog brings. A community of volunteers who dedicate their time and energy to animal welfare. A community of passionate coders like us, weaving lines of code into threads of hope and second chances.",
+    p6: "Join us on this incredible journey. Adopt, volunteer, donate, or simply spread the word. Together, let's rewrite the narrative for abandoned paws, one loving connection at a time. Remember, every life deserves a chance to find its forever home, and together, we can make that dream a reality.",
+  },
+];
+
 const aboutContent = [
   {
     section: "MISSION",
@@ -68,4 +80,4 @@ const aboutContent = [
   },
 ];
 
-export { aboutContent, team };
+export { aboutContent, team, sectionContent };

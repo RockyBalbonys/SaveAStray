@@ -1,11 +1,7 @@
-import bgImage from "../assets/images/intersect.png";
-import vector from "../assets/images/vector.png";
-import aboutImage from "../assets/images/aboutImage.png";
 import about from "../assets/images/about.png";
 import pawBG from "../assets/images/Paw.png";
 import { Box, Container, Typography, Stack, Grid, Paper } from "@mui/material";
-import mission from "../assets/icons/mission.svg";
-import { aboutContent, team } from "../constants/about";
+import { aboutContent, team, sectionContent } from "../constants/about";
 import Footer from "../Components/Footer";
 import Donate from "../Components/Donate";
 
@@ -22,6 +18,7 @@ const About = () => {
           backgroundRepeat: "no-repeat",
           backgroundSize: "100% auto",
         }}
+        component="main"
       >
         <Container maxWidth="lg">
           <Box position="absolute" width="334px" mt={13.8}>
@@ -31,61 +28,7 @@ const About = () => {
           </Box>
         </Container>
       </Box>
-      <Container maxWidth="lg">
-        <Box paddingTop={13.5} paddingBottom={13.5}>
-          <Typography
-            variant="h5"
-            color="initial"
-            fontWeight="bold"
-            mb={4}
-            textAlign="center"
-          >
-            About SaveAStray
-          </Typography>
-          <Stack direction="column" spacing={4.5} textAlign="justify">
-            <Typography fontWeight="bold">
-              More Than Coding, We're Pawsitive Changemakers
-            </Typography>
-            <Typography fontWeight="bold">
-              We're not just student coders, we're a band of passionate hearts
-              united by a furry mission: to be the bridge between the yearning
-              gazes of abandoned paws and the welcoming arms of loving homes. We
-              dream of a world where adoption is seamless, joyful, and
-              accessible to all.
-            </Typography>
-            <Typography>
-              Imagine - no more endless shelter visits, no more uncertainty,
-              just a vibrant platform teeming with wagging tails and soulful
-              eyes waiting to be discovered. That's what we're building - a
-              one-stop shop for adoption journeys, powered by the magic of
-              technology and fueled by our unwavering love for animals.
-            </Typography>
-            <Typography>
-              Hundreds of furry souls, each with a unique story and a heart full
-              of hope, wait patiently for their second chance. We believe
-              adoption is not just about giving a dog a home, it's about finding
-              the perfect missing piece for both human and animal. Through our
-              platform, we facilitate meaningful connections, ensuring every
-              match is a love story waiting to be written.
-            </Typography>
-            <Typography>
-              We're not just building a platform, we're building a community. A
-              community of paw-rents who understand the unconditional love and
-              unwavering loyalty a dog brings. A community of volunteers who
-              dedicate their time and energy to animal welfare. A community of
-              passionate coders like us, weaving lines of code into threads of
-              hope and second chances.
-            </Typography>
-            <Typography>
-              Join us on this incredible journey. Adopt, volunteer, donate, or
-              simply spread the word. Together, let's rewrite the narrative for
-              abandoned paws, one loving connection at a time. Remember, every
-              life deserves a chance to find its forever home, and together, we
-              can make that dream a reality.
-            </Typography>
-          </Stack>
-        </Box>
-      </Container>
+      <SecondSection contents={sectionContent} />
       <Stack>
         <Grid container width="100%">
           <ThirdSection contents={aboutContent} />
@@ -100,11 +43,50 @@ const About = () => {
 
 export default About;
 
+function SecondSection({ contents }) {
+  return (
+    <Container maxWidth="lg">
+      <Box paddingTop={13.5} paddingBottom={13.5}>
+        {contents.map((content, index) => (
+          <Box key={index}>
+            <Typography
+              variant="h5"
+              color="initial"
+              fontWeight="bold"
+              mb={4}
+              textAlign="center"
+            >
+              {content.title}
+            </Typography>
+            <Stack direction="column" spacing={4.5} textAlign="justify">
+              <Typography>{content.p1}</Typography>
+              <Typography>{content.p2}</Typography>
+              <Typography>{content.p3}</Typography>
+              <Typography>{content.p4}</Typography>
+              <Typography>{content.p5}</Typography>
+              <Typography>{content.p6}</Typography>
+            </Stack>
+          </Box>
+        ))}
+      </Box>
+    </Container>
+  );
+}
+
 function ThirdSection({ contents }) {
   return (
     <>
       {contents.map((content, index) => (
-        <Grid container key={index} spacing={0}>
+        <Grid
+          container
+          key={index}
+          spacing={0}
+          sx={{
+            "& > *": {
+              mb: { xs: 2, sm: 0 }, // Add margin bottom only on mobile devices
+            },
+          }}
+        >
           {index % 2 !== 0 ? (
             <>
               <OddIndexContent content={content} />
