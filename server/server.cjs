@@ -8,6 +8,7 @@ const app = express();
 const port = 3001;
 const uri = 'mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB';
 const User = require('./Models/userSchema.js');
+require('dotenv').config();
 
 //db connection >>
 mongoose.connect(uri)
@@ -27,6 +28,32 @@ app.post('/api/register', async (req, res) => {
   function generateVerificationToken() {
     return crypto.randomBytes(16).toString('hex');
   }
+ 
+  async function sendVerificationEmail(email, verificationToken) {
+    try {
+      // Create a Nodemailer transporter using SMTP
+      let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.USER_PASSWORD
+        }
+      });
+  
+      // Send verification email
+      let info = await transporter.sendMail({
+        from: process.env.USER_EMAIL,
+        to: email,
+        subject: 'Email Verification',
+        text: `Please click the following link to verify your email: http://localhost:3000/verify?token=${verificationToken}`
+      });
+  
+      console.log('Verification email sent:', info);
+    } catch (error) {
+      console.error('Error sending verification email:', error);
+      throw error; // Rethrow the error to be handled by the caller
+    }
+  }
 
   const { email, pass, role } = req.body;
     try {
@@ -40,7 +67,9 @@ app.post('/api/register', async (req, res) => {
     
         const savedUser = await newUser.save();
         console.log('User saved:', savedUser);
-    
+        
+        await sendVerificationEmail(email, verificationToken);
+        
         res.json({
           status: 'ok',
           email: email,
