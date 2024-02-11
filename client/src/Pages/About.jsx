@@ -5,7 +5,6 @@ import { aboutContent, team, sectionContent } from "../constants/about";
 import Footer from "../Components/Footer";
 import Donate from "../Components/Donate";
 
-// TODO:
 const About = () => {
   return (
     <>

@@ -3,6 +3,8 @@ import axios from "axios";
 import styles from "../styles/Signup.module.css";
 import bgImg from "../assets/images/passive.png";
 import { Link } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -13,6 +15,9 @@ function Signup() {
   });
 
   console.log({ formData });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -76,6 +81,7 @@ function Signup() {
                 id="adoptiveParent"
                 value="Adoptive Parent"
                 onChange={handleChange}
+                required
               />
               <label htmlFor="adoptiveParent" className="text-sm">
                 Adoptive Parent
@@ -87,6 +93,7 @@ function Signup() {
                 value="Rescue Shelter"
                 onChange={handleChange}
                 className="my-5"
+                required
               />
               <label htmlFor="rescueShelter" className="text-sm">
                 Rescue Shelter
@@ -101,38 +108,79 @@ function Signup() {
               className={`${styles.border2} p-2 mb-5`}
               value={formData.regEmail}
               onChange={handleChange}
+              required
             />
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              placeholder="********"
-              id="password"
-              name="regPass"
-              className={`${styles.border2} p-2 mb-5`}
-              value={formData.regPass}
-              onChange={handleChange}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="********"
+                id="password"
+                name="regPass"
+                className={`${styles.border2} p-2 mb-5`}
+                value={formData.regPass}
+                onChange={handleChange}
+                required
+              />
+              {/* Eye icon */}
+              {formData.regPass && (
+                <span
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "5%",
+                    top: "15%",
+                  }}
+                >
+                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </span>
+              )}
+            </div>
+
+            {/* // Confirm password input field */}
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              placeholder="********"
-              id="confirmPassword"
-              name="regConfirmPass"
-              className={`${styles.border2} p-2 mb-5`}
-              value={formData.regConfirmPass}
-              onChange={handleChange}
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="********"
+                id="confirmPassword"
+                name="regConfirmPass"
+                className={`${styles.border2} p-2 mb-5`}
+                value={formData.regConfirmPass}
+                onChange={handleChange}
+                required
+              />
+              {/* Eye icon */}
+              {formData.regConfirmPass && (
+                <span
+                  className="eye-icon"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "5%",
+                    top: "15%",
+                  }}
+                >
+                  {showConfirmPassword ? (
+                    <VisibilityIcon />
+                  ) : (
+                    <VisibilityOffIcon />
+                  )}
+                </span>
+              )}
+            </div>
             <p className="my-2 text-end">
               <Link to="/login">
                 <strong>Have an Account?</strong>
               </Link>
             </p>
-
             <hr />
             <div className={styles["my-2"]}>
               <div id="signinDiv" className="mt-5"></div>
             </div>
-
             <button
               type="submit"
               className="bg-orange-500 text-white p-2 rounded-xl mt-5"

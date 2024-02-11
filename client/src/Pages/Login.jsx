@@ -3,16 +3,19 @@ import axios from "axios";
 import bgImg from "../assets/images/passive.png";
 import { Link } from "react-router-dom";
 import styles from "../styles/Login.module.css";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    regEmail: "",
-    regPass: "",
-    regConfirmPass: "",
-    regRole: "",
+    loginEmail: "",
+    loginPass: "",
+    loginRole: "",
   });
 
   console.log({ formData });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,15 +24,14 @@ const Login = () => {
     });
   };
 
-  const regSubmit = async (event) => {
+  const loginSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/api/register", {
-        userID: "",
-        email: formData.regEmail,
-        pass: formData.regPass,
-        role: formData.regRole,
+      const response = await axios.post("http://localhost:3001/api/login", {
+        email: formData.loginEmail,
+        password: formData.loginPass,
+        role: "Adoptive Parent",
         verified: false,
       });
 
@@ -44,6 +46,7 @@ const Login = () => {
   }
 
   useEffect(() => {
+    /*  global google */
     google.accounts.id.initialize({
       client_id:
         "367854237850-6nomj4kp7i22ikmlcv0n4d0qkj332mhe.apps.googleusercontent.com",
@@ -70,25 +73,27 @@ const Login = () => {
           <form
             id="form"
             className={`${styles.form} flex flex-col`}
-            onSubmit={regSubmit}
+            onSubmit={loginSubmit}
           >
             <div className="flex space-x-4 my-8 justify-center">
               <input
                 type="radio"
-                name="regRole"
+                name="loginRole"
                 id="adoptiveParent"
                 value="Adoptive Parent"
                 onChange={handleChange}
+                required
               />
               <label htmlFor="adoptiveParent" className="text-sm">
                 Adoptive Parent
               </label>
               <input
                 type="radio"
-                name="regRole"
+                name="loginRole"
                 id="rescueShelter"
                 value="Rescue Shelter"
                 onChange={handleChange}
+                required
               />
               <label htmlFor="rescueShelter" className="text-sm">
                 Rescue Shelter
@@ -99,21 +104,40 @@ const Login = () => {
               type="email"
               placeholder=""
               id="email"
-              name="regEmail"
+              name="loginEmail"
               className={`${styles.input} border-2 p-2 mb-5`}
-              value={formData.regEmail}
+              value={formData.loginEmail}
               onChange={handleChange}
+              required
             ></input>
             <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              placeholder="********"
-              id="password"
-              name="regPass"
-              className={`${styles.input} border-2 p-2 mb-5`}
-              value={formData.regPass}
-              onChange={handleChange}
-            ></input>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="********"
+                id="password"
+                name="loginPass"
+                className={`${styles.input} border-2 p-2 mb-5`}
+                value={formData.loginPass}
+                onChange={handleChange}
+                required
+              />
+              {/* Eye icon */}
+              {formData.loginPass && (
+                <span
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "5%",
+                    top: "15%",
+                  }}
+                >
+                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </span>
+              )}
+            </div>
             <div className="flex justify-between mb-8">
               <p className="mt-2 text-center text-sm">
                 <Link to="/forgot-password">
