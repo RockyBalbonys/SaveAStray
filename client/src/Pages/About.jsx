@@ -13,7 +13,7 @@ const About = () => {
         sx={{
           background: `url(${about})`,
           height: "60vh",
-          overflow: "hidden",
+          overflow: "visible",
           position: "relative",
           backgroundRepeat: "no-repeat",
           backgroundSize: "100% auto",

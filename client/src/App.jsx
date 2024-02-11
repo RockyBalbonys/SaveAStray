@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from "react-router-dom";
-import Login from "./Pages/Login";
+// import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import LandingPage from "./Pages/LandingPage";
 import NotFound from "./Pages/NotFound";
@@ -10,7 +10,7 @@ import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
 import UploadImage from "./Pages/UploadImage";
-import MyLogin from "./Pages/MyLogin";
+import Login from "./Pages/Login";
 
 function App() {
   const location = useLocation();
@@ -28,7 +28,7 @@ function App() {
       {renderNavbar()}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<MyLogin />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/about" element={<About />} />
         <Route path="/animals" element={<Animals />} />
