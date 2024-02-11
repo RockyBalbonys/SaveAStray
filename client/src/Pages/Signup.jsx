@@ -1,23 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-
-//mga dinagdag: 
-//change handlers, 
-//post requests using axios,
-//changed tag name for convenience
-// -confirm password function (inaantay ko na lang yung ayos) /
-// -other datas /
-// -isave sa database /
-// include roles to the post request /
-// hashing/salting /
-// bcrypt compare /
-
-// mga gagawin pa: 
-// sign in from google aralin
-// disabled effect sa button
-// role optimization
-// test
+import styles from "../styles/Signup.module.css";
+import bgImg from "../assets/images/passive.png";
+import { Link } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -27,6 +14,11 @@ function Signup() {
     regRole: "",
   });
 
+  console.log({ formData });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -35,7 +27,7 @@ function Signup() {
   };
 
   const regSubmit = async (event) => {
-    event.preventDefault(); // Prevents the default form submission behavior
+    event.preventDefault();
 
     try {
       const response = await axios.post("http://localhost:3001/api/register", {
@@ -43,26 +35,20 @@ function Signup() {
         email: formData.regEmail,
         pass: formData.regPass,
         role: formData.regRole,
-        verified: false
+        verified: false,
       });
 
-      // Handle the response if needed
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  /* TODO: Enable google oauth api
-    FIXME: 
-  */
-
   function handleCallbackResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
   }
 
   useEffect(() => {
-    /*  global google */
     google.accounts.id.initialize({
       client_id:
         "367854237850-6nomj4kp7i22ikmlcv0n4d0qkj332mhe.apps.googleusercontent.com",
@@ -78,62 +64,144 @@ function Signup() {
   const passwordsMatch = formData.regPass === formData.regConfirmPass;
 
   return (
-    <div className="flex flex-col mt-28 justify-center items-center">
-      <div className="border-2 border-black p-10 rounded-lg">
-        <h1 className="text-2xl">Create Account</h1>
-        
-        <form onSubmit={regSubmit} className="flex flex-col mt-10 space-y-5">
-        <div className="flex space-x-4 mt-8">
-          <input type="radio" name="regRole" id="adoptiveParent" value="Adoptive Parent" onChange={handleChange}/>
-          <label htmlFor="adoptiveParent">Adoptive Parent</label>
-          <input type="radio" name="regRole" id="rescueShelter" value="Rescue Shelter"onChange={handleChange}/>
-          <label htmlFor="rescueShelter">Rescue Shelter</label>
-        </div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="regEmail"
-            className="border-2 p-2"
-            value={formData.regEmail}
-            onChange={handleChange}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="regPass"
-            className="border-2 p-2"
-            value={formData.regPass}
-            onChange={handleChange}
-          />
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="regConfirmPass"
-            className="border-2 p-2"
-            value={formData.regConfirmPass}
-            onChange={handleChange}
-          />
+    <div className={styles.container}>
+      <section className={styles.register}>
+        <div className={styles["col-1"]}>
+          <h2>Create Account</h2>
 
-          {/* TODO: insert google oauth api
-            Note: Here's the button of google sign in
-          */}
-          <hr />
-          <div className="my-2">
-            <div id="signinDiv"></div>
-          </div>
-
-          <button
-            type="submit"
-            className="bg-orange-500 text-white p-2 rounded-xl"
-            disabled={!passwordsMatch}
+          <form
+            id="form"
+            className={`${styles.form} flex flex-col `}
+            onSubmit={regSubmit}
           >
-            Get Started
-          </button>
-        </form>
-      </div>
+            <div className={`${styles.flex} mt-8 items-center justify-center`}>
+              <input
+                type="radio"
+                name="regRole"
+                id="adoptiveParent"
+                value="Adoptive Parent"
+                onChange={handleChange}
+                required
+              />
+              <label htmlFor="adoptiveParent" className="text-sm">
+                Adoptive Parent
+              </label>
+              <input
+                type="radio"
+                name="regRole"
+                id="rescueShelter"
+                value="Rescue Shelter"
+                onChange={handleChange}
+                className="my-5"
+                required
+              />
+              <label htmlFor="rescueShelter" className="text-sm">
+                Rescue Shelter
+              </label>
+            </div>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              placeholder=""
+              id="email"
+              name="regEmail"
+              className={`${styles.border2} p-2 mb-5`}
+              value={formData.regEmail}
+              onChange={handleChange}
+              required
+            />
+            <label htmlFor="password">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="********"
+                id="password"
+                name="regPass"
+                className={`${styles.border2} p-2 mb-5`}
+                value={formData.regPass}
+                onChange={handleChange}
+                required
+              />
+              {/* Eye icon */}
+              {formData.regPass && (
+                <span
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "5%",
+                    top: "15%",
+                  }}
+                >
+                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </span>
+              )}
+            </div>
+
+            {/* // Confirm password input field */}
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="********"
+                id="confirmPassword"
+                name="regConfirmPass"
+                className={`${styles.border2} p-2 mb-5`}
+                value={formData.regConfirmPass}
+                onChange={handleChange}
+                required
+              />
+              {/* Eye icon */}
+              {formData.regConfirmPass && (
+                <span
+                  className="eye-icon"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "5%",
+                    top: "15%",
+                  }}
+                >
+                  {showConfirmPassword ? (
+                    <VisibilityIcon />
+                  ) : (
+                    <VisibilityOffIcon />
+                  )}
+                </span>
+              )}
+            </div>
+            <p className="my-2 text-end">
+              <Link to="/login">
+                <strong>Have an Account?</strong>
+              </Link>
+            </p>
+            <hr />
+            <div className={styles["my-2"]}>
+              <div id="signinDiv" className="mt-5"></div>
+            </div>
+            <button
+              type="submit"
+              className="bg-orange-500 text-white p-2 rounded-xl mt-5"
+              disabled={!passwordsMatch}
+            >
+              Get Started
+            </button>
+            <p className="text-sm mt-5">
+              <Link to="/policy">
+                By signing up, you agree to SaveAStray's Policy
+              </Link>
+            </p>
+            <p className="text-sm underline mt-2">
+              <Link to="/terms">Terms of Service and Policy</Link>
+            </p>
+          </form>
+        </div>
+        <div className={styles["col-2"]}>
+          <img src={bgImg} alt="" />
+        </div>
+      </section>
     </div>
   );
 }
