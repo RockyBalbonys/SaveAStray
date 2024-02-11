@@ -10,8 +10,10 @@ import {
   Link,
   Button,
 } from "@mui/material";
+import logo from "../assets/icons/SAS_Logo4.png";
+import { pages } from "../constants/landingPage";
 
-export default function Navbar({ pages, logo }) {
+export default function Navbar() {
   return (
     <AppBar
       position="static"
@@ -29,8 +31,16 @@ export default function Navbar({ pages, logo }) {
                 <img src={logo} alt="logo" width={46} height={46} />
               </Link>
             </IconButton>
+
             <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
-              SaveAStray
+              <Link
+                to="/"
+                component={RouterLink}
+                color="inherit"
+                underline="none"
+              >
+                SaveAStray
+              </Link>
             </Typography>
             <Stack spacing={3} direction="row" alignItems="center">
               {pages.map((page, index) => (
@@ -40,6 +50,7 @@ export default function Navbar({ pages, logo }) {
                   color="inherit"
                   to={page}
                   component={RouterLink}
+                  aria-label={page}
                 >
                   {page}
                 </Link>
