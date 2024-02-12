@@ -11,6 +11,7 @@ import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
 import UploadImage from "./Pages/UploadImage";
 import Login from "./Pages/Login";
+import Verify from "./Pages/Verify";
 
 function App() {
   const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
         <Route path="/donate" element={<Donate />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/uploadImage" element={<UploadImage />} />
+        <Route path="/verify" element={<Verify />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

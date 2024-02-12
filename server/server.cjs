@@ -21,7 +21,27 @@ mongoose.connect(uri)
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 
-// functions:
+app.get(`/verify`, async (req, res) => {
+  const token = req.query.token
+  
+  try {
+    const user = await User.findOne({ verificationToken: token })
+
+    if (user) {
+      user.verified = true
+      const updatedUser = await user.save();
+      res.send(updatedUser)
+    } else {
+      res.status(404).send({ message: 'User not found' });
+    }
+    
+  } catch (err) {
+    console.log(err);
+  }
+
+
+
+});
 
 app.post('/api/register', async (req, res) => {
   
@@ -83,6 +103,10 @@ app.post('/api/register', async (req, res) => {
       }
     
 })
+
+
+
+
 
 app.post('/api/login', async (req, res) => {
   try {
