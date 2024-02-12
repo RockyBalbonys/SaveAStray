@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-//check password if correct
-//
+import bgImg from "../assets/images/passive.png";
+import { Link } from "react-router-dom";
+import styles from "../styles/Login.module.css";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,10 @@ const Login = () => {
     loginPass: "",
     loginRole: "",
   });
+
+  console.log({ formData });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -53,57 +59,113 @@ const Login = () => {
     });
   }, []);
 
+  const passwordsMatch = formData.regPass === formData.regConfirmPass;
+
   return (
-    <div className="flex flex-col h-screen justify-center items-center ">
-      <div className="border-2 border-black p-10 rounded-lg">
-        <h1 className="text-2xl">Login Account</h1>
-        <div className="flex space-x-4 mt-8">
-          <input type="radio" name="clientType" id="adoptiveParent"></input>
-          <label htmlFor="adoptiveParent">Adoptive Parent</label>
-          <input type="radio" name="clientType" id="rescueShelter"></input>
-          <label htmlFor="rescueShelter"> Rescue Shelter</label>
+    <div className={styles.container}>
+      <section className={styles.register}>
+        <div className={styles["col-2"]}>
+          <img src={bgImg} alt="" />
         </div>
-        <form
-          onSubmit={loginSubmit}
-          action=""
-          method="POST"
-          className="flex flex-col mt-10 space-y-5"
-        >
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="loginEmail"
-            className="border-2 p-2"
-            value={formData.loginEmail}
-            onChange={handleChange}
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="loginPass"
-            value={formData.loginPass}
-            onChange={handleChange}
-            className="border-2 p-2"
-          />
+        <div className={styles["col-1"]}>
+          <h2>Login Account</h2>
 
-          {/* TODO: insert google oauth api
-            Note: Here's the button of google sign in
-          */}
-          <hr />
-          <div className="my-2">
-            <div id="signinDiv"></div>
-          </div>
-
-          <button
-            type="submit"
-            className="bg-orange-500 text-white p-2 rounded-xl"
+          <form
+            id="form"
+            className={`${styles.form} flex flex-col`}
+            onSubmit={loginSubmit}
           >
-            Continue
-          </button>
-        </form>
-      </div>
+            <div className="flex space-x-4 my-8 justify-center">
+              <input
+                type="radio"
+                name="loginRole"
+                id="adoptiveParent"
+                value="Adoptive Parent"
+                onChange={handleChange}
+                required
+              />
+              <label htmlFor="adoptiveParent" className="text-sm">
+                Adoptive Parent
+              </label>
+              <input
+                type="radio"
+                name="loginRole"
+                id="rescueShelter"
+                value="Rescue Shelter"
+                onChange={handleChange}
+                required
+              />
+              <label htmlFor="rescueShelter" className="text-sm">
+                Rescue Shelter
+              </label>
+            </div>
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              placeholder=""
+              id="email"
+              name="loginEmail"
+              className={`${styles.input} border-2 p-2 mb-5`}
+              value={formData.loginEmail}
+              onChange={handleChange}
+              required
+            ></input>
+            <label htmlFor="password">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="********"
+                id="password"
+                name="loginPass"
+                className={`${styles.input} border-2 p-2 mb-5`}
+                value={formData.loginPass}
+                onChange={handleChange}
+                required
+              />
+              {/* Eye icon */}
+              {formData.loginPass && (
+                <span
+                  className="eye-icon"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "5%",
+                    top: "15%",
+                  }}
+                >
+                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </span>
+              )}
+            </div>
+            <div className="flex justify-between mb-8">
+              <p className="mt-2 text-center text-sm">
+                <Link to="/forgot-password">
+                  <strong>Forgot Password?</strong>
+                </Link>
+              </p>
+              <p className="mt-2 text-center text-sm">
+                <Link to="/signup">
+                  <strong>Need an Account?</strong>
+                </Link>
+              </p>
+            </div>
+
+            <hr />
+            <div className={styles["my-2"]}>
+              <div id="signinDiv" className="mt-5"></div>
+            </div>
+
+            <button
+              type="submit"
+              className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5`}
+              disabled={!passwordsMatch}
+            >
+              Get Started
+            </button>
+          </form>
+        </div>
+      </section>
     </div>
   );
 };

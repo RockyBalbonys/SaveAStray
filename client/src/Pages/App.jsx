@@ -1,16 +1,14 @@
-// create your assigned pages e.g. Login, Signup, Landing Page, and;
-// import your created pages here in the app: `import LandingPage from './LandingPage.jsx';`
-
-import Login from "./Login";
-import Signup from "./Signup";
+import { useState } from "react";
+import Login from "./LoginP.jsx";
 
 function App() {
-  return (
+    const [count, Setcount] = useState(0);
+
+    return (
     <>
-      {/* <Login /> */}
       <Signup />
     </>
-  );
-}
+      );
+};
 
 export default App;
