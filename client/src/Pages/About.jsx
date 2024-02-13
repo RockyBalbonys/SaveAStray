@@ -1,4 +1,4 @@
-import about from "../assets/images/about.png";
+import about from "../assets/images/Hero.png";
 import pawBG from "../assets/images/Paw.png";
 import { Box, Container, Typography, Stack, Grid, Paper } from "@mui/material";
 import { aboutContent, team, sectionContent } from "../constants/about";
@@ -11,17 +11,23 @@ const About = () => {
       <Box
         sx={{
           background: `url(${about})`,
-          height: "60vh",
+          height: "50vh",
           overflow: "visible",
           position: "relative",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "100% auto",
+          backgroundSize: "cover",
         }}
         component="main"
       >
         <Container maxWidth="lg">
-          <Box position="absolute" width="334px" mt={13.8}>
-            <Typography fontSize="2.25rem" color="white" fontWeight="bold">
+          <Box position="absolute" mt={13.8} width="100%">
+            <Typography
+              fontSize="2.25rem"
+              color="white"
+              fontWeight="bold"
+              width="334px"
+              sx={{ textAlign: { xs: "center", md: "left" } }}
+            >
               Helping hundreds connect together.
             </Typography>
           </Box>
@@ -45,7 +51,7 @@ export default About;
 function SecondSection({ contents }) {
   return (
     <Container maxWidth="lg">
-      <Box paddingTop={13.5} paddingBottom={13.5}>
+      <Box paddingBottom={13.5} paddingTop={13.5}>
         {contents.map((content, index) => (
           <Box key={index}>
             <Typography
