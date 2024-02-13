@@ -33,10 +33,8 @@ const Login = () => {
       const response = await axios.post("http://localhost:3001/api/login", {
         email: formData.loginEmail,
         password: formData.loginPass,
-        role: "Adoptive Parent",
-        verified: false,
+        role: formData.loginRole,
       });
-
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);

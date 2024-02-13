@@ -106,33 +106,31 @@ app.post('/api/register', async (req, res) => {
 
 
 
-
-
 app.post('/api/login', async (req, res) => {
+  console.log(req.url);
+  console.log(req.body);
   try {
-      const { loginEmail, loginPass } = req.body;
-      const user = await User.findOne({ email: loginEmail }).exec();
-      
-      if (!user) {
-          console.log('User not found');
-          res.status(404).json({ status: 404, message: "User not found!" });
-      } else {
-        bcrypt.compare(loginPass, user.password, (err, data) => {
-          if (err) {
-            console.log(err);
-            res.send(err)
-          }
-          if (data) {
-            res.status(200).send("Log in successful!")
-          } else {
-            res.send("wrong pass!");
-          }
-        })
-    
-      }
+    const loginEmail = req.body.email;
+    const loginPass = req.body.password;
+    const user = await User.findOne({ email: loginEmail }).exec();
+    if (!user) {
+      console.log('User not found');
+      return res.status(404).json({ status: 404, message: "User not found!" });
+    }
+
+    // Compare passwords using bcrypt.compare
+    const match = await bcrypt.compare(loginPass, user.password);
+
+    if (match) {
+      // Passwords match, send success response
+      return res.status(200).send("Log in successful!");
+    } else {
+      // Passwords don't match, send error response
+      return res.status(401).send("Wrong password!");
+    }
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
+    console.error(err);
+    return res.status(500).send('Internal Server Error');
   }
 });
 
