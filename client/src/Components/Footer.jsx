@@ -33,7 +33,7 @@ function LinksItem({ items, category }) {
           underline="hover"
           key={index}
           sx={{ color: "rgba(255, 161, 52, 1)" }}
-          to={page}
+          to={`/${page}`}
           component={RouterLink}
         >
           {page}
@@ -48,7 +48,7 @@ function IconLinks() {
   return (
     <Stack direction="row" columnGap={3}>
       {icons.map((item, index) => (
-        <IconButton key={index}>
+        <IconButton key={index} component={RouterLink} to="/Contact">
           <img src={item.icon} alt={item.alt} width="26px" />
         </IconButton>
       ))}

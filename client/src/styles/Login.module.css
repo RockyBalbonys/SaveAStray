@@ -1,3 +1,8 @@
+:root {
+  --primary: hsl(29, 100%, 53%);
+  --primary-dark: hsl(29, 100%, 43%);
+}
+
 .container {
   display: flex;
   justify-content: center;
@@ -14,8 +19,8 @@
   width: 100vw;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
-  border-radius: 10px;
+  overflow: hidden;
+  border-radius: 16px;
   box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.2);
   background-color: white;
   margin-top: 20px;
@@ -29,9 +34,18 @@
 
 .input,
 .btn {
-  border: 1px solid orange;
+  border: 1px solid var(--primary);
   padding: 0.9em 1em;
-  color: orange;
+  color: var(--primary);
+}
+
+.btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.input {
+  width: 100%;
+  border-radius: 7px;
 }
 
 .input:focus {
@@ -59,7 +73,7 @@
 .col-1 {
   margin: auto;
   padding: 4em 0;
-  color: orange;
+  color: var(--primary);
 }
 
 .col-1 h2 {
@@ -69,8 +83,8 @@
 }
 
 .col-1 input[type="radio"] {
-  border-color: orange;
-  color: orange;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .col-1 label {
@@ -79,8 +93,8 @@
 
 .col-1 input[type="email"],
 .col-1 input[type="password"] {
-  border-color: orange;
-  color: orange;
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .col-1 p {

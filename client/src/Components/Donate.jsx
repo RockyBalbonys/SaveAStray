@@ -1,6 +1,7 @@
 import { Box, Typography, Button } from "@mui/material";
 import { filter } from "../constants/landingPage";
 import donateImage from "../assets/images/image_donate.png";
+import { CustomButton } from "./CustomButton";
 
 const donateBackground = {
   position: "relative",
@@ -31,9 +32,9 @@ const Donate = () => {
         <Typography variant="h5" fontWeight="bold" color="white">
           Help SaveAStray to end animal loneliness
         </Typography>
-        <Button variant="contained" size="large">
+        <CustomButton variant="contained" size="large">
           Donate Now
-        </Button>
+        </CustomButton>
       </Box>
     </Box>
   );
