@@ -1,3 +1,10 @@
+import home from "../assets/icons/landingIcons/home.svg";
+import homeFilled from "../assets/icons/landingIcons/home-filled.svg";
+import heart from "../assets/icons/landingIcons/heart.svg";
+import heartFilled from "../assets/icons/landingIcons/heart-filled.svg";
+import paw from "../assets/icons/landingIcons/paw.svg";
+import pawFilled from "../assets/icons/landingIcons/paw-filled.svg";
+
 // Footer and Navbar content links
 const pages = ["About", "Animals", "Learn", "Donate", "Contact"];
 
@@ -10,21 +17,28 @@ const contacts = [
 ];
 
 // Content for the card in Hero section
+// TODO: add image or icon property in each objects
 const cardContent = [
   {
     title: "Save A Life",
     description:
       "By adopting from a local shelter, you are directly pulling an animal at risk of euthanasia.",
+    icon: heart,
+    iconFilled: heartFilled,
   },
   {
     title: "Support Your Community",
     description:
       "Shelters rely on community support to function and care for their animals.",
+    icon: home,
+    iconFilled: homeFilled,
   },
   {
     title: "Discover Fur-ever Friend",
     description:
       "Shelters are home to a wonderful animals, with unique personalities waiting to be discovered. ",
+    icon: paw,
+    iconFilled: pawFilled,
   },
 ];
 

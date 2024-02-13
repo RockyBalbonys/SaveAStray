@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import styles from "../styles/Login.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { Box, IconButton } from "@mui/material";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -68,8 +70,18 @@ const Login = () => {
           <img src={bgImg} alt="" />
         </div>
         <div className={styles["col-1"]}>
-          <h2>Login Account</h2>
-
+          <div className="relative">
+            <Box position="absolute" className="ml-5 mt-5 -top-12 -left-20">
+              <IconButton position="absolute" disableRipple>
+                <Link to="/">
+                  <KeyboardBackspaceIcon
+                    sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
+                  />
+                </Link>
+              </IconButton>
+            </Box>
+            <h2>Login Account</h2>
+          </div>
           <form
             id="form"
             className={`${styles.form} flex flex-col`}

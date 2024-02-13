@@ -12,7 +12,7 @@ import {
   Link,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import logo from "../assets/icons/SAS_Logo4.png";
+import { CustomButton } from "../Components/CustomButton";
 import heroImage from "../assets/images/image_13.png";
 import catImage from "../assets/images/Cats.png";
 import dogImage from "../assets/images/Dogs.png";
@@ -91,6 +91,7 @@ function HeroContent() {
             typography: {
               xs: "h3",
               sm: "h2",
+              md: "h1",
               lg: "h1",
             },
             fontWeight: "bold",
@@ -98,16 +99,33 @@ function HeroContent() {
         >
           Rescue.Adopt.Love
         </Typography>
-        <Typography variant="h5">
+        <Typography
+          variant="h5"
+          sx={{
+            typography: {
+              xs: "body1",
+              sm: "body1",
+              lg: "h6",
+            },
+          }}
+        >
           Looking for a loyal adventure buddy? Look no further than your local
           shelter! Adopt a pup and fill your life with pawsitive memories.
         </Typography>
-        <Stack direction="row" spacing={2}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ flexWrap: "wrap", rowGap: 2, justifyContent: "center" }}
+        >
           <Link to="/login" component={RouterLink}>
-            <Button variant="contained">I am a Pawrent</Button>
+            <CustomButton variant="contained" sx={{ padding: "8px 48px" }}>
+              I am a <span className="font-bold">&nbsp;Pawrent</span>
+            </CustomButton>
           </Link>
           <Link to="/login" component={RouterLink}>
-            <Button variant="contained">I am a Rescue Shelter</Button>
+            <CustomButton variant="contained" sx={{ padding: "8px 21px" }}>
+              I am a <span className="font-bold">&nbsp;Rescue Shelter</span>
+            </CustomButton>
           </Link>
         </Stack>
       </Stack>
@@ -126,18 +144,30 @@ function HeroCard({ items }) {
       >
         {cardContent.map((card, index) => (
           <Grid item key={index} maxWidth="300px">
-            <Card sx={{ padding: "32px", height: "100%" }} elevation={4}>
-              <CardContent sx={{ padding: 0 }}>
+            <Card
+              sx={{
+                padding: "32px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
+              elevation={4}
+            >
+              <CardContent sx={{ padding: 0, flexGrow: 1 }}>
                 <Stack spacing="12px" direction="column">
                   <Paper
                     sx={{
                       display: "inline-block",
-                      padding: "8px",
+                      padding: "8.55px 5.7px",
                       width: "fit-content",
+                      borderRadius: "7px",
                     }}
                   >
-                    <FavoriteBorderIcon
-                      sx={{ width: "40px", height: "35px" }}
+                    <img
+                      src={card.icon}
+                      alt={card.icon}
+                      width="40px"
+                      height="40px"
                     />
                   </Paper>
                   <Typography variant="h6" component="div">
@@ -147,7 +177,12 @@ function HeroCard({ items }) {
                 </Stack>
               </CardContent>
               <CardActions sx={{ padding: 0, margin: 0 }}>
-                <Button endIcon={<ChevronRightIcon />}>Read more</Button>
+                <CustomButton
+                  endIcon={<ChevronRightIcon />}
+                  sx={{ textTransform: "none" }}
+                >
+                  Read more
+                </CustomButton>
               </CardActions>
             </Card>
           </Grid>
@@ -179,10 +214,10 @@ function AboutContent() {
               </Typography>
             </Box>
             <Stack direction="row" spacing={1}>
-              <Button variant="contained" endIcon={<ChevronRightIcon />}>
+              <CustomButton variant="contained" endIcon={<ChevronRightIcon />}>
                 Read more
-              </Button>
-              <Button variant="outlined">Donate</Button>
+              </CustomButton>
+              <CustomButton variant="outlined">Donate</CustomButton>
             </Stack>
           </Stack>
         </Grid>
@@ -242,8 +277,16 @@ function HelpCard() {
       >
         {helpContent.map((card, index) => (
           <Grid item key={index} maxWidth="300px">
-            <Card sx={{ padding: "32px", height: "100%" }} elevation={4}>
-              <CardContent sx={{ padding: 0 }}>
+            <Card
+              sx={{
+                padding: "32px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
+              elevation={4}
+            >
+              <CardContent sx={{ padding: 0, flexGrow: 1 }}>
                 <Stack
                   spacing="12px"
                   direction="column"
@@ -270,12 +313,16 @@ function HelpCard() {
               </CardContent>
               <CardActions>
                 <Box textAlign="center" width="100%">
-                  <Button
-                    sx={{ padding: 0, margin: 0 }}
+                  <CustomButton
+                    sx={{
+                      padding: 0,
+                      margin: 0,
+                      textTransform: "none",
+                    }}
                     endIcon={<ChevronRightIcon />}
                   >
                     Read more
-                  </Button>
+                  </CustomButton>
                 </Box>
               </CardActions>
             </Card>
@@ -295,6 +342,7 @@ function MeetTheRescues() {
           flexDirection: "column",
           marginBottom: "32px",
           gap: 4,
+          my: "-4rem",
         }}
       >
         <Typography

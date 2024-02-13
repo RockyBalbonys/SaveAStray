@@ -5,6 +5,8 @@ import bgImg from "../assets/images/passive.png";
 import { Link } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { Box, IconButton } from "@mui/material";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -67,7 +69,18 @@ function Signup() {
     <div className={styles.container}>
       <section className={styles.register}>
         <div className={styles["col-1"]}>
-          <h2>Create Account</h2>
+          <div className="relative">
+            <Box position="absolute" className="ml-5 mt-5 -top-12 -left-20">
+              <IconButton disableRipple>
+                <Link to="/">
+                  <KeyboardBackspaceIcon
+                    sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
+                  />
+                </Link>
+              </IconButton>
+            </Box>
+            <h2>Create Account</h2>
+          </div>
 
           <form
             id="form"
