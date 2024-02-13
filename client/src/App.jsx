@@ -45,8 +45,8 @@ function App() {
           <Route path="/learn" element={<Learn />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/terms of services" element={<TermsOfServices />} />
-          <Route path="/privacy policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfServices />} />
+          <Route path="/policy" element={<PrivacyPolicy />} />
           <Route path="/uploadImage" element={<UploadImage />} />
           <Route path="/verify" element={<Verify />} />
           <Route path="*" element={<NotFound />} />
