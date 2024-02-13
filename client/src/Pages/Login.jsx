@@ -62,14 +62,17 @@ const Login = () => {
   const passwordsMatch = formData.regPass === formData.regConfirmPass;
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} px-4`}>
       <section className={styles.register}>
         <div className={styles["col-2"]}>
           <img src={bgImg} alt="" />
         </div>
         <div className={styles["col-1"]}>
           <div className="relative">
-            <Box position="absolute" className="ml-5 mt-5 -top-12 -left-20">
+            <Box
+              position="absolute"
+              className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] "
+            >
               <IconButton position="absolute" disableRipple>
                 <Link to="/">
                   <KeyboardBackspaceIcon
@@ -78,7 +81,7 @@ const Login = () => {
                 </Link>
               </IconButton>
             </Box>
-            <h2>Login Account</h2>
+            <h2 className="mb-[32px]">Login Account</h2>
           </div>
           <form
             id="form"
@@ -160,19 +163,17 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-
-            <hr />
-            <div className={styles["my-2"]}>
-              <div id="signinDiv" className="mt-5"></div>
-            </div>
-
             <button
               type="submit"
-              className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5`}
+              className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]`}
               disabled={!passwordsMatch}
             >
               Get Started
             </button>
+            <hr />
+            <div className={styles["my-2"]}>
+              <div id="signinDiv" className="mt-5"></div>
+            </div>
           </form>
         </div>
       </section>
