@@ -20,9 +20,19 @@ import {
 import { MyPrimaryButton, MySecondaryButton } from "./CustomButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../assets/icons/SAS_Logo4.png";
+import facebook_icon from "../assets/icons/facebook.png";
+import email_icon from "../assets/icons/email.png";
+import telegram_icon from "../assets/icons/telegram.png";
 import { pages } from "../constants/landingPage";
 import { CustomButton } from "./CustomButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import IconLinks from "./IconLinks";
+
+const icons = [
+  { icon: facebook_icon, alt: "facebook icon" },
+  { icon: email_icon, alt: "email icon" },
+  { icon: telegram_icon, alt: "telegram icon" },
+];
 
 export default function Navbar() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -112,7 +122,7 @@ export default function Navbar() {
         anchor="right"
         open={openDrawer}
         onClose={handleDrawerClose}
-        sx={{ "& .MuiDrawer-paper": { width: "50%" } }}
+        sx={{ "& .MuiDrawer-paper": { width: "50%" }, display: "flex" }}
       >
         <Box
           sx={{
@@ -156,7 +166,27 @@ export default function Navbar() {
             <ListItemText primary="Get Started" />
           </ListItemButton>
         </List>
-        <List></List>
+        <Box
+          width="100%"
+          textAlign="center"
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            pb: "1rem",
+            flexDirection: "column",
+            gap: ".5rem",
+          }}
+        >
+          <IconLinks icons={icons} />
+          <Typography
+            variant="body2"
+            // sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+          >
+            © 2024 SaveAStray by Lyfie Tech 🧡
+          </Typography>
+        </Box>
       </Drawer>
     </AppBar>
   );

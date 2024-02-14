@@ -29,7 +29,6 @@ const SecondaryButton = styled(Button)(({ theme }) => ({
 const CustomButton = styled(Button)(({ theme }) => ({
   "&.MuiButton-root": {
     textTransform: "none",
-    boxShadow: "4px 4px 5.800000190734863px rgba(169.79, 221.75, 255, 0.70)",
     borderRadius: "48px",
   },
   "&.MuiButton-contained": {
@@ -37,18 +36,18 @@ const CustomButton = styled(Button)(({ theme }) => ({
     color: theme.palette.common.white,
     "&:hover": {
       backgroundColor: theme.palette.secondary.dark,
-      boxShadow: "none",
+      boxShadow: "4px 4px 5.800000190734863px rgba(169.79, 221.75, 255, 0.70)",
     },
   },
   "&.MuiButton-outlined": {
     backgroundColor: "transparent",
     border: `2px solid ${theme.palette.secondary.main}`,
     color: theme.palette.secondary.main,
-    boxShadow: "none",
+    boxShadow: "4px 4px 5.800000190734863px rgba(169.79, 221.75, 255, 0.70)",
     "&:hover": {
       backgroundColor: theme.palette.secondary.light,
       color: theme.palette.common.white,
-      boxShadow: "4px 4px 5.800000190734863px rgba(169.79, 221.75, 255, 0.70)",
+      boxShadow: "none",
     },
   },
   "&.MuiButton-text": {

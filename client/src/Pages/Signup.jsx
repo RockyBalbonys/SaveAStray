@@ -7,6 +7,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Box, IconButton } from "@mui/material";
+import TermsAndPrivacyModal from "../Components/TermsAndPrivacyModal";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,12 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -217,13 +224,18 @@ function Signup() {
                 <strong>Have an Account?</strong>
               </Link>
             </p>
+
+            {/* FIXME: Hardcoded when clicking button it will open the modal */}
             <button
               type="submit"
               className="bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]"
               disabled={!passwordsMatch}
+              onClick={() => setModalOpen(true)}
             >
               Get Started
             </button>
+            {/* Terms and Privacy Modal */}
+            <TermsAndPrivacyModal open={modalOpen} onClose={handleModalClose} />
             <hr />
             <div className={styles["my-2"]}>
               <div id="signinDiv" className="mt-5"></div>
