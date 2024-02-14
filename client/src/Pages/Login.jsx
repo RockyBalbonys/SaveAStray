@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import bgImg from "../assets/images/passive.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/Login.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -9,15 +9,36 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Box, IconButton } from "@mui/material";
 
 const Login = () => {
+  // get the role from verify page
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const selectedRole = params.get("role");
+
   const [formData, setFormData] = useState({
     loginEmail: "",
     loginPass: "",
-    loginRole: "",
+    loginRole: selectedRole || "",
   });
+
+  const navigate = useNavigate();
+
+  //FIXME: Loop when clicking the back button, might try to research on fixing this:
+  //https://bobbyhadz.com/blog/react-remove-query-params
+  const handleGoBack = () => {
+    navigate(-1, { replace: true }); // Go back to the previous page
+  };
 
   console.log({ formData });
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    // Update formData with the selected role whenever it changes
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      loginRole: selectedRole || "", // Update loginRole with the new selected role
+    }));
+  }, [selectedRole]);
 
   const handleChange = (e) => {
     setFormData({
@@ -74,7 +95,7 @@ const Login = () => {
               className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] "
             >
               <IconButton position="absolute" disableRipple>
-                <Link to="/">
+                <Link to="#" onClick={handleGoBack}>
                   <KeyboardBackspaceIcon
                     sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
                   />
@@ -95,10 +116,11 @@ const Login = () => {
                 id="adoptiveParent"
                 value="Adoptive Parent"
                 onChange={handleChange}
+                checked={formData.loginRole === "Adoptive Parent"}
                 required
               />
               <label htmlFor="adoptiveParent" className="text-sm">
-                Adoptive Parent
+                Adoptive Pawrent
               </label>
               <input
                 type="radio"
@@ -106,6 +128,7 @@ const Login = () => {
                 id="rescueShelter"
                 value="Rescue Shelter"
                 onChange={handleChange}
+                checked={formData.loginRole === "Rescue Shelter"}
                 required
               />
               <label htmlFor="rescueShelter" className="text-sm">

@@ -26,6 +26,31 @@ const SecondaryButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const VerifyButton = styled(Button)(({ theme, icon }) => ({
+  padding: "16px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "7px",
+  color: theme.palette.primary,
+  backgroundColor: theme.palette.common.white,
+  border: `1px solid ${theme.palette.primary.main}`,
+  transition: "background-color 0.3s, color 0.5s", // Add transition property
+  "& svg": {
+    // Apply hover styles to the svg element inside the button
+    fill: "white", // Assuming the color you want to change is fill
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    "& svg": {
+      // Apply hover styles to the svg element inside the button
+      fill: "white", // Assuming the color you want to change is fill
+    },
+  },
+}));
+
 const CustomButton = styled(Button)(({ theme }) => ({
   "&.MuiButton-root": {
     textTransform: "none",
@@ -67,4 +92,4 @@ const MySecondaryButton = ({ children, ...props }) => {
   return <SecondaryButton {...props}>{children}</SecondaryButton>;
 };
 
-export { MyPrimaryButton, MySecondaryButton, CustomButton };
+export { MyPrimaryButton, MySecondaryButton, CustomButton, VerifyButton };

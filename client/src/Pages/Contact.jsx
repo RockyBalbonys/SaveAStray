@@ -48,7 +48,7 @@ const Contact = () => {
               backgroundImage: `url(${dogImage})`,
               height: "584px",
               backgroundRepeat: "no-repeat",
-              width: "327px",
+              width: "35%",
               display: {
                 xs: "none",
                 md: "block",
@@ -75,11 +75,11 @@ function SocialMediaContacts({ contacts }) {
       paddingRight="40px"
     >
       {contacts.map((item, index) => (
-        <Grid item key={index} xs={6}>
+        <Grid item key={index} xs={12} sm={6}>
           <Stack direction="row" spacing={2.5}>
             <img src={item.icon} alt="" width="30px" height="30px" />
             <Box>
-              <Typography fontWeight="bold">{item.name}Hello</Typography>
+              <Typography fontWeight="bold">{item.name}</Typography>
               <Typography>{item.link}</Typography>
             </Box>
           </Stack>

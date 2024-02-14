@@ -51,11 +51,14 @@ const TermsAndPrivacyModal = ({ open, onClose }) => {
       }}
       onClick={handleBackdropClick}
     >
-      <Paper sx={{ width: "50%", bgcolor: "background.paper", p: 4 }}>
+      <Paper sx={{ width: "50%", bgcolor: "background.paper", px: 6, py: 4 }}>
         <Typography variant="h6" gutterBottom>
           Terms of Service and Privacy Policy
         </Typography>
         <Box>
+          <Typography gutterBottom textAlign="center">
+            Terms and Services
+          </Typography>
           {myTerms.map((term, index) => (
             <>
               {typeof term === "string" ? (
@@ -80,6 +83,9 @@ const TermsAndPrivacyModal = ({ open, onClose }) => {
             </>
           ))}
           <br />
+          <Typography gutterBottom textAlign="center">
+            Privacy Policy
+          </Typography>
           {myPolicy.map((policy, index) => (
             <>
               {typeof policy === "string" ? (

@@ -9,6 +9,9 @@ const Background = ({ children }) => {
         position: "relative",
         width: "100vw",
         height: "100vh",
+        backgroundImage: `url(${PawBG})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
       }}
     >
       <Box
@@ -18,9 +21,6 @@ const Background = ({ children }) => {
           left: 0,
           width: "100%",
           height: "100%",
-          backgroundImage: `url(${PawBG})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
         }}
       />
       {children}

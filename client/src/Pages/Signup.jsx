@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../styles/Signup.module.css";
 import bgImg from "../assets/images/passive.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -22,6 +22,13 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+
+  // set this to true to open the modal
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalClose = () => {
@@ -104,7 +111,7 @@ function Signup() {
               className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] lg:-top-[4rem]"
             >
               <IconButton disableRipple>
-                <Link to="/">
+                <Link to="#" onClick={handleGoBack}>
                   <KeyboardBackspaceIcon
                     sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
                   />
