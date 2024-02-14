@@ -117,12 +117,12 @@ function HeroContent() {
           spacing={2}
           sx={{ flexWrap: "wrap", rowGap: 2, justifyContent: "center" }}
         >
-          <Link to="/login" component={RouterLink}>
+          <Link to="/login?role=Adoptive Parent" component={RouterLink}>
             <CustomButton variant="contained" sx={{ padding: "8px 48px" }}>
               I am a <span className="font-bold">&nbsp;Pawrent</span>
             </CustomButton>
           </Link>
-          <Link to="/login" component={RouterLink}>
+          <Link to="/login?role=Rescue Shelter" component={RouterLink}>
             <CustomButton variant="contained" sx={{ padding: "8px 21px" }}>
               I am a <span className="font-bold">&nbsp;Rescue Shelter</span>
             </CustomButton>

@@ -25,7 +25,8 @@ function App() {
       pathname === "/login" ||
       pathname === "/signup" ||
       pathname === "/terms" ||
-      pathname === "/policy"
+      pathname === "/policy" ||
+      pathname === "/verify"
     ) {
       return null;
     }
