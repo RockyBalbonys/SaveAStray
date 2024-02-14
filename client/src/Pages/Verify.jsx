@@ -5,8 +5,6 @@ import { Container, Box, Paper, Typography } from "@mui/material";
 import topImage from "../assets/images/formImage.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import { VerifyButton } from "../Components/CustomButton";
-import pawrentIcon from "../assets/icons/verifyIcons/pawrent.svg";
-import shelterIcon from "../assets/icons/verifyIcons/shelter.svg";
 import SvgIcon from "@mui/material/SvgIcon";
 import { StyledPaper } from "../Components/StyledPaper";
 import { Link as RouterLink } from "react-router-dom";
