@@ -14,6 +14,7 @@ import email_icon from "../assets/icons/email.png";
 import telegram_icon from "../assets/icons/telegram.png";
 import { pages, contacts, legal } from "../constants/landingPage";
 import logo from "../assets/icons/SAS_Logo4.png";
+import IconLinks from "./IconLinks";
 
 const icons = [
   { icon: facebook_icon, alt: "facebook icon" },
@@ -38,19 +39,6 @@ function LinksItem({ items, category }) {
         >
           {page}
         </Link>
-      ))}
-    </Stack>
-  );
-}
-
-// Display icon links
-function IconLinks() {
-  return (
-    <Stack direction="row" columnGap={3}>
-      {icons.map((item, index) => (
-        <IconButton key={index} component={RouterLink} to="/Contact">
-          <img src={item.icon} alt={item.alt} width="26px" />
-        </IconButton>
       ))}
     </Stack>
   );
@@ -84,7 +72,7 @@ const Footer = () => {
                 </Typography>
 
                 {/* Display Facebook, Telegram, Email Icons and Links */}
-                <IconLinks />
+                <IconLinks icons={icons} />
               </Box>
             </Stack>
           </Grid>

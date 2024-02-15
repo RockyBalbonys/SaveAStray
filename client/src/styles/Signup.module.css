@@ -36,7 +36,6 @@
 .form {
   max-width: 320px;
   width: 100vw;
-  margin: 2em auto;
 }
 
 .border2,
@@ -51,8 +50,17 @@
   width: 100%;
 }
 
+input[type="password"],
+input[type="text"] {
+  padding-right: 3rem;
+}
+
 .form > input:focus {
   outline: none;
+}
+
+.myLink {
+  text-align: end;
 }
 
 .form > .btn {
@@ -104,24 +112,14 @@
   color: var(--primary);
 }
 
-.register .col-1 p {
-  text-align: center;
-}
-
 .register .col-2 img {
-  width: 600px;
+  min-width: 600px;
   height: 100%;
   object-fit: cover;
   align-self: flex-end;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   display: none;
-}
-
-.register .col-2 p {
-  text-align: center;
-  font-size: 1.5em;
-  padding-top: 1em;
 }
 
 .my-2 {
