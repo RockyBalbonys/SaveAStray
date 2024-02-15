@@ -2,50 +2,50 @@ const mongoose = require('mongoose');
 
 const petSchema = new mongoose.Schema(
   {
-    "name": {
-      "type": "string",
-      "required": true
+    name: {
+      type: String,
+      required: true
     },
-    "age": {
-      "type": "string",
-      "enum": [
-        "Baby",
-        "Adolescent",
-        "Adult",
-        "Senior"
+    age: {
+      type: String,
+      enum: [
+        Young,
+        Adolescent,
+        Adult,
+        Senior
       ],
-      "required": true
+      required: true
     },
-    "gender": {
-      "type": "string",
-      "enum": [
-        "Male",
-        "Female",
-        "Unknown"
+    gender: {
+      type: String,
+      enum: [
+        Male,
+        Female
       ],
-      "required": true
+      required: true
     },
-    "specie": {
-      "type": "string",
-      "required": true
+    species: {
+      type: String,
+      required: true
     },
-    "breed": {
-      "type": "string",
-      "required": true
+    breed: {
+      type: String,
+      required: false
     },
-    "color": {
-      "type": "string",
-      "required": false
+    color: {
+      type: String,
+      required: false
     },
-    "size": {
-      "type": "string",
-      "enum": [
-        "Small",
-        "Medium",
-        "Large",
-        "Giant"
+    size: {
+      type: String,
+      enum: [
+        Munchkin,
+        Small,
+        Medium,
+        Large,
+        Giant
       ],
-      "required": true
+      required: true
     }
   }
 )
