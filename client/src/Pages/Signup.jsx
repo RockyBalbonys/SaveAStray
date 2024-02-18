@@ -53,7 +53,6 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
-
       console.log("Response:", response.data);
     } catch (error) {
       console.error("Error:", error);
@@ -242,7 +241,7 @@ function Signup() {
               Get Started
             </button>
             {/* Terms and Privacy Modal */}
-            <TermsAndPrivacyModal open={modalOpen} onClose={handleModalClose} />
+            <TermsAndPrivacyModal open={modalOpen} onClose={handleModalClose} formData={formData}/>
             <hr />
             <div className={styles["my-2"]}>
               <div id="signinDiv" className="mt-5"></div>

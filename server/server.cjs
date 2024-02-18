@@ -76,12 +76,16 @@ app.post('/api/register', async (req, res) => {
   }
 
   const { email, pass, role } = req.body;
-  const emailExist = await User.findOne({email: email})
-    try {
 
-      if (email == emailExist.email){ 
-        res.send("User Exists!")
+  const isEmailExist = await User.findOne({email: email})
+  console.log(isEmailExist.email)
+      if (isEmailExist.email == email) {
+        res.json({
+          message: 'User Exists'
+        })
       } else {
+        try {
+          console.log(isEmailExist.email);
         const verificationToken = generateVerificationToken()
         const newUser = new User({
           email: email,
@@ -102,12 +106,13 @@ app.post('/api/register', async (req, res) => {
           role: role,
           verificationToken: verificationToken
         });
+        } catch (err) {
+          console.log("error: ", err);
+        }
+        
+
       }
-      } catch (error) {
-        console.error('Error saving user:', error);
-        res.status(500).json({ error: 'Server error' });
-      }
-    
+ 
 })
 
 
