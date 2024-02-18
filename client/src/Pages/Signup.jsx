@@ -44,7 +44,6 @@ function Signup() {
 
   const regSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const response = await axios.post("http://localhost:3001/api/register", {
         userID: "",
@@ -53,7 +52,12 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
-      console.log("Response:", response.data);
+      if (response.data.status == 409) {
+        alert("User Exists");
+    } else {
+        console.log("Response:", response.data);
+    }
+    
     } catch (error) {
       console.error("Error:", error);
     }
