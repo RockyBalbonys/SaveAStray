@@ -76,6 +76,7 @@ app.post('/api/register', async (req, res) => {
   }
 
   const { email, pass, role } = req.body;
+
   const isEmailExist = await User.findOne({email: email})
   console.log(isEmailExist.email)
       if (isEmailExist.email == email) {
@@ -109,6 +110,7 @@ app.post('/api/register', async (req, res) => {
           console.log("error: ", err);
         }
         
+
       }
  
 })
