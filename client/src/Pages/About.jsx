@@ -1,4 +1,4 @@
-import about from "../assets/images/Hero.png";
+import about from "../assets/images/hero_about.png";
 import pawBG from "../assets/images/Paw.png";
 import { Box, Container, Typography, Stack, Grid, Paper } from "@mui/material";
 import { aboutContent, team, sectionContent } from "../constants/about";
