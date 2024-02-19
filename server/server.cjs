@@ -20,6 +20,7 @@ mongoose.connect(uri)
 
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
+app.use(express.urlencoded({ extended: true }))
 
 app.get(`/verify`, async (req, res) => {
   const token = req.query.token
@@ -76,35 +77,44 @@ app.post('/api/register', async (req, res) => {
   }
 
   const { email, pass, role } = req.body;
-    try {
-        const verificationToken = generateVerificationToken()
-        const newUser = new User({
-          email: email,
-          password: await bcrypt.hash(pass, 12),
-          role: role,
-          verificationToken: verificationToken
-        });
+
+try {
+    const existingUser = await User.findOne({ email });
     
-        const savedUser = await newUser.save();
-        console.log('User saved:', savedUser);
-        
-        await sendVerificationEmail(email, verificationToken);
-        
-        res.json({
-          status: 'ok',
-          email: email,
-          password: pass,
-          role: role,
-          verificationToken: verificationToken
-        });
-      } catch (error) {
-        console.error('Error saving user:', error);
-        res.status(500).json({ error: 'Server error' });
-      }
-    
+    if (existingUser) {
+      res.send({ 
+        message: "User already exists",
+        status: 409 });
+    } else {
+    const verificationToken = generateVerificationToken();
+    const hashedPassword = await bcrypt.hash(pass, 12);
+
+    const newUser = new User({
+        email,
+        password: hashedPassword,
+        role,
+        verificationToken
+    });
+
+    const savedUser = await newUser.save();
+
+    await sendVerificationEmail(email, verificationToken);
+
+    res.status(201).json({
+        status: 'success',
+        message: 'User created successfully',
+        user: {
+            email,
+            role,
+            verificationToken
+        }
+    });
+    }
+} catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+}
 })
-
-
 
 app.post('/api/login', async (req, res) => {
   console.log(req.url);

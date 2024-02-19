@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import { myPolicy, myTerms } from "../constants/termsAndPolicy";
 
-const TermsAndPrivacyModal = ({ open, onClose }) => {
+const TermsAndPrivacyModal = ({ open, onClose, formData }) => {
   const [isChecked, setIsChecked] = useState(false);
 
+ 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
@@ -21,7 +22,6 @@ const TermsAndPrivacyModal = ({ open, onClose }) => {
   const handleContinueClick = () => {
     // Redirect the user to another page if the checkbox is checked
     if (isChecked) {
-      // Redirect logic here
       onClose();
     }
   };
