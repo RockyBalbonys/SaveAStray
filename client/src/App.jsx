@@ -17,6 +17,7 @@ import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
 import Articles from "./Pages/Articles";
 import ArticlePage from "./Pages/ArticlePage";
+import FAQ from "./Pages/FAQ";
 
 function App() {
   const location = useLocation();
@@ -48,6 +49,7 @@ function App() {
           {/* <Route path="/learn" element={<Learn />} /> */}
           <Route path="/articles/" element={<Articles />} />
           <Route path="/articles/:id" element={<ArticlePage />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<TermsOfServices />} />
