@@ -21,7 +21,7 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [responseStatus, setResponseStatus] = useState(null);
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -53,8 +53,11 @@ function Signup() {
         verified: false,
       });
       if (response.data.status == 409) {
+        setResponseStatus(409)
+        console.log("User Exists");
         alert("User Exists");
     } else {
+        setResponseStatus(200)
         console.log("Response:", response.data);
     }
     
@@ -240,7 +243,10 @@ function Signup() {
               type="submit"
               className="bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]"
               disabled={!passwordsMatch}
-              onClick={() => setModalOpen(true)}
+              onClick={() => {
+                console.log(responseStatus);
+                setModalOpen(true)
+              }}
             >
               Get Started
             </button>

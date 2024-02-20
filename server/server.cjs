@@ -9,6 +9,7 @@ const port = 3001;
 const uri = 'mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB';
 const User = require('./Models/userSchema.js');
 require('dotenv').config();
+const { google } = require('googleapis');
 
 //db connection >>
 mongoose.connect(uri)
@@ -21,6 +22,13 @@ mongoose.connect(uri)
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }))
+
+const auth = new google.auth.GoogleAuth({
+  keyFile: './Credentials/save-a-stray-412311-bea56dae2287.json',
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
+const sheets = google.sheets({ version: 'v4', auth });
 
 app.get(`/verify`, async (req, res) => {
   const token = req.query.token
@@ -144,7 +152,11 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-
+app.get('api/sheets', async(req, res) => {
+  res.send({ 
+    message: "Hello world"
+    });
+})
 
 app.listen(port, () => {
     console.log("Connected to PORT ", port);
