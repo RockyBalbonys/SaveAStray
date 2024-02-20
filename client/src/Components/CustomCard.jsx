@@ -36,7 +36,7 @@ const ArticleCard = ({ imageUrl, title, summary }) => {
             {summary}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ flexGrow: 1 }}>
           <Button endIcon={<ChevronRightIcon />} sx={{ textTransform: "none" }}>
             Read More
           </Button>

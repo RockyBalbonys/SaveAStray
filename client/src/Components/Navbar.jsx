@@ -54,6 +54,10 @@ export default function Navbar() {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const location = useLocation();
   const isRoot = location.pathname === "/";
 
@@ -97,20 +101,21 @@ export default function Navbar() {
                   <CustomLink
                     key={index}
                     color="inherit"
-                    to={page}
+                    to={isLearn ? "articles" : page}
                     component={RouterLink}
                     aria-label={page}
                     fontSize={16}
+                    id={isLearn ? "learn-button" : undefined}
+                    onMouseOver={isLearn ? handleClick : undefined}
+                    onClick={isLearn ? handleClick : undefined}
+                    aria-controls={open ? "learn-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    aria-disabled={isLearn}
                   >
                     {page}
                     {isLearn ? (
-                      <IconButton
-                        id={isLearn ? "learn-button" : undefined}
-                        onClick={isLearn ? handleClick : undefined}
-                        aria-controls={open ? "learn-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                      >
+                      <IconButton>
                         <KeyboardArrowDownIcon />
                       </IconButton>
                     ) : null}
@@ -121,7 +126,10 @@ export default function Navbar() {
                 id="learn-menu"
                 anchorEl={anchorEl}
                 open={open}
-                MenuListProps={{ "aria-labelledby": "learn-button" }}
+                MenuListProps={{
+                  "aria-labelledby": "learn-button",
+                  onMouseLeave: handleMenuClose,
+                }}
                 onClose={() => setAnchorEl(null)}
                 anchorOrigin={{
                   vertical: "bottom",
