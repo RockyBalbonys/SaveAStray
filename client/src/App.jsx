@@ -15,6 +15,8 @@ import TermsOfServices from "./Pages/TermsOfServices";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
+import Articles from "./Pages/Articles";
+import ArticlePage from "./Pages/ArticlePage";
 
 function App() {
   const location = useLocation();
@@ -43,7 +45,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
           <Route path="/animals" element={<Animals />} />
-          <Route path="/learn" element={<Learn />} />
+          {/* <Route path="/learn" element={<Learn />} /> */}
+          <Route path="/articles/" element={<Articles />} />
+          <Route path="/articles/:id" element={<ArticlePage />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/terms" element={<TermsOfServices />} />
