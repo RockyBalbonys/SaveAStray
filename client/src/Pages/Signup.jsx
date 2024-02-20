@@ -113,8 +113,8 @@ function Signup() {
               position="absolute"
               className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] lg:-top-[4rem]"
             >
-              <IconButton disableRipple>
-                <Link to="#" onClick={handleGoBack}>
+              <IconButton disableRipple onClick={handleGoBack}>
+                <Link to="#">
                   <KeyboardBackspaceIcon
                     sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
                   />
@@ -240,12 +240,18 @@ function Signup() {
               type="submit"
               className="bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]"
               disabled={!passwordsMatch}
-              onClick={() => setModalOpen(true)}
+              onClick={() =>
+                isFormSubmitted && passwordsMatch && setModalOpen(true)
+              }
             >
               Get Started
             </button>
             {/* Terms and Privacy Modal */}
-            <TermsAndPrivacyModal open={modalOpen} onClose={handleModalClose} formData={formData}/>
+            <TermsAndPrivacyModal
+              open={modalOpen}
+              onClose={handleModalClose}
+              formData={formData}
+            />
             <hr />
             <div className={styles["my-2"]}>
               <div id="signinDiv" className="mt-5"></div>

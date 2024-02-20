@@ -60,14 +60,14 @@ const TermsAndPrivacyModal = ({ open, onClose, formData }) => {
             Terms and Services
           </Typography>
           {myTerms.map((term, index) => (
-            <>
+            <React.Fragment key={index}>
               {typeof term === "string" ? (
                 <p
                   className="mb-3"
                   dangerouslySetInnerHTML={{ __html: term }}
                 />
               ) : (
-                <div key={index} className="mb-2">
+                <div className="mb-2">
                   <p>
                     <strong>{term.item}</strong>
                   </p>
@@ -80,21 +80,21 @@ const TermsAndPrivacyModal = ({ open, onClose, formData }) => {
                   </ul>
                 </div>
               )}
-            </>
+            </React.Fragment>
           ))}
           <br />
           <Typography gutterBottom textAlign="center">
             Privacy Policy
           </Typography>
           {myPolicy.map((policy, index) => (
-            <>
+            <React.Fragment key={index}>
               {typeof policy === "string" ? (
                 <p
                   className="mb-3"
                   dangerouslySetInnerHTML={{ __html: policy }}
                 />
               ) : (
-                <div key={index} className="mb-2">
+                <div className="mb-2">
                   <p>
                     <strong>{policy.item}</strong>
                   </p>
@@ -107,7 +107,7 @@ const TermsAndPrivacyModal = ({ open, onClose, formData }) => {
                   </ul>
                 </div>
               )}
-            </>
+            </React.Fragment>
           ))}
         </Box>
         <FormControlLabel
