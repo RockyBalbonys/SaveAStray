@@ -16,8 +16,9 @@ import {
   ListItemText,
   Divider,
   ListItemButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
-import { MyPrimaryButton, MySecondaryButton } from "./CustomButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../assets/icons/SAS_Logo4.png";
 import facebook_icon from "../assets/icons/facebook.png";
@@ -27,6 +28,8 @@ import { pages } from "../constants/landingPage";
 import { CustomButton } from "./CustomButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import IconLinks from "./IconLinks";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import CustomLink from "./CustomLink";
 
 const icons = [
   { icon: facebook_icon, alt: "facebook icon" },
@@ -36,6 +39,8 @@ const icons = [
 
 export default function Navbar() {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -43,6 +48,14 @@ export default function Navbar() {
 
   const handleDrawerClose = () => {
     setOpenDrawer(false);
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const location = useLocation();
@@ -82,19 +95,59 @@ export default function Navbar() {
               alignItems="center"
               sx={{ display: { xs: "none", md: "flex" } }}
             >
-              {pages.map((page, index) => (
-                <Link
-                  key={index}
-                  underline="hover"
-                  color="inherit"
-                  to={page}
-                  component={RouterLink}
-                  aria-label={page}
-                  fontSize={16}
-                >
-                  {page}
-                </Link>
-              ))}
+              {pages.map((page, index) => {
+                const isLearn = page === "Learn";
+                return (
+                  <CustomLink
+                    key={index}
+                    color="inherit"
+                    to={isLearn ? "articles" : page}
+                    component={RouterLink}
+                    aria-label={page}
+                    fontSize={16}
+                    id={isLearn ? "learn-button" : undefined}
+                    onMouseOver={isLearn ? handleClick : undefined}
+                    onClick={isLearn ? handleClick : undefined}
+                    aria-controls={open ? "learn-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    aria-disabled={isLearn}
+                  >
+                    {page}
+                    {isLearn ? (
+                      <IconButton>
+                        <KeyboardArrowDownIcon />
+                      </IconButton>
+                    ) : null}
+                  </CustomLink>
+                );
+              })}
+              <Menu
+                id="learn-menu"
+                anchorEl={anchorEl}
+                open={open}
+                MenuListProps={{
+                  "aria-labelledby": "learn-button",
+                  onMouseLeave: handleMenuClose,
+                }}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <MenuItem component={RouterLink} to="/articles">
+                  Articles
+                </MenuItem>
+                <MenuItem component={RouterLink} to="/faq">
+                  FAQ's
+                </MenuItem>
+              </Menu>
+
               <CustomButton
                 variant="contained"
                 size="small"
