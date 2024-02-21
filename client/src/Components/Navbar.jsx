@@ -81,7 +81,7 @@ export default function Navbar() {
               <Link
                 to="/"
                 component={RouterLink}
-                color="inherit"
+                color={isRoot ? 'inherit' : '#2F4858' }
                 underline="none"
                 ml={2}
               >
@@ -100,7 +100,7 @@ export default function Navbar() {
                 return (
                   <CustomLink
                     key={index}
-                    color="inherit"
+                    sx={{color: 'inherit'}}
                     to={isLearn ? "articles" : page}
                     component={RouterLink}
                     aria-label={page}
@@ -115,7 +115,7 @@ export default function Navbar() {
                   >
                     {page}
                     {isLearn ? (
-                      <IconButton>
+                      <IconButton sx={{padding: 0, margin: 0}}>
                         <KeyboardArrowDownIcon />
                       </IconButton>
                     ) : null}
@@ -141,10 +141,10 @@ export default function Navbar() {
                 }}
               >
                 <MenuItem component={RouterLink} to="/articles">
-                  Articles
+                  <Typography variant="body2">Articles</Typography>
                 </MenuItem>
                 <MenuItem component={RouterLink} to="/faq">
-                  FAQ's
+                <Typography variant="body2">FAQ's</Typography>
                 </MenuItem>
               </Menu>
 
@@ -163,8 +163,9 @@ export default function Navbar() {
               onClick={handleDrawerOpen}
               color="inherit"
               sx={{ display: { md: "none" } }}
+              
             >
-              <MenuIcon sx={{ fontSize: "2rem" }} />
+              <MenuIcon sx={{ fontSize: "2rem", }} />
             </IconButton>
           </Box>
         </Toolbar>

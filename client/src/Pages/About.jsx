@@ -20,15 +20,15 @@ const About = () => {
         component="main"
       >
         <Container maxWidth="lg">
-          <Box position="absolute" mt={13.8} width="100%">
+          <Box position="absolute" mt={13.8}>
             <Typography
-              fontSize="2.25rem"
+              fontSize="3.5rem"
               color="white"
-              fontWeight="bold"
-              width="334px"
+              fontWeight="900"
+              width="570px"
               sx={{ textAlign: { xs: "center", md: "left" } }}
             >
-              Helping hundreds connect together.
+              Helping <span className="text-[#2F4858]">Hundreds Connect</span> Together.
             </Typography>
           </Box>
         </Container>
@@ -326,34 +326,35 @@ function MeetTheTeam() {
           </Typography>
         </Box>
 
+          <Container maxWidth='md'>
         <Grid container rowSpacing={4} columnSpacing={3} alignItems="center">
           {team.map((member, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index} sx={{ flexGrow: 1 }}>
-              <Paper elevation={4} sx={{ height: "459px", p: 0 }}>
+            <Grid item xs={12} sm={6} md={4} key={index} sx={{  height: 'auto', width: 'auto', justifyContent: 'space-around' }}>
+              <Paper elevation={4} sx={{ height: "100%", p: 2, display: 'flex', flexDirection: 'column' }}>
                 <Box
                   sx={{
-                    height: "375px",
-                    width: "100%",
+                    height: "250px",
+                    // width: "100%",
                     backgroundImage: `url(${member.media})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
+                    backgroundRepeat: 'no-repeat',
                     margin: 0, // Remove any margin
                     padding: 0, // Remove any padding
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    flexGrow: 1
                   }}
                 />
-                <Box textAlign="center" p={2}>
-                  <Typography fontWeight="bold" variant="h6" component="div">
+                <Box textAlign="center" p={1} sx={{flexGrow: 1}}>
+                  <Typography fontWeight="bold" variant="body1bold" component="div">
                     {member.name}
                   </Typography>
-                  <Typography>{member.position}</Typography>
+                  <Typography variant="subtitle2">{member.position}</Typography>
                 </Box>
               </Paper>
             </Grid>
           ))}
         </Grid>
+          </Container>
       </Container>
     </Box>
   );

@@ -100,15 +100,15 @@ try {
 
     await sendVerificationEmail(email, verificationToken);
 
-    res.status(201).json({
-        status: 'success',
-        message: 'User created successfully',
-        user: {
-            email,
-            role,
-            verificationToken
-        }
-    });
+    res.send({
+      status: 201,
+      message: 'User Created!',
+      user: {
+        email,
+        role,
+        verificationToken
+    }
+    })
     }
 } catch (error) {
     console.error('Error creating user:', error);
@@ -132,11 +132,17 @@ app.post('/api/login', async (req, res) => {
     const match = await bcrypt.compare(loginPass, user.password);
 
     if (match) {
-      // Passwords match, send success response
-      return res.status(200).send("Log in successful!");
+      res.send({
+        status: 200,
+        message: "log in success",
+        checked: true
+      })
     } else {
-      // Passwords don't match, send error response
-      return res.status(401).send("Wrong password!");
+      res.send({
+        status: 400,
+        message: "log in failed",
+        checked: true
+      })
     }
   } catch (err) {
     console.error(err);

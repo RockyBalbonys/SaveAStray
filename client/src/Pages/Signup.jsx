@@ -52,9 +52,15 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
+<<<<<<< Updated upstream
       if (response.data.status == 409) {
         alert("User Exists");
     } else {
+=======
+      if (response.data.status == 409)   {
+        setUserExists(true);
+      } else {
+>>>>>>> Stashed changes
         console.log("Response:", response.data);
     }
     
