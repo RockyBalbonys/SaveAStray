@@ -12,7 +12,7 @@ const team = [
   {
     media: jhude,
     name: "Jhude Vergara",
-    position: "Project Manager / Creative Engineer",
+    position: "Project Manager",
   },
   {
     media: lawrence,
