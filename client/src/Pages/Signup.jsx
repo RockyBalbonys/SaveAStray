@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Alert } from "@mui/material";
 import TermsAndPrivacyModal from "../Components/TermsAndPrivacyModal";
 
 function Signup() {
@@ -17,11 +17,12 @@ function Signup() {
     regRole: "",
   });
 
-  console.log({ formData });
+  const [userExists, setUserExists] = useState(false);
+  const [userCreated, setUserCreated] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const [accept, setAccept] = useState(false);
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -52,18 +53,13 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
-<<<<<<< Updated upstream
+
       if (response.data.status == 409) {
-        alert("User Exists");
-    } else {
-=======
-      if (response.data.status == 409)   {
         setUserExists(true);
       } else {
->>>>>>> Stashed changes
         console.log("Response:", response.data);
-    }
-    
+        setUserCreated(true);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -148,12 +144,12 @@ function Signup() {
             />
             {/* Helper text for email input */}
             {(isFormSubmitted || isAnyFieldEmpty) && isEmailInvalid && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 Please enter a valid email address.
               </div>
             )}
             {isFormSubmitted && !formData.regEmail && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 Email is required.
               </div>
             )}
@@ -188,7 +184,7 @@ function Signup() {
             </div>
             {/* Helper text for confirm password input */}
             {(isPasswordTooShort || isPasswordMismatch) && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 {isPasswordTooShort
                   ? "Password must be at least 8 characters."
                   : "Passwords do not match."}
@@ -230,7 +226,7 @@ function Signup() {
             </div>
             {/* Helper text for confirm password input */}
             {isConfirmPasswordMismatch && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 Passwords do not match.
               </div>
             )}
@@ -240,23 +236,43 @@ function Signup() {
                 <strong>Have an Account?</strong>
               </Link>
             </p>
+            {userExists && (
+              <Alert severity="error" onClose={() => setUserExists(false)}>
+                User already exists.
+              </Alert>
+            )}
+            {userCreated && (
+              <Alert severity="success" onClose={() => setUserCreated(false)}>
+                User successfully created. Please check your email for
+                verification. Thank you.
+              </Alert>
+            )}
 
-            {/* FIXME: Hardcoded when clicking button it will open the modal */}
+            {/* Open modal when accept is set to false, else send form */}
             <button
               type="submit"
               className="bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]"
               disabled={!passwordsMatch}
-              onClick={() =>
-                isFormSubmitted && passwordsMatch && setModalOpen(true)
-              }
+              onClick={(e) => {
+                if (!accept && isFormSubmitted && passwordsMatch) {
+                  e.preventDefault();
+                  setModalOpen(true);
+                } else {
+                  if (accept) {
+                    regSubmit(e); // Call your form submission function here
+                  }
+                }
+              }}
             >
-              Get Started
+              {accept ? "Continue" : "Get Started"}
             </button>
+
             {/* Terms and Privacy Modal */}
             <TermsAndPrivacyModal
               open={modalOpen}
               onClose={handleModalClose}
               formData={formData}
+              setAccept={setAccept}
             />
             <hr />
             <div className={styles["my-2"]}>
