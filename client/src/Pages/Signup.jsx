@@ -143,12 +143,12 @@ function Signup() {
             />
             {/* Helper text for email input */}
             {(isFormSubmitted || isAnyFieldEmpty) && isEmailInvalid && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 Please enter a valid email address.
               </div>
             )}
             {isFormSubmitted && !formData.regEmail && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 Email is required.
               </div>
             )}
@@ -183,7 +183,7 @@ function Signup() {
             </div>
             {/* Helper text for confirm password input */}
             {(isPasswordTooShort || isPasswordMismatch) && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 {isPasswordTooShort
                   ? "Password must be at least 8 characters."
                   : "Passwords do not match."}
@@ -225,7 +225,7 @@ function Signup() {
             </div>
             {/* Helper text for confirm password input */}
             {isConfirmPasswordMismatch && (
-              <div className="text-sm text-red-500 mt-[-1.25rem] mb-5">
+              <div className="text-sm text-red-500 mt-[-1.25rem] ">
                 Passwords do not match.
               </div>
             )}
