@@ -53,6 +53,7 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
+
       if (response.data.status == 409) {
         setUserExists(true);
       } else {

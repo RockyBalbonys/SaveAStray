@@ -6,7 +6,7 @@ import styles from "../styles/Login.module.css";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import { Box, IconButton } from "@mui/material";
+import { Alert, Box, IconButton } from "@mui/material";
 
 const Login = () => {
   // get the role from verify page
@@ -31,6 +31,8 @@ const Login = () => {
   console.log({ formData });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [userIn, setUserIn] = useState(false);
+  const [loginAttempted, setLoginAttempted] = useState(false);
 
   useEffect(() => {
     // Update formData with the selected role whenever it changes
@@ -57,8 +59,15 @@ const Login = () => {
         role: formData.loginRole,
       });
       console.log("Response:", response.data);
-    } catch (error) {
-      console.error("Error:", error);
+      if (response.data.status === 200 && response.data.checked === true) {
+        setLoginAttempted(true);
+        setUserIn(true)
+      } else if(response.data.status === 400 && response.data.checked === true){
+        setLoginAttempted(true);
+        setUserIn(false)
+      }
+  } catch (error) {
+    console.error("Error:", error);
     }
   };
 
@@ -81,6 +90,12 @@ const Login = () => {
   }, []);
 
   const passwordsMatch = formData.regPass === formData.regConfirmPass;
+
+  const alertMessage = userIn ? (<Alert severity="success" onClose={() => setUserIn(false)}>
+  Login Successful
+</Alert>) : (<Alert severity="error" onClose={() => setUserIn(false)}>
+                Incorrect Credentials
+              </Alert>)
 
   return (
     <div className={`${styles.container} px-4`}>
@@ -189,6 +204,8 @@ const Login = () => {
                 </Link>
               </p>
             </div>
+            
+           {loginAttempted && alertMessage}
             <button
               type="submit"
               className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]`}

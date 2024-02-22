@@ -143,7 +143,7 @@ const TermsAndPrivacyModal = ({ open, onClose, setAccept }) => {
             size="small"
             sx={{ color: "white" }}
           >
-            Continue
+            Accept
           </Button>
         </Stack>
       </Paper>
