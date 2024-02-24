@@ -63,11 +63,12 @@ export default function Navbar() {
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       sx={{
-        backgroundColor: isRoot ? "darkOrange" : "white",
+        backgroundColor: isRoot ? "transparent" : "white",
         color: isRoot ? "white" : "black",
       }}
+      elevation={isRoot ? 0 : 7}
       component="header"
     >
       <Container maxWidth="xl">
@@ -81,7 +82,7 @@ export default function Navbar() {
               <Link
                 to="/"
                 component={RouterLink}
-                color={isRoot ? 'inherit' : '#2F4858' }
+                color={isRoot ? "inherit" : "#2F4858"}
                 underline="none"
                 ml={2}
               >
@@ -100,7 +101,9 @@ export default function Navbar() {
                 return (
                   <CustomLink
                     key={index}
-                    sx={{color: 'inherit'}}
+                    sx={{
+                      color: isRoot ? "white" : "#2F4858",
+                    }}
                     to={isLearn ? "articles" : page}
                     component={RouterLink}
                     aria-label={page}
@@ -115,7 +118,13 @@ export default function Navbar() {
                   >
                     {page}
                     {isLearn ? (
-                      <IconButton sx={{padding: 0, margin: 0}}>
+                      <IconButton
+                        sx={{
+                          padding: 0,
+                          margin: 0,
+                          color: isRoot ? "white" : "",
+                        }}
+                      >
                         <KeyboardArrowDownIcon />
                       </IconButton>
                     ) : null}
@@ -144,7 +153,7 @@ export default function Navbar() {
                   <Typography variant="body2">Articles</Typography>
                 </MenuItem>
                 <MenuItem component={RouterLink} to="/faq">
-                <Typography variant="body2">FAQ's</Typography>
+                  <Typography variant="body2">FAQ's</Typography>
                 </MenuItem>
               </Menu>
 
@@ -163,9 +172,8 @@ export default function Navbar() {
               onClick={handleDrawerOpen}
               color="inherit"
               sx={{ display: { md: "none" } }}
-              
             >
-              <MenuIcon sx={{ fontSize: "2rem", }} />
+              <MenuIcon sx={{ fontSize: "2rem" }} />
             </IconButton>
           </Box>
         </Toolbar>

@@ -42,7 +42,7 @@ const TermsAndPrivacyModal = ({ open, onClose, setAccept }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        width: "100%",
+        height: "100%",
         "& .MuiPaper-root": {
           width: "50%",
           maxHeight: "80vh", // Set the maximum height to 80% of the viewport height
