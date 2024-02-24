@@ -110,7 +110,10 @@ const Login = () => {
               className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] "
             >
               <IconButton position="absolute" disableRipple>
-                <Link to="#" onClick={handleGoBack}>
+                <Link
+                  to="/"
+                  // onClick={handleGoBack}
+                >
                   <KeyboardBackspaceIcon
                     sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
                   />
