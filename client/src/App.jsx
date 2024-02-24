@@ -13,6 +13,7 @@ import Login from "./Pages/Login";
 import Verify from "./Pages/Verify";
 import TermsOfServices from "./Pages/TermsOfServices";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import Sheets from "./Pages/Sheets";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
 import Articles from "./Pages/Articles";
@@ -56,6 +57,7 @@ function App() {
           <Route path="/policy" element={<PrivacyPolicy />} />
           <Route path="/uploadImage" element={<UploadImage />} />
           <Route path="/verify" element={<Verify />} />
+          <Route path="/api/sheets" element={<Sheets />} /> 
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ThemeProvider>
