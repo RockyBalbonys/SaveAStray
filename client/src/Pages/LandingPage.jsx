@@ -33,7 +33,7 @@ const headerImage = {
 export const LandingPage = () => {
   return (
     <>
-      <Grid container component="main">
+      <Grid container component="main" mt="-4rem">
         <Grid item xs={12} position="relative">
           <Box sx={headerImage}>
             <div style={filter}></div>

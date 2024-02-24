@@ -57,3 +57,48 @@ function Item({ item }) {
     </Grid>
   );
 }
+
+export function AnimalImageCarousel({ animalImages }) {
+  const sliderItems = animalImages.length > 3 ? 3 : animalImages.length;
+  const items = [];
+
+  for (let i = 0; i < animalImages.length; i++) {
+    if (i % sliderItems === 0) {
+      items.push(
+        <div key={i.toString()} className="flex ">
+          {animalImages.slice(i, i + sliderItems).map((da, index) => {
+            return (
+              <div className="min-h-[35vh] overflow-hidden" key={index}>
+                <img
+                  key={index.toString()}
+                  src={da}
+                  alt={da}
+                  className="object-contain h-full"
+                />
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+  }
+  return (
+    <>
+      <Carousel
+        autoPlay={true}
+        animation="slide"
+        cycleNavigation={true}
+        indicators={false}
+        height="30vh"
+      >
+        {items}
+        {/* TODO: https://www.youtube.com/watch?v=sR5Z8AJ-zRU */}
+        {/* {animalImages.map((image, idx) => (
+          <div key={idx} className="h-[35vh]">
+            <img src={image} alt={`${image} ${idx}`} />
+          </div>
+        ))} */}
+      </Carousel>
+    </>
+  );
+}
