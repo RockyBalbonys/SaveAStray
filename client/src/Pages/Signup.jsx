@@ -22,11 +22,7 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-<<<<<<< HEAD
-  const [responseStatus, setResponseStatus] = useState(null);
-=======
   const [accept, setAccept] = useState(false);
->>>>>>> e51bed9397003128ef7c06799a58797e2d2f3be8
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -57,19 +53,12 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
-<<<<<<< HEAD
-      if (response.data.status == 409)   {
-        setUserExists(true);
-      } else {
-        console.log("Response:", response.data);
-=======
 
       if (response.data.status == 409) {
         setUserExists(true);
       } else {
         console.log("Response:", response.data);
         setUserCreated(true);
->>>>>>> e51bed9397003128ef7c06799a58797e2d2f3be8
       }
     } catch (error) {
       console.error("Error:", error);
