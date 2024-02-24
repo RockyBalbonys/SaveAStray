@@ -52,15 +52,11 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
-      if (response.data.status == 409) {
-        setResponseStatus(409)
-        console.log("User Exists");
-        alert("User Exists");
-    } else {
-        setResponseStatus(200)
+      if (response.data.status == 409)   {
+        setUserExists(true);
+      } else {
         console.log("Response:", response.data);
-    }
-    
+      }
     } catch (error) {
       console.error("Error:", error);
     }

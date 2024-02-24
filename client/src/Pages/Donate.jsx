@@ -25,13 +25,13 @@ const Donate = () => {
         <Container maxWidth="lg">
           <Box position="absolute" mt={13.8}>
             <Typography
-              fontSize="2.25rem"
+              fontSize="3.5rem"
               color="white"
-              fontWeight="bold"
+              fontWeight="900"
               width="334px"
               sx={{ textAlign: { xs: "center", md: "left" } }}
             >
-              Helping hundreds connect together.
+              Make A <span className="text-[#2F4858]">Big Difference</span> Today!
             </Typography>
           </Box>
         </Container>
@@ -163,6 +163,7 @@ function DonateChannelsSection() {
                 <Button
                   variant="contained"
                   component={Link}
+                  target="_blank"
                   to="https://www.sandbox.paypal.com/donate/?hosted_button_id=N75WBMATV34RJ"
                   sx={{
                     bgcolor: "rgba(255, 184, 0, 1)",

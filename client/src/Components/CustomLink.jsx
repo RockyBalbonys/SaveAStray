@@ -7,7 +7,7 @@ const CustomLink = styled(Link)(({ theme }) => ({
   textDecoration: "none", // Remove default underline
   position: "relative", // Position relative for pseudo-elements
   color: theme.palette.secondary.main, // Default color
-  transition: "color 0.3s ease", // Smooth transition for color change
+  transition: "color 0.3s ease-out", // Smooth transition for color change
 
   "&.active": {
     color: theme.palette.primary.main,
