@@ -10,8 +10,8 @@ const AnimalModal = ({ open, onClose, animal }) => {
       <Modal
         open={open}
         onClose={onClose}
-        aria-labelledby="terms-and-privacy-modal-title"
-        aria-describedby="terms-and-privacy-modal-description"
+        aria-labelledby="animal-modal-title"
+        aria-describedby="animal-modal-description"
         sx={{
           display: "flex",
           alignItems: "center",

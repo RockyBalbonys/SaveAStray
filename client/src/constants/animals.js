@@ -98,4 +98,37 @@ const mockAnimals = [
   },
 ];
 
-export { mockAnimals };
+const animalProps = [
+  {
+    id: 1,
+    propType: "Pet Type",
+    options: ["Dog", "Cat"],
+  },
+  {
+    id: 2,
+    propType: "Breed",
+    options: [],
+  },
+  {
+    id: 3,
+    propType: "Sex",
+    options: ["Male", "Female"],
+  },
+  {
+    id: 4,
+    propType: "Age",
+    options: ["Young", "Adolescent", "Adult", "Senior"],
+  },
+  {
+    id: 5,
+    propType: "Color",
+    options: [],
+  },
+  {
+    id: 6,
+    propType: "Size",
+    options: ["Munchkin", "Small", "Medium", "Large", "Giant"],
+  },
+];
+
+export { mockAnimals, animalProps };

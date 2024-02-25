@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import animalHero from "../assets/images/animals/animalHero.png";
-import { Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import AnimalCard from "../Components/AnimalCard";
 import { mockAnimals } from "../constants/animals";
 import Footer from "../Components/Footer";
+import AddIcon from "@mui/icons-material/Add";
+import AddAnimalModal from "../Components/AddAnimalModal";
 
 const Animals = () => {
   return (
@@ -45,6 +47,10 @@ const Animals = () => {
           </Typography>
         </Container>
 
+        <Box>
+          <AddAnimal />
+        </Box>
+
         <Grid container columnSpacing={3} rowSpacing={4}>
           {mockAnimals.map((animal, idx) => (
             <Grid key={idx} item xs={3}>
@@ -63,3 +69,20 @@ const Animals = () => {
 };
 
 export default Animals;
+
+function AddAnimal() {
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const handleClose = () => setOpenAddModal(false);
+  return (
+    <>
+      <Button
+        variant="outlined"
+        endIcon={<AddIcon />}
+        onClick={() => setOpenAddModal(true)}
+      >
+        Add New Pet
+      </Button>
+      <AddAnimalModal open={openAddModal} onClose={handleClose} />
+    </>
+  );
+}
