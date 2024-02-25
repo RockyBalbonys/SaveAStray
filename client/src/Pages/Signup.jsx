@@ -53,7 +53,6 @@ function Signup() {
         role: formData.regRole,
         verified: false,
       });
-
       if (response.data.status == 409) {
         setUserExists(true);
       } else {
@@ -199,7 +198,7 @@ function Signup() {
                 placeholder="********"
                 id="confirmPassword"
                 name="regConfirmPass"
-                className={`${styles.border2} p-2 mb-5`}
+                className={`${styles.border2} p-2`}
                 value={formData.regConfirmPass}
                 onChange={handleChange}
                 required
