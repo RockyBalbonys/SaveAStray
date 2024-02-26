@@ -41,6 +41,12 @@ const AddAnimalModal = ({ open, onClose }) => {
     size: "",
   });
 
+  // TODO: Logic for submitting animal
+  const handleSubmitAnimal = () => {
+    console.log("Animal Submit");
+  };
+
+  // Data of images - array
   const [uploadedImages, setUploadedImages] = useState([]);
 
   const handleChange = (e) => {
@@ -67,6 +73,12 @@ const AddAnimalModal = ({ open, onClose }) => {
 
   console.log({ animalData, uploadedImages });
 
+  // Validation
+  const isAnimalDataEmpty = Object.values(animalData).some(
+    (value) => value === ""
+  );
+  const isImagesEmpty = uploadedImages.length === 0;
+
   return (
     <Modal
       open={open}
@@ -87,38 +99,58 @@ const AddAnimalModal = ({ open, onClose }) => {
             xl: "50%",
           },
           overflowY: "auto",
+          scrollbarWidth: "none", // Hide the scrollbar for firefox
+          "&::-webkit-scrollbar": {
+            display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+          },
+          "&-ms-overflow-style:": {
+            display: "none", // Hide the scrollbar for IE
+          },
           maxHeight: "80%",
         },
       }}
     >
-      <Paper sx={{ p: "32px 48px" }}>
-        <Grid container spacing={3} mb="32px">
-          <Grid item xs={12} sm={12} md={6} order={{ xs: 2, md: 1 }}>
-            <Box>
-              <InputField onChange={handleChange} data={animalData} />
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={12} md={6} order={{ xs: 1, md: 2 }}>
-            <UploadImage
-              onChange={handleUpload}
-              images={uploadedImages}
-              handleRemoveImage={handleRemoveImage}
-            />
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          {animalProps.map((property, idx) => (
-            <Grid key={idx} xs={12} sm={4} item>
-              <AnimalProp
-                prop={property.propType}
-                options={property.options}
-                onChange={handleChange}
-                formData={animalData}
-                setFormData={setAnimalData}
+      <Paper>
+        <Box sx={{ p: "32px 48px 0px 48px" }}>
+          <Grid container spacing={3} mb="32px">
+            <Grid item xs={12} sm={12} md={6} order={{ xs: 2, md: 1 }}>
+              <Box>
+                <InputField onChange={handleChange} data={animalData} />
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6} order={{ xs: 1, md: 2 }}>
+              <UploadImage
+                onChange={handleUpload}
+                images={uploadedImages}
+                handleRemoveImage={handleRemoveImage}
               />
             </Grid>
-          ))}
-        </Grid>
+          </Grid>
+          <Grid container spacing={2} pb="32px">
+            {animalProps.map((property, idx) => (
+              <Grid key={idx} xs={12} sm={4} item>
+                <AnimalProp
+                  prop={property.propType}
+                  options={property.options}
+                  onChange={handleChange}
+                  formData={animalData}
+                  setFormData={setAnimalData}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Button Submit */}
+        <Button
+          disabled={isAnimalDataEmpty || isImagesEmpty}
+          type="submit"
+          onClick={handleSubmitAnimal}
+          variant="contained"
+          sx={{ color: "white", width: "100%", borderRadius: 0, py: "12px" }}
+        >
+          Add Animal
+        </Button>
       </Paper>
     </Modal>
   );
@@ -136,6 +168,7 @@ const InputField = ({ onChange }) => {
           placeholder="Animal Name"
           aria-label="animal name"
           inputProps={{ maxLength: 150 }}
+          required
         />
         <AnimalDescInput
           name="description"
@@ -143,8 +176,9 @@ const InputField = ({ onChange }) => {
           placeholder="Add description here... (600 characters max including whitespace)"
           aria-label="animal description"
           multiline
-          maxRows={17}
+          rows={15}
           inputProps={{ maxLength: 600 }}
+          required
         />
       </Stack>
     </>
@@ -182,7 +216,7 @@ const UploadImage = ({ onChange, images, handleRemoveImage }) => {
           }}
         >
           <AddPhotoAlternateIcon sx={{ fontSize: "5rem" }} />
-          <VisuallyHiddenInput type="file" onChange={onChange} />
+          <VisuallyHiddenInput type="file" onChange={onChange} required />
         </IconButton>
         <Button
           sx={{ position: "absolute", bottom: 0, right: 0 }}
@@ -279,6 +313,7 @@ const renderInputOrSelection = (prop, options, setFormData, formData) => {
     };
     return (
       <InputBase
+        required
         value={formData[prop.toLowerCase()]}
         name={prop.toLowerCase()}
         onChange={handleInputPropChange}
@@ -318,6 +353,7 @@ function SelectionProp({ menuItems, setFormData, formData, propName }) {
     <FormControl sx={{ width: "100%" }}>
       <Select
         value={selectedValue}
+        required
         name={propName === "Pet Type" ? "species" : propName.toLowerCase()}
         displayEmpty
         onChange={handleSelectPropChange}

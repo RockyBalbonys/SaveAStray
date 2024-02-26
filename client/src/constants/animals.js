@@ -127,8 +127,44 @@ const animalProps = [
   {
     id: 6,
     propType: "Size",
-    options: ["Munchkin", "Small", "Medium", "Large", "Giant"],
+    options: ["Small", "Medium", "Large", "Giant"],
   },
 ];
 
-export { mockAnimals, animalProps };
+const commonDogBreeds = [
+  "Labrador Retriever",
+  "German Shepherd",
+  "Golden Retriever",
+  "Bulldog",
+  "Beagle",
+  "Poodle",
+  "Boxer",
+  "Dachshund",
+  "Siberian Husky",
+  "Shih Tzu",
+  "Rottweiler",
+  "Yorkshire Terrier",
+  "Chihuahua",
+  "Border Collie",
+  "Australian Shepherd",
+];
+
+const commonCatBreeds = [
+  "American Shorthair",
+  "Persian",
+  "Maine Coon",
+  "Siamese",
+  "Ragdoll",
+  "British Shorthair",
+  "Bengal",
+  "Sphynx",
+  "Scottish Fold",
+  "Russian Blue",
+  "Abyssinian",
+  "Burmese",
+  "Exotic Shorthair",
+  "Norwegian Forest Cat",
+  "Manx",
+];
+
+export { mockAnimals, animalProps, commonDogBreeds, commonCatBreeds };
