@@ -98,4 +98,73 @@ const mockAnimals = [
   },
 ];
 
-export { mockAnimals };
+const animalProps = [
+  {
+    id: 1,
+    propType: "Pet Type",
+    options: ["Dog", "Cat"],
+  },
+  {
+    id: 2,
+    propType: "Breed",
+    options: [],
+  },
+  {
+    id: 3,
+    propType: "Sex",
+    options: ["Male", "Female"],
+  },
+  {
+    id: 4,
+    propType: "Age",
+    options: ["Young", "Adolescent", "Adult", "Senior"],
+  },
+  {
+    id: 5,
+    propType: "Color",
+    options: [],
+  },
+  {
+    id: 6,
+    propType: "Size",
+    options: ["Small", "Medium", "Large", "Giant"],
+  },
+];
+
+const commonDogBreeds = [
+  "Labrador Retriever",
+  "German Shepherd",
+  "Golden Retriever",
+  "Bulldog",
+  "Beagle",
+  "Poodle",
+  "Boxer",
+  "Dachshund",
+  "Siberian Husky",
+  "Shih Tzu",
+  "Rottweiler",
+  "Yorkshire Terrier",
+  "Chihuahua",
+  "Border Collie",
+  "Australian Shepherd",
+];
+
+const commonCatBreeds = [
+  "American Shorthair",
+  "Persian",
+  "Maine Coon",
+  "Siamese",
+  "Ragdoll",
+  "British Shorthair",
+  "Bengal",
+  "Sphynx",
+  "Scottish Fold",
+  "Russian Blue",
+  "Abyssinian",
+  "Burmese",
+  "Exotic Shorthair",
+  "Norwegian Forest Cat",
+  "Manx",
+];
+
+export { mockAnimals, animalProps, commonDogBreeds, commonCatBreeds };
