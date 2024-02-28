@@ -6,6 +6,7 @@ export default function Sheets() {
 
 axios.get('http://localhost:3001/api/sheets')
   .then(function (res) {
+    const questions = res
     console.log(res);
   })
   .catch(function (err) {
@@ -13,6 +14,9 @@ axios.get('http://localhost:3001/api/sheets')
   });
 
   return (
-    <div>Sheets</div>
+    <div>
+    <div>Hello world</div>
+      {questions}
+    </div>
   )
 }

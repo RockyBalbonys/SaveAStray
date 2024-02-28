@@ -28,6 +28,22 @@ import animalPaw from "../assets/icons/animalPaw.svg";
 import { animalProps } from "../constants/animals";
 import { AnimalNameInput, AnimalDescInput } from "./CustomInput";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import { initializeApp } from 'firebase/app';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+
+//TODO: add image structure 
+const firebaseConfig = {
+  apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
+  authDomain: "save-a-stray-40e56.firebaseapp.com",
+  projectId: "save-a-stray-40e56",
+  storageBucket: "save-a-stray-40e56.appspot.com",
+  messagingSenderId: "767492186893",
+  appId: "1:767492186893:web:e9e9ef6c165e144c9a4644"
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 const AddAnimalModal = ({ open, onClose }) => {
   const [animalData, setAnimalData] = useState({
@@ -41,10 +57,42 @@ const AddAnimalModal = ({ open, onClose }) => {
     size: "",
   });
 
-  // TODO: Logic for submitting animal
-  const handleSubmitAnimal = () => {
-    console.log("Animal Submit");
+  // TODO: uploading images
+  const handleSubmitAnimal = async (event) => {
+    event.preventDefault();
+  
+    const { name, description, species, breed, sex, age, color, size } = animalData;
+    try {
+      const response = await axios.post('http://localhost:3001/api/addAnimal', {
+        name,
+        description,
+        species,
+        breed,
+        sex,
+        age,
+        color,
+        size,
+      });
+      const petId = response.data.petId
+      if (petId) {
+        uploadedImages.forEach(async (imageFile) => {
+        const storageRef = ref(storage, `pets/${petId}/${imageFile.name}`);
+        try {
+          const snapshot = await uploadBytes(storageRef, imageFile);
+          console.log('Uploaded a blob or file!', snapshot);
+        } catch (error) {
+          console.error('Error uploading file:', error);
+        }
+      });
+      }
+      
+  } catch (error) {
+    console.error(error);
   };
+}
+/*   const handleSubmit = () => {
+    
+}; */
 
   // Data of images - array
   const [uploadedImages, setUploadedImages] = useState([]);
