@@ -10,12 +10,15 @@ const petSchema = new mongoose.Schema({
     enum: ['Young', 'Adolescent', 'Adult', 'Senior'],
     required: true
   },
-  gender: {
+  sex: {
     type: String,
     enum: ['Male', 'Female'],
     required: true
   },
-  specie: {
+  description: {
+    type: String
+  },
+  species: {
     type: String,
     enum: ['Cat', 'Dog'],
     required: true
@@ -37,7 +40,7 @@ const petSchema = new mongoose.Schema({
     type: String,
     enum: ['Available', 'In Process', 'Adopted'],
     default: 'Available',
-    required: true
+    required: false
   }
 });
 
