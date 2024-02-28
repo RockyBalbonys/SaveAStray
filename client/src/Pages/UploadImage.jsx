@@ -23,7 +23,6 @@ export default function UploadImage() {
             setImage(e.target.files[0]);
         }
     }
-
     const handleSubmit = () => {
         const storageRef = ref(storage, `images/${image.name}`);
         uploadBytes(storageRef, image).then((snapshot) => {

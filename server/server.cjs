@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
@@ -6,9 +7,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const app = express();
 const port = 3001;
-const uri = 'mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB';
+const uri = `mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB`;
 const User = require('./Models/userSchema.js');
-require('dotenv').config();
+const Pet = require('./Models/petSchema.js')
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 
@@ -118,8 +119,38 @@ try {
 }
 })
 
+app.post('/api/addAnimal', async (req, res) => {
+  console.log(req.body);
+  const { name, description, species, breed, sex, age, color, size, petId } = req.body
+  try {
+    const newPet = new Pet({
+      name,
+      description,
+      species,
+      breed,
+      sex,
+      age,
+      color,
+      size,
+      status: "Available"
+  });
+  const savedPet = await newPet.save();
+  
+  if (savedPet) {
+    const petId = savedPet._id;
+    res.send({
+      status: 200,
+      message: "Ped added successfully",
+      petId
+    })
+      console.log("pet added: " + savedPet);
+  }
+  } catch (err) {
+    console.log(err);
+  }
+})
+
 app.post('/api/login', async (req, res) => {
-  console.log(req.url);
   console.log(req.body);
   try {
     const loginEmail = req.body.email;
@@ -161,7 +192,6 @@ app.get('/api/sheets', async (req, res) => {
         'https://www.googleapis.com/auth/spreadsheets',
       ],
     });
-    
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SHEETS_DOCUMENT_ID, serviceAccountAuth);
     
     await doc.loadInfo(); // loads document properties and worksheets
@@ -224,7 +254,6 @@ function isEmptyRow(sheet, rowIndex) {
   }
   return true;
 }
-
 // Function to check if a column is empty
 function isEmptyColumn(sheet, columnIndex) {
   for (let i = 0; i < sheet.rowCount; i++) {
