@@ -183,6 +183,18 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.get('/getPet', async (req, res) => {
+  try {
+    const allPets = await Pet.find()	
+    res.send({
+      status: 200,
+      allPets
+    })
+  } catch (err) {
+    console.log("error: ", err);
+  }
+})
+
 app.get('/api/sheets', async (req, res) => {
   try {
     const serviceAccountAuth = new JWT({
