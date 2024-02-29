@@ -9,12 +9,15 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import AnimalModal from "./AnimalModal";
+import UpdateAnimalModal from "./UpdateAnimalModal";
 
 const AnimalCard = ({ animals, height, width }) => {
   const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
+    setOpenUpdate(false);
   };
 
   return (
@@ -65,6 +68,7 @@ const AnimalCard = ({ animals, height, width }) => {
           }}
           onClick={() => {
             console.log("Update clicked");
+            setOpenUpdate(true);
           }}
         >
           Update
@@ -85,6 +89,11 @@ const AnimalCard = ({ animals, height, width }) => {
         </Button>
       </CardActions>
       <AnimalModal open={open} onClose={handleClose} animal={animals} />
+      <UpdateAnimalModal
+        open={openUpdate}
+        onClose={handleClose}
+        animal={animals}
+      />
     </Card>
   );
 };
