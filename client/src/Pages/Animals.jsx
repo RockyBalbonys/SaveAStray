@@ -104,14 +104,17 @@ const Animals = () => {
 
         <FilterOptions filters={filteredOptions} />
 
-        <Grid container columnSpacing={3} rowSpacing={4} mt={4}>
+        <Grid
+          container
+          columnSpacing={3}
+          rowSpacing={4}
+          mt={4}
+          justifyContent="center"
+          alignItems="center"
+        >
           {animals.map((animal, idx) => (
-            <Grid key={idx} item xs={3}>
-              <AnimalCard
-                animals={animal}
-                height="fit-content"
-                width="fit-content"
-              />
+            <Grid key={idx} item xs={12} sm={6} md={3}>
+              <AnimalCard animals={animal} height="auto" width="257px" />
             </Grid>
           ))}
         </Grid>
@@ -132,6 +135,7 @@ function AddAnimal() {
         variant="outlined"
         endIcon={<AddIcon />}
         onClick={() => setOpenAddModal(true)}
+        sx={{ textTransform: "none" }}
       >
         Add New Pet
       </Button>
@@ -203,7 +207,12 @@ function FilterOptions({ filters }) {
   };
 
   return (
-    <Grid container width="100%" sx={{ p: "24px 24px 32px 24px" }}>
+    <Grid
+      container
+      width="100%"
+      sx={{ p: "24px 24px 32px 24px" }}
+      rowSpacing={3}
+    >
       {filters.map((filter, index) => (
         <Grid key={index} xs={12} sm={6} md={3} item>
           <FormControl>
@@ -217,7 +226,11 @@ function FilterOptions({ filters }) {
               onChange={(event) =>
                 handleOptionChange(index, event.target.value)
               }
-              sx={{ fontSize: "16px", color: "#EE7200", rowGap: "4px" }}
+              sx={{
+                fontSize: "16px",
+                color: "#EE7200",
+                rowGap: "4px",
+              }}
             >
               {filter.options.map((option, idx) => (
                 <MyFormControlLabel
