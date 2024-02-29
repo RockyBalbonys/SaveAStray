@@ -90,10 +90,6 @@ const AddAnimalModal = ({ open, onClose }) => {
     console.error(error);
   };
 }
-/*   const handleSubmit = () => {
-    
-}; */
-
   // Data of images - array
   const [uploadedImages, setUploadedImages] = useState([]);
 

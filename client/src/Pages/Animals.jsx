@@ -6,8 +6,23 @@ import { mockAnimals } from "../constants/animals";
 import Footer from "../Components/Footer";
 import AddIcon from "@mui/icons-material/Add";
 import AddAnimalModal from "../Components/AddAnimalModal";
+import axios from "axios";
 
 const Animals = () => {
+
+  axios.get('http://localhost:3001/getPet')
+  .then(function (response) {
+    const allPets = response.data.allPets;
+    console.log(allPets);
+    allPets.forEach(pet => {
+      console.log(pet.name); 
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
   return (
     <>
       <div className="relative bg-gradient-to-b from-orange-500 to-orange-300  h-[40vh] w-full flex justify-end items-center">
