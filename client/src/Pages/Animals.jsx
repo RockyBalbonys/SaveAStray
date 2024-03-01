@@ -23,10 +23,16 @@ import AddAnimalModal from "../Components/AddAnimalModal";
 import axios from "axios";
 import styled from "@emotion/styled";
 
-const filteredOptions = animalProps.filter((item) => item.options.length > 0);
+const filteredOptions = [
+  { propType: "Pet Type", options: ["Dog", "Cat"] },
+  { propType: "Sex", options: ["Male", "Female"] },
+  { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
+  { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
+];
 
 const Animals = () => {
   const [animals, setAnimals] = useState([]);
+  const [filteredAnimals, setFilteredAnimals] = useState([]);
 
   useEffect(() => {
     axios
@@ -35,6 +41,7 @@ const Animals = () => {
         const allPets = response.data.allPets;
         console.log(allPets);
         setAnimals(allPets);
+        setFilteredAnimals(allPets); // Set filteredAnimals initially with all pets
         allPets.forEach((pet) => {
           console.log(pet.name);
         });
@@ -43,6 +50,22 @@ const Animals = () => {
         console.log(error);
       });
   }, []);
+
+  const applyFilters = (selectedOptions) => {
+    const filtered = animals.filter((animal) => {
+      return (
+        (selectedOptions[0] === null || animal.petType === selectedOptions[0]) &&
+        (selectedOptions[1] === null || animal.sex === selectedOptions[1]) &&
+        (selectedOptions[2] === null || animal.age === selectedOptions[2]) &&
+        (selectedOptions[3] === null || animal.size === selectedOptions[3])
+      );
+    });
+    setFilteredAnimals(filtered);
+  };
+
+  const handleClearFilters = () => {
+    setFilteredAnimals(animals); // Reset filteredAnimals to include all animals
+  };
 
   const [sortBy, setSortBy] = useState("");
 
@@ -102,7 +125,14 @@ const Animals = () => {
           <AddAnimal />
         </Box>
 
-        <FilterOptions filters={filteredOptions} />
+        <FilterOptions
+        filters={filteredOptions}
+        applyFilters={applyFilters}
+        clearFilters={handleClearFilters}
+        animals={animals}
+        setAnimals={setAnimals}
+      />
+
 
         <Grid
           container
@@ -189,11 +219,11 @@ function SortByButton({ value, onChange }) {
   );
 }
 
-function FilterOptions({ filters }) {
-  const [selectedOptions, setSelectedOptions] = useState(
-    filters.map(() => null)
-  );
 
+function FilterOptions({ filters, applyFilters, clearFilters, animals }) {
+
+  const [selectedOptions, setSelectedOptions] = useState(filteredOptions.map(() => null));
+  
   const handleOptionChange = (filterIndex, option) => {
     setSelectedOptions((prevSelectedOptions) => {
       const newSelectedOptions = [...prevSelectedOptions];
@@ -202,8 +232,12 @@ function FilterOptions({ filters }) {
     });
   };
 
+  const handleApplyFilters = () => {
+    applyFilters(selectedOptions); // Call the applyFilters function from props
+  };
+
   const handleClearFilters = () => {
-    setSelectedOptions(filters.map(() => null));
+    clearFilters(); // Call the clearFilters function from props
   };
 
   return (
@@ -268,6 +302,7 @@ function FilterOptions({ filters }) {
             borderRadius: "7px",
           }}
           width="100%"
+          onClick={ handleApplyFilters }
         >
           Apply Filters
         </Button>

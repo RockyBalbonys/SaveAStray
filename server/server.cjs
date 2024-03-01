@@ -183,17 +183,34 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+app.post('/filterPets', async (req, res) => {
+  const filters = req.body;
+  try {
+    const filteredPets = await Pet.find(filters);
+    res.json({ filteredPets });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.get('/getPet', async (req, res) => {
   try {
-    const allPets = await Pet.find()	
+    let query = {};
+    if (req.query.species) {
+      query.species = req.query.species;
+    }
+    const allPets = await Pet.find(query);
     res.send({
       status: 200,
       allPets
-    })
+    });
   } catch (err) {
     console.log("error: ", err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-})
+});
+
 
 app.get('/api/sheets', async (req, res) => {
   try {
