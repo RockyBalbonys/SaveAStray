@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import AnimalModal from "./AnimalModal";
 import UpdateAnimalModal from "./UpdateAnimalModal";
+import placeholder from "../assets/icons/SAS_Logo4.png";
 
 const AnimalCard = ({ animals, height, width }) => {
   const [open, setOpen] = useState(false);
@@ -41,11 +42,7 @@ const AnimalCard = ({ animals, height, width }) => {
         disableRipple
       >
         <CardMedia
-          // image={
-          //   species === "Dog"
-          //     ? animals.placeholder.dog
-          //     : animals.placeholder.cat
-          // }
+          image={placeholder}
           sx={{ height: "220px", objectFit: "contain" }}
         />
         <CardContent sx={{ padding: 1 }}>

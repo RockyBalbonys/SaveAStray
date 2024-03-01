@@ -207,18 +207,40 @@ export default Animals;
 
 function AddAnimal() {
   const [openAddModal, setOpenAddModal] = useState(false);
-  const handleClose = () => setOpenAddModal(false);
+
+  const defaultAnimalData = {
+    // Define default animal data
+    name: "",
+    description: "",
+    species: "",
+    breed: "",
+    sex: "",
+    age: "",
+    color: "",
+    size: "",
+  };
+  const defaultUploadedImages = []; // Define default uploaded images
+  const handleModalClose = () => {
+    setOpenAddModal(false);
+  };
   return (
     <>
       <Button
         variant="outlined"
         endIcon={<AddIcon />}
-        onClick={() => setOpenAddModal(true)}
+        onClick={() => {
+          setOpenAddModal(true);
+        }}
         sx={{ textTransform: "none" }}
       >
         Add New Pet
       </Button>
-      <AddAnimalModal open={openAddModal} onClose={handleClose} />
+      <AddAnimalModal
+        open={openAddModal}
+        onClose={handleModalClose}
+        defaultAnimal={defaultAnimalData}
+        defaultImage={defaultUploadedImages}
+      />
     </>
   );
 }

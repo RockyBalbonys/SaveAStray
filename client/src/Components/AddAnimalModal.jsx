@@ -19,18 +19,15 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import React, { useState } from "react";
-import EditIcon from "@mui/icons-material/Edit";
-import styled from "@emotion/styled";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import React, { useState, useEffect } from "react";
 import { animalProps } from "../constants/animals";
-import { AnimalNameInput, AnimalDescInput } from "./CustomInput";
-import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { InputField } from "./InputField";
 import { AnimalProp } from "./AnimalProp";
+import { UploadImage } from "./UploadImage";
+import CloseIcon from "@mui/icons-material/Close";
 
 //TODO: add image structure
 const firebaseConfig = {
@@ -45,17 +42,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-const AddAnimalModal = ({ open, onClose }) => {
-  const [animalData, setAnimalData] = useState({
-    name: "",
-    description: "",
-    species: "",
-    breed: "",
-    sex: "",
-    age: "",
-    color: "",
-    size: "",
-  });
+const AddAnimalModal = ({ open, onClose, defaultAnimal, defaultImage }) => {
+  const [animalData, setAnimalData] = useState(defaultAnimal);
+
+  useEffect(() => {
+    if (!open) {
+      setAnimalData(defaultAnimal);
+      setUploadedImages(defaultImage);
+    }
+  }, [open, defaultAnimal, defaultImage]);
 
   // TODO: uploading images
   const handleSubmitAnimal = async (event) => {
@@ -91,7 +86,7 @@ const AddAnimalModal = ({ open, onClose }) => {
     }
   };
   // Data of images - array
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState(defaultImage);
 
   const handleChange = (e) => {
     setAnimalData((a) => ({
@@ -154,7 +149,21 @@ const AddAnimalModal = ({ open, onClose }) => {
         },
       }}
     >
-      <Paper>
+      <Paper sx={{ position: "relative" }}>
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 0,
+            bgcolor: "rgba(238, 114, 0, 0.50)",
+            borderRadius: 0,
+            color: "#FFFFFF",
+          }}
+          disableFocusRipple
+          disableRipple
+        >
+          <CloseIcon />
+        </IconButton>
         <Box sx={{ p: "32px 48px 0px 48px" }}>
           <Grid container spacing={3} mb="32px">
             <Grid item xs={12} sm={12} md={6} order={{ xs: 2, md: 1 }}>
@@ -191,7 +200,13 @@ const AddAnimalModal = ({ open, onClose }) => {
           type="submit"
           onClick={handleSubmitAnimal}
           variant="contained"
-          sx={{ color: "white", width: "100%", borderRadius: 0, py: "12px" }}
+          sx={{
+            color: "white",
+            width: "100%",
+            borderRadius: 0,
+            py: "12px",
+            textTransform: "none",
+          }}
         >
           Add Animal
         </Button>
@@ -201,99 +216,3 @@ const AddAnimalModal = ({ open, onClose }) => {
 };
 
 export default AddAnimalModal;
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
-const UploadImage = ({ onChange, images, handleRemoveImage }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  return (
-    <>
-      <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-        <IconButton
-          component="label"
-          aria-label="upload image"
-          sx={{
-            tabIndex: -1,
-            border: "1px solid",
-            width: "100%",
-            height: "100%",
-            borderRadius: "7px",
-            border: "1px solid #FF8210",
-          }}
-        >
-          <AddPhotoAlternateIcon sx={{ fontSize: "5rem" }} />
-          <VisuallyHiddenInput type="file" onChange={onChange} required />
-        </IconButton>
-        <Button
-          sx={{ position: "absolute", bottom: 0, right: 0 }}
-          onClick={() => setIsDialogOpen(true)}
-        >
-          Edit
-        </Button>
-      </Box>
-      <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
-        <Box
-          sx={{
-            p: "1rem",
-            width: {
-              xs: "90vw",
-              sm: "50vw",
-              md: "30vw",
-            },
-            height: "50vh",
-          }}
-        >
-          <Typography fontWeight={600}>Files Uploaded</Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "80%",
-            }}
-          >
-            {images.length === 0 ? (
-              <Typography textAlign="center" justifySelf="center" width="100%">
-                None
-              </Typography>
-            ) : (
-              <List>
-                {images.map((image, index) => (
-                  <React.Fragment key={index}>
-                    <ListItem>
-                      <ListItemText>
-                        <Typography variant="body2">{image.name}</Typography>
-                      </ListItemText>
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          edge="end"
-                          aria-label="remove"
-                          onClick={() => handleRemoveImage(index)}
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider />
-                  </React.Fragment>
-                ))}
-              </List>
-            )}
-          </Box>
-        </Box>
-      </Dialog>
-    </>
-  );
-};
