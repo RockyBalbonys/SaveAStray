@@ -29,6 +29,7 @@ const AnimalCard = ({ animals, height, width }) => {
         padding: "12px",
         border: "2px solid #EE7200",
         borderRadius: "7px",
+        "&:hover": {},
       }}
     >
       <CardActionArea
@@ -36,9 +37,15 @@ const AnimalCard = ({ animals, height, width }) => {
           console.log("Card clicked! show modal");
           setOpen(true);
         }}
+        disableTouchRipple
+        disableRipple
       >
         <CardMedia
-          image={animals.image}
+          // image={
+          //   species === "Dog"
+          //     ? animals.placeholder.dog
+          //     : animals.placeholder.cat
+          // }
           sx={{ height: "220px", objectFit: "contain" }}
         />
         <CardContent sx={{ padding: 1 }}>
@@ -65,6 +72,7 @@ const AnimalCard = ({ animals, height, width }) => {
             fontWeight: "300",
             fontSize: "14px",
             paddingX: "25px",
+            textTransform: "none",
           }}
           onClick={() => {
             console.log("Update clicked");
@@ -80,6 +88,7 @@ const AnimalCard = ({ animals, height, width }) => {
             fontSize: "14px",
             paddingX: "21px",
             background: "white",
+            textTransform: "none",
           }}
           onClick={() => {
             console.log("Adopted clicked");

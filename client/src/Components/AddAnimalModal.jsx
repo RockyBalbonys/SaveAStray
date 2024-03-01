@@ -23,13 +23,14 @@ import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import styled from "@emotion/styled";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import animalPaw from "../assets/icons/animalPaw.svg";
 import { animalProps } from "../constants/animals";
 import { AnimalNameInput, AnimalDescInput } from "./CustomInput";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { InputField } from "./InputField";
+import { AnimalProp } from "./AnimalProp";
 
 //TODO: add image structure
 const firebaseConfig = {
@@ -201,33 +202,6 @@ const AddAnimalModal = ({ open, onClose }) => {
 
 export default AddAnimalModal;
 
-const InputField = ({ onChange }) => {
-  return (
-    <>
-      <Stack direction="column">
-        <AnimalNameInput
-          name="name"
-          onChange={onChange}
-          placeholder="Animal Name"
-          aria-label="animal name"
-          inputProps={{ maxLength: 150 }}
-          required
-        />
-        <AnimalDescInput
-          name="description"
-          onChange={onChange}
-          placeholder="Add description here... (600 characters max including whitespace)"
-          aria-label="animal description"
-          multiline
-          rows={15}
-          inputProps={{ maxLength: 600 }}
-          required
-        />
-      </Stack>
-    </>
-  );
-};
-
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -323,96 +297,3 @@ const UploadImage = ({ onChange, images, handleRemoveImage }) => {
     </>
   );
 };
-
-const AnimalProp = ({ prop, options, setFormData, formData }) => {
-  return (
-    <>
-      <Box
-        sx={{
-          p: "16px",
-          border: "1px solid rgba(238, 114, 0, 0.50)",
-          borderRadius: "7px",
-        }}
-      >
-        <Icon>
-          <img src={animalPaw} alt="icon" />
-        </Icon>
-        <Typography variant="body2" fontWeight={700}>
-          {prop}
-        </Typography>
-        {renderInputOrSelection(prop, options, setFormData, formData)}
-      </Box>
-    </>
-  );
-};
-
-const renderInputOrSelection = (prop, options, setFormData, formData) => {
-  if (prop === "Breed" || prop === "Color") {
-    const handleInputPropChange = (e) => {
-      setFormData((a) => ({
-        ...a,
-        [e.target.name]: e.target.value,
-      }));
-    };
-    return (
-      <InputBase
-        required
-        value={formData[prop.toLowerCase()]}
-        name={prop.toLowerCase()}
-        onChange={handleInputPropChange}
-        sx={{
-          fontSize: "16px",
-          "& .MuiInputBase-input": {
-            pr: 0,
-          },
-        }}
-        placeholder={`Enter ${prop}`}
-        fullWidth
-      />
-    );
-  } else {
-    return (
-      <SelectionProp
-        propName={prop}
-        menuItems={options}
-        setFormData={setFormData}
-        formData={formData}
-      />
-    );
-  }
-};
-
-function SelectionProp({ menuItems, setFormData, formData, propName }) {
-  const [selectedValue, setSelectedValue] = useState("");
-
-  const handleSelectPropChange = (e) => {
-    setSelectedValue(e.target.value);
-    setFormData((a) => ({
-      ...a,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  return (
-    <FormControl sx={{ width: "100%" }}>
-      <Select
-        value={selectedValue}
-        required
-        name={propName === "Pet Type" ? "species" : propName.toLowerCase()}
-        displayEmpty
-        onChange={handleSelectPropChange}
-        input={<InputBase />}
-        notched="true"
-        sx={{ fontSize: "16px", fontWeight: 300 }}
-      >
-        <MenuItem disabled value="" sx={{ fontSize: "14px" }}>
-          Select
-        </MenuItem>
-        {menuItems.map((item, idx) => (
-          <MenuItem value={item} key={idx} sx={{ fontSize: "14px" }}>
-            {item}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-}

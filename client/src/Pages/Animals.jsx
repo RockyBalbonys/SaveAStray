@@ -14,17 +14,22 @@ import {
   Select,
   Typography,
   useRadioGroup,
+  Pagination,
 } from "@mui/material";
 import AnimalCard from "../Components/AnimalCard";
-import { mockAnimals, animalProps } from "../constants/animals";
+import { animalProps } from "../constants/animals";
 import Footer from "../Components/Footer";
 import AddIcon from "@mui/icons-material/Add";
 import AddAnimalModal from "../Components/AddAnimalModal";
 import axios from "axios";
-import styled from "@emotion/styled";
+import { SortByButton } from "../Components/SortByButton";
+import { FilterOptions } from "../Components/FilterOptions";
+
+const filteredOptions = animalProps.filter((item) => item.options.length > 0);
 
 const Animals = () => {
   const [animals, setAnimals] = useState([]);
+
   const [filters, setFilters] = useState({
     type: null,
     sex: null,
@@ -50,7 +55,9 @@ const Animals = () => {
 
   const fetchFilteredPets = async () => {
     try {
-      const response = await axios.get("/api/filteredPets", { params: filters });
+      const response = await axios.get("/api/filteredPets", {
+        params: filters,
+      });
       setAnimals(response.data.filteredPets);
     } catch (error) {
       console.error("Error fetching filtered pets:", error);
@@ -81,7 +88,7 @@ const Animals = () => {
     { propType: "Pet Type", options: ["Dog", "Cat"] },
     { propType: "Sex", options: ["Male", "Female"] },
     { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
-    { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] }
+    { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
   ];
 
   const [sortBy, setSortBy] = useState("");
@@ -90,9 +97,20 @@ const Animals = () => {
     setSortBy(e.target.value);
   };
 
+  // Pagination
+  const itemsPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(animals.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, animals.length);
+  const currentAnimals = animals.slice(startIndex, endIndex);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
   return (
     <>
-      <div className="relative bg-gradient-to-b from-orange-500 to-orange-300  h-[40vh] w-full flex justify-end items-center">
+      <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600  h-[40vh] w-full flex justify-end items-center">
         <div className="absolute left-0 z-10 w-full">
           <Container maxWidth="md">
             <Typography variant="h2" className="text-white">
@@ -105,7 +123,7 @@ const Animals = () => {
           style={{
             backgroundImage: `url(${animalHero})`,
           }}
-          className="absolute h-full bg-no-repeat bg-contain w-full bg-right"
+          className="absolute hidden sm:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
       </div>
       <Container maxWidth="lg" sx={{ my: "64px" }}>
@@ -142,7 +160,8 @@ const Animals = () => {
           <AddAnimal />
         </Box>
 
-        <FilterOptions filters={filteredOptions} handleFilterChange={handleFilterChange} handleApplyFilters={handleApplyFilters} />
+        {/* Filter Component */}
+        <FilterOptions filters={filteredOptions} />
 
         <Grid
           container
@@ -152,12 +171,32 @@ const Animals = () => {
           justifyContent="center"
           alignItems="center"
         >
-          {animals && animals.map((animal, idx) => (
+          {currentAnimals.map((animal, idx) => (
             <Grid key={idx} item xs={12} sm={6} md={3}>
               <AnimalCard animals={animal} height="auto" width="257px" />
             </Grid>
           ))}
         </Grid>
+        <Box
+          sx={{
+            width: "100%",
+            justifyContent: "center",
+            display: "flex",
+            mt: 2,
+          }}
+        >
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            size="large"
+            siblingCount={1}
+            boundaryCount={1}
+            showFirstButton
+            showLastButton
+            sx={{ mt: 2, justifyContent: "center" }}
+          />
+        </Box>
       </Container>
       <Footer />
     </>
@@ -182,177 +221,4 @@ function AddAnimal() {
       <AddAnimalModal open={openAddModal} onClose={handleClose} />
     </>
   );
-}
-
-function SortByButton({ value, onChange }) {
-  return (
-    <FormControl width="195px">
-      <Select
-        onChange={onChange}
-        displayEmpty
-        value={value}
-        variant="outlined"
-        sx={{
-          border: "1px solid hsl(29, 100%, 47%, 0.5)",
-          fontSize: "16px",
-          textAlign: "center",
-          color: "#FF8210",
-          fontWeight: "600",
-          width: "195px",
-          transition: "background border 300ms ease-out",
-          "&:hover": {
-            background: "hsl(29, 100%, 47%, 0.02)",
-            border: "1px solid hsl(29, 100%, 47%, 1)",
-          },
-          "& .MuiOutlinedInput-notchedOutline": {
-            border: "none",
-          },
-          "& .MuiOutlinedInput-input": {
-            padding: "8px 32px",
-          },
-        }}
-      >
-        <MenuItem value="" sx={{ fontSize: "14px" }} disabled>
-          Sort By
-        </MenuItem>
-        <MenuItem value="Available" sx={{ fontSize: "14px" }}>
-          Available
-        </MenuItem>
-        <MenuItem value="Adopted" sx={{ fontSize: "14px" }}>
-          Adopted
-        </MenuItem>
-        <MenuItem value="On Process" sx={{ fontSize: "14px" }}>
-          On Process
-        </MenuItem>
-      </Select>
-    </FormControl>
-  );
-}
-
-function FilterOptions({ filters, handleFilterChange, handleApplyFilters }) {
-  const [selectedOptions, setSelectedOptions] = useState(
-    filters.map(() => null)
-  );
-
-  const handleOptionChange = (filterIndex, option) => {
-    setSelectedOptions((prevSelectedOptions) => {
-      const newSelectedOptions = [...prevSelectedOptions];
-      newSelectedOptions[filterIndex] = option;
-      return newSelectedOptions;
-    });
-    handleFilterChange(filters[filterIndex].propType.toLowerCase(), option);
-  };
-
-  const handleClearFilters = () => {
-    setSelectedOptions(filters.map(() => null));
-    filters.forEach((filter) => {
-      handleFilterChange(filter.propType.toLowerCase(), null);
-    });
-  };
-
-  return (
-    <Grid
-      container
-      width="100%"
-      sx={{ p: "24px 24px 32px 24px" }}
-      rowSpacing={3}
-    >
-      {filters.map((filter, index) => (
-        <Grid key={index} xs={12} sm={6} md={3} item>
-          <FormControl>
-            <FormLabel
-              sx={{ fontSize: "16px", color: "#EE7200", fontWeight: "600" }}
-            >
-              {filter.propType}
-            </FormLabel>
-            <RadioGroup
-              value={selectedOptions[index]}
-              onChange={(event) =>
-                handleOptionChange(index, event.target.value)
-              }
-              sx={{
-                fontSize: "16px",
-                color: "#EE7200",
-                rowGap: "4px",
-              }}
-            >
-              {filter.options.map((option, idx) => (
-                <MyFormControlLabel
-                  control={<Radio sx={{ color: "#EE7200" }} />}
-                  key={idx}
-                  value={option}
-                  label={<Typography fontSize="16px">{option}</Typography>}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-      ))}
-      <Box width="100%" sx={{ display: "flex", columnGap: "32px", mt: "32px" }}>
-        <Button
-          variant="outlined"
-          width="100%"
-          sx={{
-            flexGrow: 1,
-            fontWeight: "600",
-            textTransform: "none",
-            borderRadius: "7px",
-          }}
-          onClick={handleClearFilters}
-        >
-          Clear Filters
-        </Button>
-        <Button
-          variant="contained"
-          sx={{
-            color: "white",
-            flexGrow: 1,
-            fontWeight: "600",
-            textTransform: "none",
-            borderRadius: "7px",
-          }}
-          width="100%"
-          onClick={handleApplyFilters}
-        >
-          Apply Filters
-        </Button>
-      </Box>
-    </Grid>
-  );
-}
-
-const StyledFormControlLabel = styled((props) => (
-  <FormControlLabel {...props} />
-))(({ theme, checked }) => ({
-  fontSize: "16px",
-  width: "152px",
-  border: "1.2px solid transparent",
-  fontWeight: "300",
-  transition: "background-color border 1s ease",
-  "&:hover": {
-    background: "#FAFAFB",
-    borderRadius: "40px",
-    border: "1.2px solid rgba(238, 114, 0, 0.80)",
-    paddingRight: "16px",
-  },
-  ...(checked && {
-    // Conditional background style when checked
-    background: "rgba(238, 114, 0, 0.15)",
-    borderRadius: "40px",
-    border: "1.2px solid transparent",
-    paddingRight: "16px",
-  }),
-}));
-
-function MyFormControlLabel(props) {
-  // MUI UseRadio Group
-  const radioGroup = useRadioGroup();
-
-  let checked = false;
-
-  if (radioGroup) {
-    checked = radioGroup.value === props.value;
-  }
-
-  return <StyledFormControlLabel checked={checked} {...props} />;
 }
