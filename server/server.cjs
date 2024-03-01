@@ -183,34 +183,36 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.post('/filterPets', async (req, res) => {
-  const filters = req.body;
-  try {
-    const filteredPets = await Pet.find(filters);
-    res.json({ filteredPets });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 app.get('/getPet', async (req, res) => {
   try {
-    let query = {};
-    if (req.query.species) {
-      query.species = req.query.species;
-    }
-    const allPets = await Pet.find(query);
+    const allPets = await Pet.find()	
     res.send({
       status: 200,
       allPets
-    });
+    })
   } catch (err) {
     console.log("error: ", err);
-    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+app.get('/api/filteredPets', async (req, res) => {
+  try {
+    const { species, sex, age, size } = req.query;
+    let filter = {};
+    
+    if (species) filter.type = species;
+    if (sex) filter.sex = sex;
+    if (age) filter.age = age;
+    if (size) filter.size = size;
+
+    const filteredPets = await Pet.find(filter);
+    
+    res.status(200).json({ filteredPets });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 app.get('/api/sheets', async (req, res) => {
   try {

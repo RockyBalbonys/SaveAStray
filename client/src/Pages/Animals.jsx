@@ -23,16 +23,14 @@ import AddAnimalModal from "../Components/AddAnimalModal";
 import axios from "axios";
 import styled from "@emotion/styled";
 
-const filteredOptions = [
-  { propType: "Pet Type", options: ["Dog", "Cat"] },
-  { propType: "Sex", options: ["Male", "Female"] },
-  { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
-  { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
-];
-
 const Animals = () => {
   const [animals, setAnimals] = useState([]);
-  const [filteredAnimals, setFilteredAnimals] = useState([]);
+  const [filters, setFilters] = useState({
+    type: null,
+    sex: null,
+    age: null,
+    size: null,
+  });
 
   useEffect(() => {
     axios
@@ -41,7 +39,6 @@ const Animals = () => {
         const allPets = response.data.allPets;
         console.log(allPets);
         setAnimals(allPets);
-        setFilteredAnimals(allPets); // Set filteredAnimals initially with all pets
         allPets.forEach((pet) => {
           console.log(pet.name);
         });
@@ -51,21 +48,41 @@ const Animals = () => {
       });
   }, []);
 
-  const applyFilters = (selectedOptions) => {
-    const filtered = animals.filter((animal) => {
-      return (
-        (selectedOptions[0] === null || animal.petType === selectedOptions[0]) &&
-        (selectedOptions[1] === null || animal.sex === selectedOptions[1]) &&
-        (selectedOptions[2] === null || animal.age === selectedOptions[2]) &&
-        (selectedOptions[3] === null || animal.size === selectedOptions[3])
-      );
-    });
-    setFilteredAnimals(filtered);
+  const fetchFilteredPets = async () => {
+    try {
+      const response = await axios.get("/api/filteredPets", { params: filters });
+      setAnimals(response.data.filteredPets);
+    } catch (error) {
+      console.error("Error fetching filtered pets:", error);
+    }
+  };
+
+  const handleFilterChange = (filterType, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: value,
+    }));
   };
 
   const handleClearFilters = () => {
-    setFilteredAnimals(animals); // Reset filteredAnimals to include all animals
+    setFilters({
+      type: null,
+      sex: null,
+      age: null,
+      size: null,
+    });
   };
+
+  const handleApplyFilters = () => {
+    fetchFilteredPets();
+  };
+
+  const filteredOptions = [
+    { propType: "Pet Type", options: ["Dog", "Cat"] },
+    { propType: "Sex", options: ["Male", "Female"] },
+    { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
+    { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] }
+  ];
 
   const [sortBy, setSortBy] = useState("");
 
@@ -125,14 +142,7 @@ const Animals = () => {
           <AddAnimal />
         </Box>
 
-        <FilterOptions
-        filters={filteredOptions}
-        applyFilters={applyFilters}
-        clearFilters={handleClearFilters}
-        animals={animals}
-        setAnimals={setAnimals}
-      />
-
+        <FilterOptions filters={filteredOptions} handleFilterChange={handleFilterChange} handleApplyFilters={handleApplyFilters} />
 
         <Grid
           container
@@ -142,7 +152,7 @@ const Animals = () => {
           justifyContent="center"
           alignItems="center"
         >
-          {animals.map((animal, idx) => (
+          {animals && animals.map((animal, idx) => (
             <Grid key={idx} item xs={12} sm={6} md={3}>
               <AnimalCard animals={animal} height="auto" width="257px" />
             </Grid>
@@ -219,25 +229,25 @@ function SortByButton({ value, onChange }) {
   );
 }
 
+function FilterOptions({ filters, handleFilterChange, handleApplyFilters }) {
+  const [selectedOptions, setSelectedOptions] = useState(
+    filters.map(() => null)
+  );
 
-function FilterOptions({ filters, applyFilters, clearFilters, animals }) {
-
-  const [selectedOptions, setSelectedOptions] = useState(filteredOptions.map(() => null));
-  
   const handleOptionChange = (filterIndex, option) => {
     setSelectedOptions((prevSelectedOptions) => {
       const newSelectedOptions = [...prevSelectedOptions];
       newSelectedOptions[filterIndex] = option;
       return newSelectedOptions;
     });
-  };
-
-  const handleApplyFilters = () => {
-    applyFilters(selectedOptions); // Call the applyFilters function from props
+    handleFilterChange(filters[filterIndex].propType.toLowerCase(), option);
   };
 
   const handleClearFilters = () => {
-    clearFilters(); // Call the clearFilters function from props
+    setSelectedOptions(filters.map(() => null));
+    filters.forEach((filter) => {
+      handleFilterChange(filter.propType.toLowerCase(), null);
+    });
   };
 
   return (
@@ -302,7 +312,7 @@ function FilterOptions({ filters, applyFilters, clearFilters, animals }) {
             borderRadius: "7px",
           }}
           width="100%"
-          onClick={ handleApplyFilters }
+          onClick={handleApplyFilters}
         >
           Apply Filters
         </Button>

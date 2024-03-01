@@ -33,7 +33,12 @@ const petSchema = new mongoose.Schema({
   },
   size: {
     type: String,
-    enum: ['Munchkin', 'Small', 'Medium', 'Large', 'Giant'],
+    enum: ['Small', 'Medium', 'Large', 'Giant'],
+    required: true
+  },
+  shelter: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Shelter',
     required: true
   },
   status: {
@@ -41,13 +46,14 @@ const petSchema = new mongoose.Schema({
     enum: ['Available', 'In Process', 'Adopted'],
     default: 'Available',
     required: false
+  },
+  price: {
+    type: Number,
+    default: 0,
+    required: true
   }
 });
 
 const Pet = mongoose.model('Pet', petSchema);
 
 module.exports = Pet;
-
-// Optimized code layout
-// Breed and specie required changed to true
-// Default status value = Available
