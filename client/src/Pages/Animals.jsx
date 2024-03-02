@@ -25,7 +25,7 @@ import axios from "axios";
 import { SortByButton } from "../Components/SortByButton";
 import { FilterOptions } from "../Components/FilterOptions";
 
-const filteredOptions = animalProps.filter((item) => item.options.length > 0);
+// const filteredOptions = animalProps.filter((item) => item.options.length > 0);
 
 const Animals = () => {
   const [animals, setAnimals] = useState([]);
@@ -103,6 +103,7 @@ const Animals = () => {
   const totalPages = Math.ceil(animals.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, animals.length);
+
   const currentAnimals = animals.slice(startIndex, endIndex);
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -110,9 +111,9 @@ const Animals = () => {
 
   return (
     <>
-      <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600  h-[40vh] w-full flex justify-end items-center">
+      <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
         <div className="absolute left-0 z-10 w-full">
-          <Container maxWidth="md">
+          <Container maxWidth="lg">
             <Typography variant="h2" className="text-white">
               Rescue. <br /> <span className="text-[#2F4858]">Adopt.</span>{" "}
               <br /> Love. <br /> Spread.
@@ -123,7 +124,7 @@ const Animals = () => {
           style={{
             backgroundImage: `url(${animalHero})`,
           }}
-          className="absolute hidden sm:block h-full bg-no-repeat bg-contain w-full bg-right"
+          className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
       </div>
       <Container maxWidth="lg" sx={{ my: "64px" }}>
@@ -168,7 +169,6 @@ const Animals = () => {
           columnSpacing={3}
           rowSpacing={4}
           mt={4}
-          justifyContent="center"
           alignItems="center"
         >
           {currentAnimals.map((animal, idx) => (
@@ -186,6 +186,7 @@ const Animals = () => {
           }}
         >
           <Pagination
+            variant="rounded"
             count={totalPages}
             page={currentPage}
             onChange={handlePageChange}

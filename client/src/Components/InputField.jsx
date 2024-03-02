@@ -6,7 +6,7 @@ export const InputField = ({ onChange, data }) => {
     <>
       <Stack direction="column">
         <AnimalNameInput
-          value={data.name}
+          value={data.name.slice(0, 1).toUpperCase() + data.name.slice(1)}
           name="name"
           onChange={onChange}
           placeholder="Animal Name"

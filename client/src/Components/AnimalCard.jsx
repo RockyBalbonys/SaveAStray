@@ -52,7 +52,7 @@ const AnimalCard = ({ animals, height, width }) => {
             fontWeight={600}
             color="primary"
           >
-            {animals.name}
+            {animals.name.slice(0, 1).toUpperCase() + animals.name.slice(1)}
           </Typography>
         </CardContent>
       </CardActionArea>

@@ -25,14 +25,14 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
   const [animalInfo, setAnimalInfo] = useState(animal);
   const [uploadedImages, setUploadedImages] = useState([]);
 
+  console.log({ animalInfo });
+
   useEffect(() => {
     if (!open) {
       setAnimalInfo(animal);
       setUploadedImages([]);
     }
-  }, [open, animal, []]);
-
-  console.log({ animalInfo });
+  }, [open, animal]);
 
   const handleChange = (e) => {
     setAnimalInfo((a) => ({
@@ -41,7 +41,8 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
     }));
   };
 
-  const handleSubmitAnimal = () => {
+  // TODO: Create logic for updating animal information
+  const handleUpdateSaveAnimal = () => {
     console.log("Animal Updated");
   };
 
@@ -160,7 +161,7 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
           <Button
             disabled={isAnimalDataEmpty || isImagesEmpty}
             type="submit"
-            onClick={handleSubmitAnimal}
+            onClick={handleUpdateSaveAnimal}
             variant="contained"
             sx={{
               color: "white",
