@@ -5,7 +5,7 @@ const StyledFormControlLabel = styled((props) => (
   <FormControlLabel {...props} />
 ))(({ theme, checked }) => ({
   fontSize: "16px",
-  width: "152px",
+  width: "160px",
   border: "1.2px solid transparent",
   fontWeight: "300",
   transition: "background-color border 1s ease",
