@@ -11,7 +11,11 @@ import {
 import { useState } from "react";
 import { MyFormControlLabel } from "../Components/MyFormControlLabel";
 
-export function FilterOptions({ filters }) {
+export function FilterOptions({
+  filters,
+  handleFilterChange,
+  handleApplyFilters,
+}) {
   const [selectedOptions, setSelectedOptions] = useState(
     filters.map(() => null)
   );
@@ -22,10 +26,14 @@ export function FilterOptions({ filters }) {
       newSelectedOptions[filterIndex] = option;
       return newSelectedOptions;
     });
+    handleFilterChange(filters[filterIndex].propType.toLowerCase(), option);
   };
 
   const handleClearFilters = () => {
     setSelectedOptions(filters.map(() => null));
+    filters.forEach((filter) => {
+      handleFilterChange(filter.propType.toLowerCase(), null);
+    });
   };
 
   return (
@@ -36,7 +44,7 @@ export function FilterOptions({ filters }) {
       rowSpacing={3}
     >
       {filters.map((filter, index) => (
-        <Grid key={index} xs={12} sm={6} md={3} item>
+        <Grid key={index} xs={12} sm={6} md={2.4} item>
           <FormControl>
             <FormLabel
               sx={{ fontSize: "16px", color: "#EE7200", fontWeight: "600" }}
@@ -81,6 +89,7 @@ export function FilterOptions({ filters }) {
           Clear Filters
         </Button>
         <Button
+          onClick={handleApplyFilters}
           variant="contained"
           sx={{
             color: "white",

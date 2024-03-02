@@ -31,14 +31,11 @@ export function SortByButton({ value, onChange }) {
         <MenuItem value="" sx={{ fontSize: "14px" }} disabled>
           Sort By
         </MenuItem>
-        <MenuItem value="Available" sx={{ fontSize: "14px" }}>
-          Available
+        <MenuItem value="Ascending" sx={{ fontSize: "14px" }}>
+          Ascending (A-Z)
         </MenuItem>
-        <MenuItem value="Adopted" sx={{ fontSize: "14px" }}>
-          Adopted
-        </MenuItem>
-        <MenuItem value="On Process" sx={{ fontSize: "14px" }}>
-          On Process
+        <MenuItem value="Descending" sx={{ fontSize: "14px" }}>
+          Descending (Z-A)
         </MenuItem>
       </Select>
     </FormControl>
