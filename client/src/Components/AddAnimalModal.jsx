@@ -29,7 +29,6 @@ import { AnimalProp } from "./AnimalProp";
 import { UploadImage } from "./UploadImage";
 import CloseIcon from "@mui/icons-material/Close";
 
-//TODO: add image structure
 const firebaseConfig = {
   apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
   authDomain: "save-a-stray-40e56.firebaseapp.com",
@@ -52,7 +51,6 @@ const AddAnimalModal = ({ open, onClose, defaultAnimal, defaultImage }) => {
     }
   }, [open, defaultAnimal, defaultImage]);
 
-  // TODO: uploading images
   const handleSubmitAnimal = async (event) => {
     event.preventDefault();
 
