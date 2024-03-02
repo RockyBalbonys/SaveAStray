@@ -36,7 +36,7 @@ const typography = {
   },
 
   body1: {
-    fontSize: 20, // 20px converted to rem // 1.25rem
+    fontSize: 16, // 20px converted to rem // 1.25rem
     fontWeight: "400",
   },
 

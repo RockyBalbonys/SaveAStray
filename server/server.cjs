@@ -195,6 +195,25 @@ app.get('/getPet', async (req, res) => {
   }
 })
 
+app.get('/api/filteredPets', async (req, res) => {
+  try {
+    const { species, sex, age, size } = req.query;
+    let filter = {};
+    
+    if (species) filter.type = species;
+    if (sex) filter.sex = sex;
+    if (age) filter.age = age;
+    if (size) filter.size = size;
+
+    const filteredPets = await Pet.find(filter);
+    
+    res.status(200).json({ filteredPets });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.get('/api/sheets', async (req, res) => {
   try {
     const serviceAccountAuth = new JWT({

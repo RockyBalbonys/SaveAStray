@@ -1,9 +1,19 @@
-import { Container, Paper, Typography, Box, Stack, Grid } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Typography,
+  Box,
+  Stack,
+  Grid,
+  Button,
+} from "@mui/material";
 import Textarea from "../Components/Textarea";
 import { contactDetails } from "../constants/contact";
 import dogImage from "../assets/images/dogContact.png";
 import Donate from "../Components/Donate";
 import Footer from "../Components/Footer";
+import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
 
 const Contact = () => {
   return (
@@ -89,13 +99,37 @@ function SocialMediaContacts({ contacts }) {
   );
 }
 
+//TODO: Fetch email body from text area
 function Message() {
+  const [messageContent, setMessageContent] = useState("");
+
+  const handleTextareaChange = (event) => {
+    setMessageContent(event.target.value);
+  };
+
+  const sendEmail = () => {
+    // Construct the mailto link with the subject and body
+    const subject = "User Feedback";
+    const emailBody = encodeURIComponent(messageContent);
+    const mailtoLink = `mailto:saveastray@gmail.com?subject=${subject}&body=${emailBody}`;
+    // Open the default email client with the mailto link
+    window.location.href = mailtoLink;
+  };
   return (
-    <Box>
+    <Box display="flex" flexDirection="column">
       <Typography fontWeight="bold" mb={2}>
         Your Message:
       </Typography>
-      <Textarea />
+      <Textarea value={messageContent} onChange={handleTextareaChange} />
+      <Button
+        variant="contained"
+        sx={{ color: "white", mt: "4px" }}
+        component={RouterLink}
+        to="mailto:saveastray@gmail.com"
+        onClick={sendEmail}
+      >
+        Send email
+      </Button>
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { InputBase } from "@mui/material";
+import { InputBase, Typography } from "@mui/material";
 
 export const AnimalNameInput = styled(InputBase)(({ theme }) => ({
   "& .MuiInputBase-input": {
@@ -29,6 +29,20 @@ export const AnimalDescInput = styled(InputBase)(({ theme }) => ({
     },
     "&:focus": {
       border: `2px solid ${theme.palette.primary.main}`,
+    },
+  },
+}));
+
+export const AdoptionFeeInput = styled(InputBase)(({ theme }) => ({
+  "& .MuiInputBase-input": {
+    borderBottom: `2px solid transparent`,
+    marginBottom: theme.spacing(2),
+    transition: "border-bottom 0.3s ease",
+    "&:hover": {
+      borderBottom: `2px solid grey`,
+    },
+    "&:focus": {
+      borderBottom: `2px solid ${theme.palette.primary.main}`,
     },
   },
 }));

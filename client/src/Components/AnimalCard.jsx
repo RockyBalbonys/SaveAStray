@@ -9,12 +9,16 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import AnimalModal from "./AnimalModal";
+import UpdateAnimalModal from "./UpdateAnimalModal";
+import placeholder from "../assets/icons/SAS_Logo4.png";
 
 const AnimalCard = ({ animals, height, width }) => {
   const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
+    setOpenUpdate(false);
   };
 
   return (
@@ -26,6 +30,7 @@ const AnimalCard = ({ animals, height, width }) => {
         padding: "12px",
         border: "2px solid #EE7200",
         borderRadius: "7px",
+        "&:hover": {},
       }}
     >
       <CardActionArea
@@ -33,9 +38,11 @@ const AnimalCard = ({ animals, height, width }) => {
           console.log("Card clicked! show modal");
           setOpen(true);
         }}
+        disableTouchRipple
+        disableRipple
       >
         <CardMedia
-          image={animals.image}
+          image={placeholder}
           sx={{ height: "220px", objectFit: "contain" }}
         />
         <CardContent sx={{ padding: 1 }}>
@@ -45,7 +52,7 @@ const AnimalCard = ({ animals, height, width }) => {
             fontWeight={600}
             color="primary"
           >
-            {animals.name}
+            {animals.name.slice(0, 1).toUpperCase() + animals.name.slice(1)}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -62,9 +69,11 @@ const AnimalCard = ({ animals, height, width }) => {
             fontWeight: "300",
             fontSize: "14px",
             paddingX: "25px",
+            textTransform: "none",
           }}
           onClick={() => {
             console.log("Update clicked");
+            setOpenUpdate(true);
           }}
         >
           Update
@@ -76,6 +85,7 @@ const AnimalCard = ({ animals, height, width }) => {
             fontSize: "14px",
             paddingX: "21px",
             background: "white",
+            textTransform: "none",
           }}
           onClick={() => {
             console.log("Adopted clicked");
@@ -85,6 +95,11 @@ const AnimalCard = ({ animals, height, width }) => {
         </Button>
       </CardActions>
       <AnimalModal open={open} onClose={handleClose} animal={animals} />
+      <UpdateAnimalModal
+        open={openUpdate}
+        onClose={handleClose}
+        animal={animals}
+      />
     </Card>
   );
 };
