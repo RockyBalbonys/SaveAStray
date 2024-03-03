@@ -78,7 +78,11 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
           alignItems: "center",
           justifyContent: "center",
           height: "100%",
-          "& .MuiPaper-root": {
+        }}
+      >
+        <Paper
+          sx={{
+            position: "relative",
             width: {
               xs: "90%",
               sm: "80%",
@@ -95,10 +99,9 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
               display: "none", // Hide the scrollbar for IE
             },
             maxHeight: "80%",
-          },
-        }}
-      >
-        <Paper sx={{ position: "relative" }}>
+            backgroundColor: "#FAFAFB",
+          }}
+        >
           <IconButton
             onClick={onClose}
             sx={{
@@ -202,33 +205,48 @@ function AdoptionFee({ value, setAnimalInfo }) {
   };
   return (
     <>
-      <Box
+      <Paper
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          p: "16px",
+          bgColor: "#FFFFFF",
+          borderRadius: "7px",
+          boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+          transition: "box-shadow 0.3s ease",
+          "&:hover": {
+            boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
+          },
         }}
       >
-        <InputLabel htmlFor="adoption-fee" sx={{ color: "#2F4858" }}>
-          Adoption Fee
-        </InputLabel>
-        <Input
-          id="adoption-fee"
-          value={value}
-          onChange={handleChangePrice}
-          name="price"
-          startAdornment={<InputAdornment position="start">PHP</InputAdornment>}
+        <Box
           sx={{
-            width: "40%",
-            "& .MuiInputBase-input[type='text']": {
-              paddingRight: 0,
-            },
-            fontWeight: "700",
-            fontSize: "24px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            p: "16px",
           }}
-        />
-      </Box>
+        >
+          <InputLabel htmlFor="adoption-fee" sx={{ color: "#2F4858" }}>
+            Adoption Fee
+          </InputLabel>
+          <Input
+            id="adoption-fee"
+            value={value}
+            onChange={handleChangePrice}
+            name="price"
+            startAdornment={
+              <InputAdornment position="start">PHP</InputAdornment>
+            }
+            sx={{
+              width: "40%",
+              "& .MuiInputBase-input[type='text']": {
+                paddingRight: 0,
+              },
+              fontWeight: "700",
+              fontSize: "24px",
+              color: "#2F4858",
+            }}
+          />
+        </Box>
+      </Paper>
     </>
   );
 }

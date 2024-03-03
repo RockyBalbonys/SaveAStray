@@ -33,6 +33,7 @@ const AnimalCard = ({ animals, height, width }) => {
         borderRadius: "7px",
         "&:hover": {},
       }}
+      elevation={0}
     >
       <CardActionArea
         onClick={() => {

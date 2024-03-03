@@ -1,5 +1,6 @@
 import {
   Box,
+  Card,
   FormControl,
   Icon,
   InputBase,
@@ -16,8 +17,15 @@ export const AnimalProp = ({ prop, options, setFormData, formData }) => {
       <Box
         sx={{
           p: "16px",
-          border: "1px solid rgba(238, 114, 0, 0.50)",
+          border: "0.5px solid rgba(238, 114, 0, 0.50)",
           borderRadius: "7px",
+          color: "#2F4858",
+          backgroundColor: "#FFFFFF",
+          transition: "box-shadow 0.3s ease",
+          boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+          "&:hover": {
+            boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.15)",
+          },
         }}
       >
         <Icon>
