@@ -55,7 +55,7 @@ const Animals = () => {
 
   const fetchFilteredPets = async () => {
     try {
-      const response = await axios.get("/api/filteredPets", {
+      const response = await axios.get("localhost:3001/api/filteredPets", {
         params: filters,
       });
       setAnimals(response.data.filteredPets);
