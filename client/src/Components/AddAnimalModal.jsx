@@ -51,50 +51,48 @@ const AddAnimalModal = ({ open, onClose, defaultAnimal, defaultImage }) => {
       setUploadedImages(defaultImage);
     }
   }, [open, defaultAnimal, defaultImage]);
-  const handleSubmitAnimal = async (event) => {
+  
+ const handleSubmitAnimal = async (event) => {
     event.preventDefault();
   
     const { name, description, species, breed, sex, age, color, size } = animalData;
+    
     try {
-      const response = await axios.post("http://localhost:3001/api/addAnimal", {
-        name,
-        description,
-        species,
-        breed,
-        sex,
-        age,
-        color,
-        size,
-      });
-      const petId = response.data.petId;
-      if (petId) {
-        const newDownloadURLs = [];
-  
-        await Promise.all(uploadedImages.map(async (imageFile) => {
-          const storageRef = ref(storage, `pets/${petId}/${imageFile.name}`);
-          try {
-            const snapshot = await uploadBytes(storageRef, imageFile);
-            console.log("Uploaded a blob or file!", snapshot);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-            console.log(downloadURL);
-            newDownloadURLs.push(downloadURL); 
-          } catch (error) {
-            console.error("Error uploading file:", error);
-          }
-        }));
-        console.log("Download URLs:", newDownloadURLs);
-        const animalDataWithPhotos = {
-          ...animalData,
-          photos: newDownloadURLs
+        const animalDataWithImages = {
+            name,
+            description,
+            species,
+            breed,
+            sex,
+            age,
+            color,
+            size,
+            photos: []
         };
   
-        await axios.post("http://localhost:3001/api/addAnimal", animalDataWithPhotos);
-  
-      }
+        // Upload images and get download URLs
+        await Promise.all(uploadedImages.map(async (imageFile) => {
+            const storageRef = ref(storage, `pets/${imageFile.name}`);
+            try {
+                const snapshot = await uploadBytes(storageRef, imageFile);
+                console.log("Uploaded a blob or file!", snapshot);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                console.log(downloadURL);
+                animalDataWithImages.photos.push(downloadURL); 
+            } catch (error) {
+                console.error("Error uploading file:", error);
+            }
+        }));
+        
+        console.log("Animal Data with Images:", animalDataWithImages);
+        
+        // Send data and images in a single request
+        await axios.post("http://localhost:3001/api/addAnimal", animalDataWithImages);
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+};
+
   
   const [uploadedImages, setUploadedImages] = useState(defaultImage);
 

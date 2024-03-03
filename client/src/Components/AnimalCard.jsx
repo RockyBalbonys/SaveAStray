@@ -41,7 +41,7 @@ const AnimalCard = ({ animals, height, width }) => {
         disableRipple
       >
         <CardMedia
-          image={placeholder}
+          image={animals.photos[0]}
           sx={{ height: "220px", objectFit: "contain" }}
         />
         <CardContent sx={{ padding: 1 }}>
