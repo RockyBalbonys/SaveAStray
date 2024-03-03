@@ -144,7 +144,7 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
 
             <Grid container spacing={2} pb="32px">
               {animalProps.map((property, idx) => (
-                <Grid key={idx} xs={12} sm={4} item>
+                <Grid item key={idx} xs={12} sm={4}>
                   <AnimalProp
                     prop={property.propType}
                     options={property.options}

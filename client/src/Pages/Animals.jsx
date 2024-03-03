@@ -105,6 +105,19 @@ const Animals = () => {
     setSortBy(e.target.value);
   };
 
+  // Search function
+  const [searchValue, setSearchValue] = useState("");
+
+  // Filtered animals based on search value
+  const filteredAnimals = animals.filter((animal) =>
+    animal.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
+  // Handle search input change
+  const handleSearchInputChange = (event) => {
+    setSearchValue(event.target.value);
+  };
+
   // Pagination
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +125,7 @@ const Animals = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, animals.length);
 
-  const currentAnimals = animals.slice(startIndex, endIndex);
+  const currentAnimals = filteredAnimals.slice(startIndex, endIndex);
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -156,21 +169,37 @@ const Animals = () => {
           </Typography>
         </Container>
 
-        <Box
+        <Grid
+          container
           sx={{
-            display: "flex",
-            width: "100%",
+            rowGap: "16px",
+            columnGap: "8px",
             justifyContent: "center",
             marginBottom: "32px",
           }}
         >
-          <SortByButton value={sortBy} onChange={handleChangeSortBy} />
+          <Grid item order={{ xs: 2, sm: 2, md: 2, lg: 1 }}>
+            <SortByButton value={sortBy} onChange={handleChangeSortBy} />
+          </Grid>
           {/* TODO: Search bar */}
-          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
-            <SearchInput />
-          </Box>
-          <AddAnimal />
-        </Box>
+          <Grid
+            item
+            order={{ xs: 1, sm: 1, md: 1, lg: 2 }}
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <SearchInput
+              value={searchValue}
+              onChange={handleSearchInputChange}
+            />
+          </Grid>
+          <Grid item order={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
+            <AddAnimal />
+          </Grid>
+        </Grid>
 
         {/* Filter Component */}
         <FilterOptions
@@ -186,11 +215,31 @@ const Animals = () => {
           mt={4}
           alignItems="center"
         >
-          {currentAnimals.map((animal, idx) => (
-            <Grid key={idx} item xs={12} sm={6} md={3}>
-              <AnimalCard animals={animal} height="auto" width="257px" />
-            </Grid>
-          ))}
+          {currentAnimals.length === 0 ? (
+            <Typography
+              variant="h6"
+              component="p"
+              color="secondary"
+              textAlign="center"
+              width="100%"
+            >
+              Not pet found
+            </Typography>
+          ) : (
+            currentAnimals.map((animal, idx) => (
+              <Grid
+                key={idx}
+                item
+                xs={12}
+                sm={6}
+                md={3}
+                display="flex"
+                justifyContent="center"
+              >
+                <AnimalCard animals={animal} height="auto" width="257px" />
+              </Grid>
+            ))
+          )}
         </Grid>
         <Box
           sx={{
@@ -221,6 +270,27 @@ const Animals = () => {
 
 export default Animals;
 
+function SearchInput({ value, onChange }) {
+  return (
+    <>
+      <Input
+        value={value}
+        onChange={onChange}
+        id="search-item"
+        aria-label="Search pet name"
+        placeholder="Search"
+        sx={{ width: "500px" }}
+        variant="outlined"
+        startAdornment={
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        }
+      />
+    </>
+  );
+}
+
 function AddAnimal() {
   const [openAddModal, setOpenAddModal] = useState(false);
 
@@ -247,7 +317,7 @@ function AddAnimal() {
         onClick={() => {
           setOpenAddModal(true);
         }}
-        sx={{ textTransform: "none" }}
+        sx={{ textTransform: "none", padding: "6px 34px" }}
       >
         Add New Pet
       </Button>
@@ -256,25 +326,6 @@ function AddAnimal() {
         onClose={handleModalClose}
         defaultAnimal={defaultAnimalData}
         defaultImage={defaultUploadedImages}
-      />
-    </>
-  );
-}
-
-function SearchInput() {
-  return (
-    <>
-      <Input
-        id="search-item"
-        aria-label="Search pet name"
-        placeholder="Search"
-        sx={{ width: "500px" }}
-        variant="outlined"
-        startAdornment={
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        }
       />
     </>
   );
