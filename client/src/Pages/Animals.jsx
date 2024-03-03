@@ -223,7 +223,7 @@ const Animals = () => {
               textAlign="center"
               width="100%"
             >
-              No items
+              Not pet found
             </Typography>
           ) : (
             currentAnimals.map((animal, idx) => (
