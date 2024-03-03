@@ -11,6 +11,7 @@ import { useState } from "react";
 import AnimalModal from "./AnimalModal";
 import UpdateAnimalModal from "./UpdateAnimalModal";
 import placeholder from "../assets/icons/SAS_Logo4.png";
+import InformationModal from "./InformationModal";
 
 const AnimalCard = ({ animals, height, width }) => {
   const [open, setOpen] = useState(false);
@@ -94,7 +95,7 @@ const AnimalCard = ({ animals, height, width }) => {
           Adopted
         </Button>
       </CardActions>
-      <AnimalModal open={open} onClose={handleClose} animal={animals} />
+      <InformationModal open={open} onClose={handleClose} animal={animals} />
       <UpdateAnimalModal
         open={openUpdate}
         onClose={handleClose}
