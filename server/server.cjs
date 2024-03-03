@@ -121,7 +121,7 @@ try {
 
 app.post('/api/addAnimal', async (req, res) => {
   console.log(req.body);
-  const { name, description, species, breed, sex, age, color, size, petId } = req.body
+  const { name, description, species, breed, sex, age, color, size, photos } = req.body
   try {
     const newPet = new Pet({
       name,
@@ -132,7 +132,8 @@ app.post('/api/addAnimal', async (req, res) => {
       age,
       color,
       size,
-      status: "Available"
+      status: "Available",
+      photos
   });
   const savedPet = await newPet.save();
   

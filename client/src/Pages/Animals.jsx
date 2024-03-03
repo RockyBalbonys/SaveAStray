@@ -59,18 +59,12 @@ const Animals = () => {
 
   const fetchFilteredPets = async () => {
     try {
-<<<<<<< HEAD
-      const response = await axios.get("localhost:3001/api/filteredPets", {
-        params: filters,
-      });
-=======
       const response = await axios.get(
         "http://localhost:3001/api/filteredPets",
         {
           params: filters,
         }
       );
->>>>>>> f7177d40bee31a7a5c9a60522a0dad484c55e40a
       setAnimals(response.data.filteredPets);
     } catch (error) {
       console.error("Error fetching filtered pets:", error);

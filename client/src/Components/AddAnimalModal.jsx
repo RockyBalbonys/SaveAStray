@@ -23,7 +23,7 @@ import React, { useState, useEffect } from "react";
 import { animalProps } from "../constants/animals";
 import axios from "axios";
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { InputField } from "./InputField";
 import { AnimalProp } from "./AnimalProp";
 import { UploadImage } from "./UploadImage";
@@ -43,6 +43,7 @@ const storage = getStorage(app);
 
 const AddAnimalModal = ({ open, onClose, defaultAnimal, defaultImage }) => {
   const [animalData, setAnimalData] = useState(defaultAnimal);
+  const [downloadURLs, setDownloadURLs] = useState([]);
 
   useEffect(() => {
     if (!open) {
@@ -50,12 +51,10 @@ const AddAnimalModal = ({ open, onClose, defaultAnimal, defaultImage }) => {
       setUploadedImages(defaultImage);
     }
   }, [open, defaultAnimal, defaultImage]);
-
   const handleSubmitAnimal = async (event) => {
     event.preventDefault();
-
-    const { name, description, species, breed, sex, age, color, size } =
-      animalData;
+  
+    const { name, description, species, breed, sex, age, color, size } = animalData;
     try {
       const response = await axios.post("http://localhost:3001/api/addAnimal", {
         name,
@@ -69,21 +68,34 @@ const AddAnimalModal = ({ open, onClose, defaultAnimal, defaultImage }) => {
       });
       const petId = response.data.petId;
       if (petId) {
-        uploadedImages.forEach(async (imageFile) => {
+        const newDownloadURLs = [];
+  
+        await Promise.all(uploadedImages.map(async (imageFile) => {
           const storageRef = ref(storage, `pets/${petId}/${imageFile.name}`);
           try {
             const snapshot = await uploadBytes(storageRef, imageFile);
             console.log("Uploaded a blob or file!", snapshot);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            console.log(downloadURL);
+            newDownloadURLs.push(downloadURL); 
           } catch (error) {
             console.error("Error uploading file:", error);
           }
-        });
+        }));
+        console.log("Download URLs:", newDownloadURLs);
+        const animalDataWithPhotos = {
+          ...animalData,
+          photos: newDownloadURLs
+        };
+  
+        await axios.post("http://localhost:3001/api/addAnimal", animalDataWithPhotos);
+  
       }
     } catch (error) {
       console.error(error);
     }
   };
-  // Data of images - array
+  
   const [uploadedImages, setUploadedImages] = useState(defaultImage);
 
   const handleChange = (e) => {

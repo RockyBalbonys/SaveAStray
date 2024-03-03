@@ -20,7 +20,6 @@ const AnimalCard = ({ animals, height, width }) => {
     setOpen(false);
     setOpenUpdate(false);
   };
-
   return (
     <Card
       sx={{
