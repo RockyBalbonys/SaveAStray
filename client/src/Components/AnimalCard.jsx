@@ -52,7 +52,10 @@ const AnimalCard = ({ animals, height, width }) => {
             fontWeight={600}
             color="primary"
           >
-            {animals.name.slice(0, 1).toUpperCase() + animals.name.slice(1)}
+            {truncateString(
+              animals.name.slice(0, 1).toUpperCase() + animals.name.slice(1),
+              12
+            )}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -87,9 +90,9 @@ const AnimalCard = ({ animals, height, width }) => {
             background: "white",
             textTransform: "none",
           }}
-          onClick={() => {
-            console.log("Adopted clicked");
-          }}
+          // onClick={() => {
+          //   console.log("Adopted clicked");
+          // }}
         >
           Adopted
         </Button>
@@ -105,3 +108,15 @@ const AnimalCard = ({ animals, height, width }) => {
 };
 
 export default AnimalCard;
+
+function truncateString(str, num) {
+  // If the length of str is less than or equal to num
+  // just return str--don't truncate it.
+  if (str.length <= num) {
+    return str;
+  }
+  // Return str truncated with '...' concatenated to the end of str.
+  return str.slice(0, num) + "...";
+}
+
+truncateString("A-tisket a-tasket A green and yellow basket", 8);

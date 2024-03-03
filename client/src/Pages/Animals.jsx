@@ -15,6 +15,9 @@ import {
   Typography,
   useRadioGroup,
   Pagination,
+  Input,
+  InputAdornment,
+  InputLabel,
 } from "@mui/material";
 import AnimalCard from "../Components/AnimalCard";
 import { animalProps } from "../constants/animals";
@@ -24,6 +27,7 @@ import AddAnimalModal from "../Components/AddAnimalModal";
 import axios from "axios";
 import { SortByButton } from "../Components/SortByButton";
 import { FilterOptions } from "../Components/FilterOptions";
+import SearchIcon from "@mui/icons-material/Search";
 
 // const filteredOptions = animalProps.filter((item) => item.options.length > 0);
 
@@ -55,9 +59,18 @@ const Animals = () => {
 
   const fetchFilteredPets = async () => {
     try {
+<<<<<<< HEAD
       const response = await axios.get("localhost:3001/api/filteredPets", {
         params: filters,
       });
+=======
+      const response = await axios.get(
+        "http://localhost:3001/api/filteredPets",
+        {
+          params: filters,
+        }
+      );
+>>>>>>> f7177d40bee31a7a5c9a60522a0dad484c55e40a
       setAnimals(response.data.filteredPets);
     } catch (error) {
       console.error("Error fetching filtered pets:", error);
@@ -89,6 +102,7 @@ const Animals = () => {
     { propType: "Sex", options: ["Male", "Female"] },
     { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
     { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
+    { propType: "Status", options: ["Available", "On Process", "Adopted"] },
   ];
 
   const [sortBy, setSortBy] = useState("");
@@ -157,12 +171,19 @@ const Animals = () => {
           }}
         >
           <SortByButton value={sortBy} onChange={handleChangeSortBy} />
-          <Box sx={{ flexGrow: 1 }} /> {/* Search bar place */}
+          {/* TODO: Search bar */}
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
+            <SearchInput />
+          </Box>
           <AddAnimal />
         </Box>
 
         {/* Filter Component */}
-        <FilterOptions filters={filteredOptions} />
+        <FilterOptions
+          filters={filteredOptions}
+          handleFilterChange={handleFilterChange}
+          handleApplyFilters={handleApplyFilters}
+        />
 
         <Grid
           container
@@ -241,6 +262,25 @@ function AddAnimal() {
         onClose={handleModalClose}
         defaultAnimal={defaultAnimalData}
         defaultImage={defaultUploadedImages}
+      />
+    </>
+  );
+}
+
+function SearchInput() {
+  return (
+    <>
+      <Input
+        id="search-item"
+        aria-label="Search pet name"
+        placeholder="Search"
+        sx={{ width: "500px" }}
+        variant="outlined"
+        startAdornment={
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        }
       />
     </>
   );
