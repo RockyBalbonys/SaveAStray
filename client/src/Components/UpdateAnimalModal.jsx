@@ -25,8 +25,6 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
   const [animalInfo, setAnimalInfo] = useState(animal);
   const [uploadedImages, setUploadedImages] = useState([]);
 
-  console.log({ animalInfo });
-
   useEffect(() => {
     if (!open) {
       setAnimalInfo(animal);

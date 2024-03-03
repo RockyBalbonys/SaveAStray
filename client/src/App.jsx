@@ -4,7 +4,7 @@ import LandingPage from "./Pages/LandingPage";
 import NotFound from "./Pages/NotFound";
 import Navbar from "./Components/Navbar";
 import About from "./Pages/About";
-import Animals from "./Pages/Animals";
+import AnimalsShelter from "./Pages/AnimalsShelter";
 import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
@@ -46,7 +46,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
-          <Route path="/animals" element={<Animals />} />
+          <Route path="/animals" element={<AnimalsShelter />} />
+          {/* <Route path="/animals" element={<Animals />} /> */}
           {/* <Route path="/learn" element={<Learn />} /> */}
           <Route path="/articles/" element={<Articles />} />
           <Route path="/articles/:id" element={<ArticlePage />} />
@@ -57,7 +58,7 @@ function App() {
           <Route path="/policy" element={<PrivacyPolicy />} />
           <Route path="/uploadImage" element={<UploadImage />} />
           <Route path="/verify" element={<Verify />} />
-          <Route path="/api/sheets" element={<Sheets />} /> 
+          <Route path="/api/sheets" element={<Sheets />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ThemeProvider>

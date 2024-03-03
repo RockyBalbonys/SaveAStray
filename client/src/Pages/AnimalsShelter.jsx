@@ -31,8 +31,10 @@ import SearchIcon from "@mui/icons-material/Search";
 
 // const filteredOptions = animalProps.filter((item) => item.options.length > 0);
 
-const Animals = () => {
+const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
+
+  console.table(animals);
 
   const [filters, setFilters] = useState({
     type: null,
@@ -65,6 +67,24 @@ const Animals = () => {
           params: filters,
         }
       );
+
+      let filteredPets = response.data.filteredPets;
+
+      // Apply sorting logic to the filtered subset of animals
+      if (sortBy === "Ascending") {
+        filteredPets = filteredPets.sort((a, b) => {
+          // Sorting logic for ascending order
+          // For example, compare the name property of animals
+          return a.name.localeCompare(b.name);
+        });
+      } else if (sortBy === "Descending") {
+        filteredPets = filteredPets.sort((a, b) => {
+          // Sorting logic for descending order
+          // For example, compare the name property of animals
+          return b.name.localeCompare(a.name);
+        });
+      }
+
       setAnimals(response.data.filteredPets);
     } catch (error) {
       console.error("Error fetching filtered pets:", error);
@@ -76,15 +96,6 @@ const Animals = () => {
       ...prevFilters,
       [filterType]: value,
     }));
-  };
-
-  const handleClearFilters = () => {
-    setFilters({
-      type: null,
-      sex: null,
-      age: null,
-      size: null,
-    });
   };
 
   const handleApplyFilters = () => {
@@ -99,11 +110,38 @@ const Animals = () => {
     { propType: "Status", options: ["Available", "On Process", "Adopted"] },
   ];
 
+  // Sorting by names
   const [sortBy, setSortBy] = useState("");
 
   const handleChangeSortBy = (e) => {
-    setSortBy(e.target.value);
+    const selectedSortBy = e.target.value;
+    setSortBy((prevSortBy) => {
+      if (selectedSortBy === "Ascending") {
+        setAnimals(ascendingPets);
+      } else if (selectedSortBy === "Descending") {
+        setAnimals(descendingPets);
+      }
+      return selectedSortBy;
+    });
   };
+
+  // Sort Ascending
+  const ascendingPets = () => {
+    return animals.sort(compareByNameAscending);
+  };
+
+  // Sort Descending
+  const descendingPets = () => {
+    return animals.sort(compareByNameDescending);
+  };
+
+  function compareByNameAscending(a, b) {
+    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+  }
+
+  function compareByNameDescending(a, b) {
+    return b.name.toLowerCase().localeCompare(a.name.toLowerCase());
+  }
 
   // Search function
   const [searchValue, setSearchValue] = useState("");
@@ -268,7 +306,7 @@ const Animals = () => {
   );
 };
 
-export default Animals;
+export default AnimalsShelter;
 
 function SearchInput({ value, onChange }) {
   return (

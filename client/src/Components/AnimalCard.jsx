@@ -31,7 +31,11 @@ const AnimalCard = ({ animals, height, width }) => {
         padding: "12px",
         border: "2px solid #EE7200",
         borderRadius: "7px",
-        "&:hover": {},
+        boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+        transition: "box-shadow 0.3s ease",
+        "&:hover": {
+          boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
+        },
       }}
       elevation={0}
     >
@@ -42,6 +46,11 @@ const AnimalCard = ({ animals, height, width }) => {
         }}
         disableTouchRipple
         disableRipple
+        sx={{
+          "& .MuiCardActionArea-focusHighlight": {
+            background: "transparent",
+          },
+        }}
       >
         <CardMedia
           image={placeholder}
