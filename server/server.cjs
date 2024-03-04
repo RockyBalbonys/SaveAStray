@@ -151,6 +151,30 @@ app.post('/api/addAnimal', async (req, res) => {
     }
 })
 
+app.post('/api/updatePet', async (req, res) => {
+  console.log(req.body);
+
+  const { _id, name, description, species, breed, sex, age, color, size, price } = req.body
+  try {
+    const pet = await Pet.updateOne({_id}, {$set: {
+      name,
+      description,
+      species,
+      breed,
+      sex, 
+      age,
+      color,
+      size,
+      price
+    }})
+    res.send({
+      status: 200,
+      message: "success"
+    })
+  } catch (err) {
+    console.log(err);
+  }  
+})
 
 app.post('/api/login', async (req, res) => {
   console.log(req.body);
