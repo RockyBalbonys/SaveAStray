@@ -9,10 +9,8 @@ import {
   Typography,
   Stack,
   Link,
-  Button,
   Drawer,
   List,
-  ListItem,
   ListItemText,
   Divider,
   ListItemButton,
@@ -20,16 +18,16 @@ import {
   MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import logo from "../assets/icons/SAS_Logo4.png";
-import facebook_icon from "../assets/icons/facebook.png";
-import email_icon from "../assets/icons/email.png";
-import telegram_icon from "../assets/icons/telegram.png";
-import { pages } from "../constants/landingPage";
-import { CustomButton } from "./CustomButton";
+import logo from "../../assets/icons/SAS_Logo4.png";
+import facebook_icon from "../../assets/icons/facebook.png";
+import email_icon from "../../assets/icons/email.png";
+import telegram_icon from "../../assets/icons/telegram.png";
+import { pages } from "../../constants/landingPage";
+import { CustomButton } from "../Button/CustomButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import IconLinks from "./IconLinks";
+import IconLinks from "../IconLinks";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import CustomLink from "./CustomLink";
+import CustomLink from "../CustomLink";
 
 const icons = [
   { icon: facebook_icon, alt: "facebook icon" },

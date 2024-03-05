@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Background from "../Components/Background";
-import { Container, Box, Paper, Typography } from "@mui/material";
+import { Container, Box, Typography } from "@mui/material";
 import topImage from "../assets/images/formImage.png";
 import logo from "../assets/icons/SAS_Logo4.png";
-import { VerifyButton } from "../Components/CustomButton";
+import { VerifyButton } from "../Components/Button/CustomButton";
 import SvgIcon from "@mui/material/SvgIcon";
-import { StyledPaper } from "../Components/StyledPaper";
+import { StyledPaper } from "../Components/Paper/StyledPaper";
 import { Link as RouterLink } from "react-router-dom";
 
 function PawrentIcon(props) {

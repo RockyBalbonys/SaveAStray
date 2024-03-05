@@ -1,7 +1,7 @@
 import { Container, Typography, Box, Stack } from "@mui/material";
 import dogImage from "../assets/images/learn/learnImage.png";
 import thirdSectionImage from "../assets/images/learn/learnImage2.png";
-import Footer from "../Components/Footer";
+import Footer from "../Components/PageComponent/Footer";
 
 const Learn = () => {
   return (

@@ -2,7 +2,7 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { articlesCardContent } from "../constants/article";
-import { ArticleCard } from "../Components/CustomCard";
+import { ArticleCard } from "../Components/Card/CustomCard";
 import { Link as RouterLink } from "react-router-dom";
 
 const ArticlePage = () => {

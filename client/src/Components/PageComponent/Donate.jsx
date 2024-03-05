@@ -1,8 +1,8 @@
 import { Box, Typography, Button } from "@mui/material";
-import { filter } from "../constants/landingPage";
-import donateImage from "../assets/images/image_donate.png";
-import { CustomButton } from "./CustomButton";
-import {Link } from 'react-router-dom'
+import { filter } from "../../constants/landingPage";
+import donateImage from "../../assets/images/image_donate.png";
+import { CustomButton } from "../Button/CustomButton";
+import { Link } from "react-router-dom";
 
 const donateBackground = {
   position: "relative",
@@ -33,7 +33,12 @@ const Donate = () => {
         <Typography variant="h5" fontWeight="bold" color="white">
           Help SaveAStray to end animal loneliness
         </Typography>
-        <CustomButton variant="contained" size="large" component={Link} to='/donate'>
+        <CustomButton
+          variant="contained"
+          size="large"
+          component={Link}
+          to="/donate"
+        >
           Donate Now
         </CustomButton>
       </Box>
