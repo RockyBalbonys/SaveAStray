@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { AnimalNameInput, AnimalDescInput } from "./CustomInput";
+import { AnimalNameInput, AnimalDescInput } from "./Input/CustomInput";
 
 export const InputField = ({ onChange, data }) => {
   return (

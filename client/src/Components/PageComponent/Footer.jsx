@@ -9,12 +9,12 @@ import {
   Link,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import facebook_icon from "../assets/icons/facebook.png";
-import email_icon from "../assets/icons/email.png";
-import telegram_icon from "../assets/icons/telegram.png";
-import { pages, contacts, legal } from "../constants/landingPage";
-import logo from "../assets/icons/SAS_Logo4.png";
-import IconLinks from "./IconLinks";
+import facebook_icon from "../../assets/icons/facebook.png";
+import email_icon from "../../assets/icons/email.png";
+import telegram_icon from "../../assets/icons/telegram.png";
+import { pages, contacts, legal } from "../../constants/landingPage";
+import logo from "../../assets/icons/SAS_Logo4.png";
+import IconLinks from "../IconLinks";
 
 const icons = [
   { icon: facebook_icon, alt: "facebook icon" },

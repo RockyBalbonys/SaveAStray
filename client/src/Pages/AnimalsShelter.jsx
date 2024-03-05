@@ -19,17 +19,14 @@ import {
   InputAdornment,
   InputLabel,
 } from "@mui/material";
-import AnimalCard from "../Components/AnimalCard";
-import { animalProps } from "../constants/animals";
-import Footer from "../Components/Footer";
+import AnimalCard from "../Components/Card/AnimalCard";
+import Footer from "../Components/PageComponent/Footer";
 import AddIcon from "@mui/icons-material/Add";
-import AddAnimalModal from "../Components/AddAnimalModal";
 import axios from "axios";
 import { SortByButton } from "../Components/SortByButton";
 import { FilterOptions } from "../Components/FilterOptions";
 import SearchIcon from "@mui/icons-material/Search";
-
-// const filteredOptions = animalProps.filter((item) => item.options.length > 0);
+import ModalAddPet from "../Components/Modal/ModalAddPet";
 
 const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
@@ -48,11 +45,7 @@ const AnimalsShelter = () => {
       .get("http://localhost:3001/getPet")
       .then(function (response) {
         const allPets = response.data.allPets;
-        console.log(allPets);
         setAnimals(allPets);
-        allPets.forEach((pet) => {
-          console.log(pet.name);
-        });
       })
       .catch(function (error) {
         console.log(error);
@@ -186,7 +179,7 @@ const AnimalsShelter = () => {
           className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
       </div>
-      <Container maxWidth="lg" sx={{ my: "64px" }}>
+      <Container maxWidth="lg" sx={{ my: "64px", position: "relative" }}>
         <Container
           maxWidth="md"
           sx={{
@@ -235,7 +228,7 @@ const AnimalsShelter = () => {
             />
           </Grid>
           <Grid item order={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
-            <AddAnimal />
+            <AddAnimal setAnimals={setAnimals} />
           </Grid>
         </Grid>
 
@@ -261,7 +254,7 @@ const AnimalsShelter = () => {
               textAlign="center"
               width="100%"
             >
-              Not pet found
+              No pet found
             </Typography>
           ) : (
             currentAnimals.map((animal, idx) => (
@@ -274,7 +267,12 @@ const AnimalsShelter = () => {
                 display="flex"
                 justifyContent="center"
               >
-                <AnimalCard animals={animal} height="auto" width="257px" />
+                <AnimalCard
+                  animals={animal}
+                  height="auto"
+                  width="257px"
+                  setAnimals={setAnimals}
+                />
               </Grid>
             ))
           )}
@@ -329,7 +327,7 @@ function SearchInput({ value, onChange }) {
   );
 }
 
-function AddAnimal() {
+function AddAnimal({ setAnimals }) {
   const [openAddModal, setOpenAddModal] = useState(false);
 
   const defaultAnimalData = {
@@ -359,11 +357,12 @@ function AddAnimal() {
       >
         Add New Pet
       </Button>
-      <AddAnimalModal
+      <ModalAddPet
         open={openAddModal}
         onClose={handleModalClose}
         defaultAnimal={defaultAnimalData}
         defaultImage={defaultUploadedImages}
+        setAnimals={setAnimals}
       />
     </>
   );

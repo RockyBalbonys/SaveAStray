@@ -12,15 +12,15 @@ import {
   Link,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { CustomButton } from "../Components/CustomButton";
+import { CustomButton } from "../Components/Button/CustomButton";
 import heroImage from "../assets/images/image_13.png";
 import catImage from "../assets/images/Cats.png";
 import dogImage from "../assets/images/Dogs.png";
 import aboutImage from "../assets/images/image_14.png";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Donate from "../Components/Donate";
-import Footer from "../Components/Footer";
+import Donate from "../Components/PageComponent/Donate";
+import Footer from "../Components/PageComponent/Footer";
 import { cardContent, helpContent, filter } from "../constants/landingPage";
 
 const headerImage = {
@@ -112,22 +112,26 @@ function HeroContent() {
           Looking for a loyal adventure buddy? Look no further than your local
           shelter! Adopt a pup and fill your life with pawsitive memories.
         </Typography>
-        <Stack
-          direction="row"
+        <Grid
+          container
           spacing={2}
-          sx={{ flexWrap: "wrap", rowGap: 2, justifyContent: "center" }}
+          sx={{ justifyContent: "center", alignContent: "center" }}
         >
-          <Link to="/login?role=Adoptive Parent" component={RouterLink}>
-            <CustomButton variant="contained" sx={{ padding: "8px 48px" }}>
-              I am a <span className="font-bold">&nbsp;Pawrent</span>
-            </CustomButton>
-          </Link>
-          <Link to="/login?role=Rescue Shelter" component={RouterLink}>
-            <CustomButton variant="contained" sx={{ padding: "8px 21px" }}>
-              I am a <span className="font-bold">&nbsp;Rescue Shelter</span>
-            </CustomButton>
-          </Link>
-        </Stack>
+          <Grid item>
+            <Link to="/login?role=Adoptive Parent" component={RouterLink}>
+              <CustomButton variant="contained" sx={{ padding: "8px 48px" }}>
+                I am a <span className="font-bold">&nbsp;Pawrent</span>
+              </CustomButton>
+            </Link>
+          </Grid>
+          <Grid item>
+            <Link to="/login?role=Rescue Shelter" component={RouterLink}>
+              <CustomButton variant="contained" sx={{ padding: "8px 21px" }}>
+                I am a <span className="font-bold">&nbsp;Rescue Shelter</span>
+              </CustomButton>
+            </Link>
+          </Grid>
+        </Grid>
       </Stack>
     </Container>
   );

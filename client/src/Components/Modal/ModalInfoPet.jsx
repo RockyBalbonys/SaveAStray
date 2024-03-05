@@ -13,13 +13,13 @@ import {
   IconButton,
   Card,
 } from "@mui/material";
-import { AnimalImageCarousel } from "./CustomCarousel";
-import animalPaw from "../assets/icons/animalPaw.svg";
+import { AnimalImageCarousel } from "../CustomCarousel";
+import animalPaw from "../../assets/icons/animalPaw.svg";
 import { useState } from "react";
-import placeholder from "../assets/icons/SAS_Logo4.png";
+import placeholder from "../../assets/icons/SAS_Logo4.png";
 import CloseIcon from "@mui/icons-material/Close";
 
-const InformationModal = ({ open, onClose, animal }) => {
+const ModalInfoPet = ({ open, onClose, animal }) => {
   const { imageCollection } = animal;
 
   return (
@@ -123,9 +123,13 @@ const InformationModal = ({ open, onClose, animal }) => {
                   height: "100%",
                 }}
               >
-                <div>
+                <div className="flex justify-center items-center">
                   <img
-                    src={placeholder}
+                    src={
+                      !animal.photos || animal.photos.length === 0
+                        ? placeholder
+                        : animal.photos[0]
+                    }
                     alt="placeholder"
                     className="min-h_[200px] bg-cover bg-center"
                   />
@@ -160,7 +164,7 @@ const InformationModal = ({ open, onClose, animal }) => {
   );
 };
 
-export default InformationModal;
+export default ModalInfoPet;
 
 const isPetTypeTernary = (property) =>
   property === "Pet Type" ? "species" : property.toLowerCase();

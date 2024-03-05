@@ -2,8 +2,8 @@ import about from "../assets/images/hero_about.png";
 import pawBG from "../assets/images/Paw.png";
 import { Box, Container, Typography, Stack, Grid, Paper } from "@mui/material";
 import { aboutContent, team, sectionContent } from "../constants/about";
-import Footer from "../Components/Footer";
-import Donate from "../Components/Donate";
+import Footer from "../Components/PageComponent/Footer";
+import Donate from "../Components/PageComponent/Donate";
 
 const About = () => {
   return (
@@ -28,7 +28,8 @@ const About = () => {
               width="570px"
               sx={{ textAlign: { xs: "center", md: "left" } }}
             >
-              Helping <span className="text-[#2F4858]">Hundreds Connect</span> Together.
+              Helping <span className="text-[#2F4858]">Hundreds Connect</span>{" "}
+              Together.
             </Typography>
           </Box>
         </Container>
@@ -317,7 +318,7 @@ function MeetTheTeam() {
             width: "100%",
           }}
         >
-          <Typography fontWeight="bold" mb={3}>
+          <Typography fontWeight="bold" variant="h5" mb={3}>
             Meet The Team
           </Typography>
           <Typography mb={3} width="600px">
@@ -326,35 +327,60 @@ function MeetTheTeam() {
           </Typography>
         </Box>
 
-          <Container maxWidth='md'>
-        <Grid container rowSpacing={4} columnSpacing={3} alignItems="center">
-          {team.map((member, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index} sx={{  height: 'auto', width: 'auto', justifyContent: 'space-around' }}>
-              <Paper elevation={4} sx={{ height: "100%", p: 2, display: 'flex', flexDirection: 'column' }}>
-                <Box
+        <Container maxWidth="md">
+          <Grid container rowSpacing={4} columnSpacing={3} alignItems="center">
+            {team.map((member, index) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={index}
+                sx={{
+                  height: "auto",
+                  width: "auto",
+                  justifyContent: "space-around",
+                }}
+              >
+                <Paper
+                  elevation={4}
                   sx={{
-                    height: "250px",
-                    // width: "100%",
-                    backgroundImage: `url(${member.media})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: 'no-repeat',
-                    margin: 0, // Remove any margin
-                    padding: 0, // Remove any padding
-                    flexGrow: 1
+                    height: "100%",
+                    p: 2,
+                    display: "flex",
+                    flexDirection: "column",
                   }}
-                />
-                <Box textAlign="center" p={1} sx={{flexGrow: 1}}>
-                  <Typography fontWeight="bold" variant="body1bold" component="div">
-                    {member.name}
-                  </Typography>
-                  <Typography variant="subtitle2">{member.position}</Typography>
-                </Box>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-          </Container>
+                >
+                  <Box
+                    sx={{
+                      height: "250px",
+                      // width: "100%",
+                      backgroundImage: `url(${member.media})`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
+                      margin: 0, // Remove any margin
+                      padding: 0, // Remove any padding
+                      flexGrow: 1,
+                    }}
+                  />
+                  <Box textAlign="center" p={1} sx={{ flexGrow: 1 }}>
+                    <Typography
+                      fontWeight="bold"
+                      variant="body1bold"
+                      component="div"
+                    >
+                      {member.name}
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      {member.position}
+                    </Typography>
+                  </Box>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </Container>
     </Box>
   );

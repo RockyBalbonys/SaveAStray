@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Signup from "./Pages/Signup";
 import LandingPage from "./Pages/LandingPage";
 import NotFound from "./Pages/NotFound";
-import Navbar from "./Components/Navbar";
+import Navbar from "./Components/PageComponent/Navbar";
 import About from "./Pages/About";
 import AnimalsShelter from "./Pages/AnimalsShelter";
 import Learn from "./Pages/Learn";

@@ -10,12 +10,11 @@ import {
   Box,
 } from "@mui/material";
 import { useState } from "react";
-import AnimalModal from "./AnimalModal";
-import UpdateAnimalModal from "./UpdateAnimalModal";
-import placeholder from "../assets/icons/SAS_Logo4.png";
-import InformationModal from "./InformationModal";
+import placeholder from "../../assets/icons/SAS_Logo4.png";
+import ModalInfoPet from "../Modal/ModalInfoPet";
+import ModalUpdatePet from "../Modal/ModalUpdatePet";
 
-const AnimalCard = ({ animals, height, width }) => {
+const AnimalCard = ({ animals, height, width, setAnimals }) => {
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
 
@@ -49,7 +48,6 @@ const AnimalCard = ({ animals, height, width }) => {
         >
           <CardActionArea
             onClick={() => {
-              console.log("Card clicked! show modal");
               setOpen(true);
             }}
             disableTouchRipple
@@ -61,7 +59,11 @@ const AnimalCard = ({ animals, height, width }) => {
             }}
           >
             <CardMedia
-              image={placeholder}
+              image={
+                !animals.photos || animals.photos.length === 0
+                  ? placeholder
+                  : animals.photos[0]
+              }
               sx={{ height: "220px", objectFit: "contain" }}
             />
             <CardContent sx={{ padding: 1 }}>
@@ -96,22 +98,18 @@ const AnimalCard = ({ animals, height, width }) => {
                 width: "100%",
               }}
               onClick={() => {
-                console.log("Update clicked");
                 setOpenUpdate(true);
               }}
             >
               Update
             </Button>
           </CardActions>
-          <InformationModal
-            open={open}
-            onClose={handleClose}
-            animal={animals}
-          />
-          <UpdateAnimalModal
+          <ModalInfoPet open={open} onClose={handleClose} animal={animals} />
+          <ModalUpdatePet
             open={openUpdate}
             onClose={handleClose}
             animal={animals}
+            setAnimals={setAnimals}
           />
         </Card>
       </Box>

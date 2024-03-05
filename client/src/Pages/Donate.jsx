@@ -2,7 +2,7 @@ import { Box, Container, Typography, Grid, Button } from "@mui/material";
 import HeroImage from "../assets/images/donate/hero_donate.png";
 import { carouselItems } from "../constants/donate";
 import CustomCarousel from "../Components/CustomCarousel";
-import Footer from "../Components/Footer";
+import Footer from "../Components/PageComponent/Footer";
 import GCashImage from "../assets/images/donate/donate_gcash.png";
 import gcashIcon from "../assets/icons/gcash.svg";
 import paypalIcon from "../assets/icons/paypal.svg";
@@ -31,7 +31,8 @@ const Donate = () => {
               width="334px"
               sx={{ textAlign: { xs: "center", md: "left" } }}
             >
-              Make A <span className="text-[#2F4858]">Big Difference</span> Today!
+              Make A <span className="text-[#2F4858]">Big Difference</span>{" "}
+              Today!
             </Typography>
           </Box>
         </Container>

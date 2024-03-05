@@ -34,10 +34,11 @@ export const UploadImage = ({
   images,
   handleRemoveImage,
   isAddingNew,
+  data,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  console.log(placeholder);
+  const { photos } = data;
 
   return (
     <>
@@ -52,34 +53,69 @@ export const UploadImage = ({
           "&:hover": {
             border: `2px solid grey`,
           },
+          overflow: "hidden",
         }}
       >
-        {/* <IconButton
-          component="label"
-          aria-label="upload image"
-          sx={{
-            tabIndex: -1,
-            border: "1px solid",
-            width: "100%",
-            height: "100%",
-            borderRadius: "7px",
-            border: "1px solid #FF8210",
-          }}
-        >
-          <AddPhotoAlternateIcon sx={{ fontSize: "5rem" }} />
-          <VisuallyHiddenInput type="file" onChange={onChange} required />
-        </IconButton> */}
-        <div>
-          <img
-            src={placeholder}
-            alt="placeholder"
-            className="min-h-[200px] bg-cover bg-center"
-          />
+        <div className="flex justify-center items-center overflow-hidden h-full">
+          {images.length > 0 ? (
+            // Show uploaded image if there are images
+            <img
+              src={URL.createObjectURL(images[images.length - 1])}
+              alt="Uploaded"
+              className="h-full object-contain bg-center"
+            />
+          ) : photos && photos.length > 0 ? (
+            // Show existing image if available
+            <img
+              src={photos[0]}
+              alt="Existing"
+              className="h-full object-contain bg-center"
+            />
+          ) : (
+            // Show placeholder image if no images
+            <img
+              src={placeholder}
+              alt="Placeholder"
+              className="h-full object-contain bg-center"
+            />
+          )}
         </div>
 
-        <Box sx={{ position: "absolute", bottom: 0, right: 0 }}>
-          <Button onClick={() => setIsDialogOpen(true)}>Edit</Button>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+            display: "flex",
+            columnGap: "5px",
+          }}
+        >
           <Button
+            variant="contained"
+            sx={{
+              color: "primary",
+              padding: 0,
+              fontSize: "14px",
+              bgcolor: "white",
+              "&:hover": {
+                color: "white",
+              },
+            }}
+            onClick={() => setIsDialogOpen(true)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              color: "primary",
+              padding: 0,
+              fontSize: "14px",
+              bgcolor: "white",
+              "&:hover": {
+                color: "white",
+              },
+            }}
             onClick={() => {
               document.getElementById("fileInput").click();
             }}
