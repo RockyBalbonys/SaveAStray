@@ -13,7 +13,7 @@ import { animalProps } from "../../constants/animals";
 import axios from "axios";
 import { initializeApp } from "firebase/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { InputField } from "../InputField";
+import { InputField } from "../Input/InputField";
 import { AnimalProp } from "../AnimalProp";
 import { UploadImage } from "../UploadImage";
 import CloseIcon from "@mui/icons-material/Close";
@@ -284,6 +284,7 @@ const ModalAddPet = ({
                   onChange={handleChange}
                   formData={animalData}
                   setFormData={setAnimalData}
+                  isAdd={true}
                 />
               </Grid>
             ))}

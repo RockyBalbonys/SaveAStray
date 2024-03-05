@@ -11,36 +11,44 @@ import {
 import animalPaw from "../assets/icons/animalPaw.svg";
 import { useState } from "react";
 
-export const AnimalProp = ({ prop, options, setFormData, formData }) => {
+export const AnimalProp = ({ prop, options, setFormData, formData, isAdd }) => {
   return (
     <>
-      <Box
-        sx={{
-          p: "16px",
-          border: "0.5px solid rgba(238, 114, 0, 0.50)",
-          borderRadius: "7px",
-          color: "#2F4858",
-          backgroundColor: "#FFFFFF",
-          transition: "box-shadow 0.3s ease",
-          boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-          "&:hover": {
-            boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.15)",
-          },
-        }}
-      >
-        <Icon>
-          <img src={animalPaw} alt="icon" />
-        </Icon>
-        <Typography variant="body2" fontWeight={700}>
-          {prop}
-        </Typography>
-        {renderInputOrSelection(prop, options, setFormData, formData)}
-      </Box>
+      {isAdd && prop === "Status" ? null : (
+        <Box
+          sx={{
+            p: "16px",
+            border: "0.5px solid rgba(238, 114, 0, 0.50)",
+            borderRadius: "7px",
+            color: "#2F4858",
+            backgroundColor: "#FFFFFF",
+            transition: "box-shadow 0.3s ease",
+            boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+            "&:hover": {
+              boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.15)",
+            },
+          }}
+        >
+          <Icon>
+            <img src={animalPaw} alt="icon" />
+          </Icon>
+          <Typography variant="body2" fontWeight={700}>
+            {prop}
+          </Typography>
+          {renderInputOrSelection(prop, options, setFormData, formData, isAdd)}
+        </Box>
+      )}
     </>
   );
 };
 
-const renderInputOrSelection = (prop, options, setFormData, formData) => {
+const renderInputOrSelection = (
+  prop,
+  options,
+  setFormData,
+  formData,
+  isAdd
+) => {
   if (prop === "Breed" || prop === "Color") {
     const handleInputPropChange = (e) => {
       setFormData((a) => ({
@@ -71,12 +79,14 @@ const renderInputOrSelection = (prop, options, setFormData, formData) => {
         menuItems={options}
         setFormData={setFormData}
         formData={formData}
+        isAdd={isAdd}
       />
     );
   }
 };
 
-function SelectionProp({ menuItems, setFormData, formData, propName }) {
+function SelectionProp({ menuItems, setFormData, formData, propName, isAdd }) {
+  const noStatusSelect = isAdd && propName === "Status" ? "false" : "true";
   const propertyName =
     propName === "Pet Type" ? "species" : propName.toLowerCase();
   const [selectedValue, setSelectedValue] = useState(formData[propertyName]);
@@ -88,6 +98,10 @@ function SelectionProp({ menuItems, setFormData, formData, propName }) {
       [e.target.name]: e.target.value,
     }));
   };
+
+  if (isAdd && propName === "Status") {
+    return null; // Don't render the Select component if isAdd is true and propName is 'Status'
+  }
   return (
     <FormControl sx={{ width: "100%" }}>
       <Select

@@ -25,15 +25,15 @@ const getStatusColor = (status) => {
       };
     case "On Process":
       return {
-        background: "#FFCC80",
-        text: "#FF6F00",
-        border: "#FF6F00",
+        background: "#FFADC1",
+        text: "#9B0101",
+        border: "#9B0101",
       };
     case "Adopted":
       return {
-        background: "#FF8A65",
+        background: "#BC9300",
         text: "#BF360C",
-        border: "#BF360C",
+        border: "#BC9300",
       };
     default:
       return {

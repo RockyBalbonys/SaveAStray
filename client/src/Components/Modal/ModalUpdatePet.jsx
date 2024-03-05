@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SnackbarAnimal from "../Snackbar/SnackbarAnimal";
-import { InputField } from "../InputField";
+import { InputField } from "../Input/InputField";
 import { useState, useEffect } from "react";
 import { animalProps } from "../../constants/animals";
 import { AnimalProp } from "../AnimalProp";
@@ -61,6 +61,7 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
     } = animalInfo;
 
     try {
+      setLoadingButton(true);
       // Update the pet information
       const res = await axios.post("http://localhost:3001/api/updatePet", {
         _id,
@@ -275,7 +276,7 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
 
             <Grid container spacing={2} pb="32px">
               {animalProps.map((property, idx) => (
-                <Grid item key={idx} xs={12} sm={4}>
+                <Grid item key={idx} xs={12} sm={6} md={4}>
                   <AnimalProp
                     prop={property.propType}
                     options={property.options}
@@ -308,7 +309,7 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
           <SnackbarAnimal
             open={openSnackbar}
             onClose={handleCloseSnackbar}
-            message={"New pet has been successfully updated."}
+            message={`${animal.name} has been successfully updated.`}
           />
         </Paper>
       </Modal>
