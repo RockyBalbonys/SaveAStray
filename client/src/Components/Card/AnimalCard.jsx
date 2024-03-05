@@ -13,6 +13,7 @@ import { useState } from "react";
 import placeholder from "../../assets/icons/SAS_Logo4.png";
 import ModalInfoPet from "../Modal/ModalInfoPet";
 import ModalUpdatePet from "../Modal/ModalUpdatePet";
+import BadgeAnimal from "../Badge/BadgeAnimal";
 
 const AnimalCard = ({ animals, height, width, setAnimals }) => {
   const [open, setOpen] = useState(false);
@@ -24,12 +25,18 @@ const AnimalCard = ({ animals, height, width, setAnimals }) => {
   };
   return (
     <>
-      <Box sx={{ position: "relative" }}>
-        <Badge
-          sx={{ position: "absolute", top: "0px", left: "20px" }}
-          badgeContent={animals.status}
-          color={animals.status === "Available" ? "success" : "secondary"}
-        />
+      <Box
+        sx={{
+          position: "relative",
+          "&:hover": {
+            "& .MuiBadge-badge": {
+              opacity: 0,
+              transition: "opacity 0.3s ease-in-out",
+            },
+          },
+        }}
+      >
+        <BadgeAnimal status={animals.status} />
         <Card
           sx={{
             height: height,
