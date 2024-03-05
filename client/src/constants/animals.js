@@ -39,7 +39,7 @@ const animalProps = [
   {
     id: 7,
     propType: "Status",
-    options: ["Available", "On Process", "Adopted"],
+    options: ["Available", "In Process", "Adopted"],
   },
 ];
 

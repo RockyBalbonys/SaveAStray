@@ -4,20 +4,11 @@ import {
   Box,
   Button,
   Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   Grid,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
   Typography,
-  useRadioGroup,
   Pagination,
   Input,
   InputAdornment,
-  InputLabel,
 } from "@mui/material";
 import AnimalCard from "../Components/Card/AnimalCard";
 import Footer from "../Components/PageComponent/Footer";
@@ -100,7 +91,7 @@ const AnimalsShelter = () => {
     { propType: "Sex", options: ["Male", "Female"] },
     { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
     { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
-    { propType: "Status", options: ["Available", "On Process", "Adopted"] },
+    { propType: "Status", options: ["Available", "In Process", "Adopted"] },
   ];
 
   // Sorting by names

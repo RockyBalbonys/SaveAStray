@@ -12,6 +12,8 @@ const StyledBadge = styled(Badge)(({ theme, status }) => ({
     padding: "12px 10px",
     fontSize: "1rem",
     fontWeight: "400",
+    width: "121px",
+    height: "32px",
   },
 }));
 
@@ -23,7 +25,7 @@ const getStatusColor = (status) => {
         text: "#299B01",
         border: "#299B01",
       };
-    case "On Process":
+    case "In Process":
       return {
         background: "#FFADC1",
         text: "#9B0101",
@@ -31,8 +33,8 @@ const getStatusColor = (status) => {
       };
     case "Adopted":
       return {
-        background: "#BC9300",
-        text: "#BF360C",
+        background: "#FFF7CD",
+        text: "#BC9300",
         border: "#BC9300",
       };
     default:

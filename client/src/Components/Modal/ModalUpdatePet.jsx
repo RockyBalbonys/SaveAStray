@@ -58,6 +58,7 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
       size,
       photos,
       price,
+      status,
     } = animalInfo;
 
     try {
@@ -74,6 +75,7 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
         color,
         size,
         price,
+        status,
       });
       console.log(res);
 

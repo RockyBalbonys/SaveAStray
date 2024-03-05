@@ -164,6 +164,7 @@ app.post("/api/updatePet", async (req, res) => {
     color,
     size,
     price,
+    status,
   } = req.body;
   try {
     const pet = await Pet.updateOne(
@@ -179,6 +180,7 @@ app.post("/api/updatePet", async (req, res) => {
           color,
           size,
           price,
+          status,
         },
       }
     );
@@ -238,13 +240,14 @@ app.get("/getPet", async (req, res) => {
 
 app.get("/api/filteredPets", async (req, res) => {
   try {
-    const { species, sex, age, size } = req.query;
+    const { species, sex, age, size, status } = req.query;
     let filter = {};
 
     if (species) filter.type = species;
     if (sex) filter.sex = sex;
     if (age) filter.age = age;
     if (size) filter.size = size;
+    if (status) filter.status = status;
 
     const filteredPets = await Pet.find(filter);
 
