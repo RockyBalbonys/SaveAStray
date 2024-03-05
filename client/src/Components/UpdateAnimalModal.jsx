@@ -20,6 +20,7 @@ import { AnimalProp } from "./AnimalProp";
 import { UploadImage } from "./UploadImage";
 import { AdoptionFeeInput } from "./CustomInput";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
 const UpdateAnimalModal = ({ open, onClose, animal }) => {
   const [animalInfo, setAnimalInfo] = useState(animal);
@@ -42,6 +43,27 @@ const UpdateAnimalModal = ({ open, onClose, animal }) => {
   // TODO: Create logic for updating animal information
   const handleUpdateSaveAnimal = () => {
     console.log("Animal Updated");
+    console.log(animal.name);
+    console.log(animalInfo);
+    const { _id, name, description, species, breed, sex, age, color, size, photos, price } = animalInfo
+    axios.post('http://localhost:3001/api/updatePet', {
+            _id,
+            name,
+            description,
+            species,
+            breed,
+            sex,
+            age,
+            color,
+            size,
+            price
+    })
+    .then(function (res) {
+      console.log(res);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
   };
 
   const handleUpload = (e) => {

@@ -23,7 +23,6 @@ const AnimalCard = ({ animals, height, width }) => {
     setOpen(false);
     setOpenUpdate(false);
   };
-
   return (
     <>
       <Box sx={{ position: "relative" }}>
@@ -103,21 +102,6 @@ const AnimalCard = ({ animals, height, width }) => {
             >
               Update
             </Button>
-            {/* <Button
-              variant="outlined"
-              sx={{
-                fontWeight: "300",
-                fontSize: "14px",
-                paddingX: "21px",
-                background: "white",
-                textTransform: "none",
-              }}
-              // onClick={() => {
-              //   console.log("Adopted clicked");
-              // }}
-            >
-              Adopted
-            </Button> */}
           </CardActions>
           <InformationModal
             open={open}
@@ -138,13 +122,8 @@ const AnimalCard = ({ animals, height, width }) => {
 export default AnimalCard;
 
 function truncateString(str, num) {
-  // If the length of str is less than or equal to num
-  // just return str--don't truncate it.
   if (str.length <= num) {
     return str;
   }
-  // Return str truncated with '...' concatenated to the end of str.
   return str.slice(0, num) + "...";
 }
-
-truncateString("A-tisket a-tasket A green and yellow basket", 8);

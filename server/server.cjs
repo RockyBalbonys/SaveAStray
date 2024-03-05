@@ -121,33 +121,59 @@ try {
 
 app.post('/api/addAnimal', async (req, res) => {
   console.log(req.body);
-  const { name, description, species, breed, sex, age, color, size, petId } = req.body
+  const { name, description, species, breed, sex, age, color, size, photos } = req.body
+
+    try {
+      const newPet = new Pet({
+        name,
+        description,
+        species,
+        breed,
+        sex,
+        age,
+        color,
+        size,
+        status: "Available",
+        photos
+    });
+    const savedPet = await newPet.save();
+    //const petId  = savedPet._id
+    if (savedPet) {
+      res.send({
+        status: 200,
+        message: "Ped added successfully",
+        //petId
+      })
+        console.log("pet added: " + savedPet);
+    }
+    } catch (err) {
+      console.log(err);
+    }
+})
+
+app.post('/api/updatePet', async (req, res) => {
+  console.log(req.body);
+
+  const { _id, name, description, species, breed, sex, age, color, size, price } = req.body
   try {
-    const newPet = new Pet({
+    const pet = await Pet.updateOne({_id}, {$set: {
       name,
       description,
       species,
       breed,
-      sex,
+      sex, 
       age,
       color,
       size,
-      status: "Available"
-  });
-  const savedPet = await newPet.save();
-  
-  if (savedPet) {
-    const petId = savedPet._id;
+      price
+    }})
     res.send({
       status: 200,
-      message: "Ped added successfully",
-      petId
+      message: "success"
     })
-      console.log("pet added: " + savedPet);
-  }
   } catch (err) {
     console.log(err);
-  }
+  }  
 })
 
 app.post('/api/login', async (req, res) => {

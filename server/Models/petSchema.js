@@ -39,7 +39,6 @@ const petSchema = new mongoose.Schema({
   shelter: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Shelter',
-    required: true
   },
   status: {
     type: String,
@@ -51,6 +50,9 @@ const petSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     required: true
+  },
+  photos: {
+    type: Array
   }
 });
 
