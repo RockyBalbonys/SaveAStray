@@ -10,8 +10,8 @@ import {
 import Textarea from "../Components/Textarea";
 import { contactDetails } from "../constants/contact";
 import dogImage from "../assets/images/dogContact.png";
-import Donate from "../Components/Donate";
-import Footer from "../Components/Footer";
+import Donate from "../Components/PageComponent/Donate";
+import Footer from "../Components/PageComponent/Footer";
 import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 

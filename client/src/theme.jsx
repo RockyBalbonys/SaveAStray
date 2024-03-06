@@ -1,5 +1,24 @@
 import { createTheme } from "@mui/material";
 
+// Define custom color palette
+const palette = {
+  primary: {
+    main: "#FF8210",
+    highlighted: "#EE7200",
+  },
+  secondary: {
+    main: "#2F4858",
+    dark: "#263A47",
+    light: "#385669",
+  },
+  common: {
+    white: "#FFFFFF",
+    black: "#000000",
+    dirtyWhite: "#FAFAFB",
+    semiBlack: "#181818",
+  },
+};
+
 // Define custom typography variants
 const typography = {
   fontFamily: "Poppins",
@@ -63,25 +82,6 @@ const typography = {
   btn: {
     fontSize: 18, // 18px converted to rem // 1.125rem
     fontWeight: "700",
-  },
-};
-
-// Define custom color palette
-const palette = {
-  primary: {
-    main: "#FF8210",
-    highlighted: "#EE7200",
-  },
-  secondary: {
-    main: "#2F4858",
-    dark: "#263A47",
-    light: "#385669",
-  },
-  common: {
-    white: "#FFFFFF",
-    black: "#000000",
-    dirtyWhite: "#FAFAFB",
-    semiBlack: "#181818",
   },
 };
 

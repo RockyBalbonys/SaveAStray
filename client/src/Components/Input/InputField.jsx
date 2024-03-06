@@ -13,6 +13,7 @@ export const InputField = ({ onChange, data }) => {
           aria-label="animal name"
           inputProps={{ maxLength: 150 }}
           required
+          sx={{ fontSize: "24px", color: "#2F4858", fontWeight: "600" }}
         />
         <AnimalDescInput
           value={data.description}
@@ -24,6 +25,7 @@ export const InputField = ({ onChange, data }) => {
           rows={15}
           inputProps={{ maxLength: 600 }}
           required
+          sx={{ fontSize: "14px", color: "#2F4858", fontWeight: "300" }}
         />
       </Stack>
     </>

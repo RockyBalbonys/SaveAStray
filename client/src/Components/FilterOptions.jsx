@@ -8,7 +8,7 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MyFormControlLabel } from "../Components/MyFormControlLabel";
 
 export function FilterOptions({
@@ -19,6 +19,19 @@ export function FilterOptions({
   const [selectedOptions, setSelectedOptions] = useState(
     filters.map(() => null)
   );
+
+  const [filtersApplied, setFiltersApplied] = useState(false);
+
+  useEffect(() => {
+    if (filtersApplied) {
+      handleApplyFilters();
+      setFiltersApplied(false); // Reset to false after applying filters
+    }
+  }, [filtersApplied]);
+
+  const handleApplyFiltersClick = () => {
+    setFiltersApplied(true);
+  };
 
   const handleOptionChange = (filterIndex, option) => {
     setSelectedOptions((prevSelectedOptions) => {
@@ -34,6 +47,7 @@ export function FilterOptions({
     filters.forEach((filter) => {
       handleFilterChange(filter.propType.toLowerCase(), null);
     });
+    setFiltersApplied(true);
   };
 
   return (
@@ -44,7 +58,7 @@ export function FilterOptions({
       rowSpacing={3}
     >
       {filters.map((filter, index) => (
-        <Grid key={index} xs={12} sm={6} md={2.4} item>
+        <Grid key={index} xs={12} sm={6} md={4} lg={2.4} item>
           <FormControl>
             <FormLabel
               sx={{ fontSize: "16px", color: "#EE7200", fontWeight: "600" }}
@@ -89,7 +103,7 @@ export function FilterOptions({
           Clear Filters
         </Button>
         <Button
-          onClick={handleApplyFilters}
+          onClick={handleApplyFiltersClick}
           variant="contained"
           sx={{
             color: "white",
