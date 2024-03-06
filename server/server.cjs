@@ -154,7 +154,7 @@ app.post('/api/addAnimal', async (req, res) => {
 app.post('/api/updatePet', async (req, res) => {
   console.log(req.body);
 
-  const { _id, name, description, species, breed, sex, age, color, size, price } = req.body
+  const { _id, name, description, species, breed, sex, age, color, size, price, status } = req.body
   try {
     const pet = await Pet.updateOne({_id}, {$set: {
       name,
@@ -165,7 +165,8 @@ app.post('/api/updatePet', async (req, res) => {
       age,
       color,
       size,
-      price
+      price,
+      status
     }})
     res.send({
       status: 200,
