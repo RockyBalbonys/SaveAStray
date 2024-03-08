@@ -196,35 +196,44 @@ app.post("/api/updatePet", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   console.log(req.body);
   try {
-    const loginEmail = req.body.email;
-    const loginPass = req.body.password;
-    const user = await User.findOne({ email: loginEmail }).exec();
-    if (!user) {
-      console.log("User not found");
-      return res.status(404).json({ status: 404, message: "User not found!" });
-    }
+      const loginEmail = req.body.email;
+      const loginPass = req.body.password;
+      const loginRole = req.body.role;
+      
+      // Find user by email and role
+      const user = await User.findOne({ email: loginEmail, role: loginRole }).exec();
 
-    // Compare passwords using bcrypt.compare
-    const match = await bcrypt.compare(loginPass, user.password);
+      // If user is not found, return a 404 response
+      if (!user) {
+          console.log("User not found");
+          return res.status(401 ).send({ status: 401 , message: "User not found!" });
+      }
 
-    if (match) {
-      res.send({
-        status: 200,
-        message: "log in success",
-        checked: true,
-      });
-    } else {
-      res.send({
-        status: 400,
-        message: "log in failed",
-        checked: true,
-      });
-    }
+      // Compare passwords using bcrypt.compare
+      const match = await bcrypt.compare(loginPass, user.password);
+
+      if (match) {
+          // Passwords match, send success response
+          res.send({
+              status: 200,
+              message: "Log in Success",
+              checked: true,
+          });
+      } else {
+          // Passwords don't match, send failure response
+          res.send({
+              status: 400,
+              message: "Wrong Email/Pass",
+              checked: true,
+          });
+      }
   } catch (err) {
-    console.error(err);
-    return res.status(500).send("Internal Server Error");
+      // Handle server errors
+      console.error(err);
+      return res.status(500).send("Internal Server Error");
   }
 });
+
 
 app.get("/getPet", async (req, res) => {
   try {
