@@ -1,8 +1,20 @@
 import { useState, useEffect } from "react";
+import * as React from "react";
 import axios from "axios";
 import Background from "../Components/Background";
-import { Container, Box, Typography } from "@mui/material";
-import topImage from "../assets/images/formImage.png";
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Slide,
+} from "@mui/material";
+import topImage from "../assets/images/passive2.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import { VerifyButton } from "../Components/Button/CustomButton";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -85,17 +97,40 @@ export default function Verify() {
       console.log(err);
     });
 
+  // Dialog state
+  const [openDialog, setOpenDialog] = useState(false);
+  const [role, setRole] = useState("");
+
+  const handleClickOpen = (role) => {
+    if (role === "Adoptive Pawrent") {
+      setRole("Adoptive Pawrent");
+    }
+    if (role === "Rescue Shelter") {
+      setRole("Rescue Shelter");
+    }
+
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  //TOD: Logic for role submit
+  const handleRoleSubmit = () => {
+    console.log(role + " submitted");
+  };
+
   return (
     <>
-      <Background>
+      <Background display={"flex"} align={"center"}>
         <Container sx={{ py: 10 }}>
-          <div className="h-[12vh] relative">
+          <div className="h-[12vh] relative border-[5px] rounded-[7px]">
             <img
               src={topImage}
               alt="top image"
               className="object-cover h-full w-full"
             />
-            <div className="bg-orange-400 opacity-50 absolute inset-0"></div>
             <div className="absolute inset-0 flex justify-center items-center z-10">
               <img src={logo} alt="logo" className="h-[91px] w-[91px]" />
               <Typography component="div" variant="h3" ml="22px" color="white">
@@ -124,9 +159,19 @@ export default function Verify() {
             >
               {/* Redirect user to login page with the role value */}
               <VerifyButton
-                component={RouterLink}
-                to="/login?role=Adoptive Parent"
-                sx={{ textTransform: "none" }}
+                onClick={() => handleClickOpen("Adoptive Pawrent")}
+                sx={{
+                  textTransform: "none",
+                  "&:hover": {
+                    "& path": {
+                      fill: "#EE7200",
+                      stroke: "white",
+                      strokeWidth: "4.5",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                    },
+                  },
+                }}
               >
                 <PawrentIcon sx={{ fontSize: "4.5rem" }} />
                 <Typography variant="body1Bold">Adoptive Pawrent</Typography>
@@ -135,20 +180,65 @@ export default function Verify() {
                 </Typography>
               </VerifyButton>
               <VerifyButton
-                component={RouterLink}
-                to="/login?role=Rescue Shelter"
-                sx={{ textTransform: "none" }}
+                onClick={() => handleClickOpen("Rescue Shelter")}
+                sx={{
+                  textTransform: "none",
+                  "&:hover": {
+                    "& path": {
+                      fill: "white",
+                    },
+                  },
+                }}
               >
-                <ShelterIcon sx={{ fontSize: "4.5rem" }} />
+                <ShelterIcon
+                  sx={{
+                    fontSize: "4.5rem",
+                  }}
+                />
                 <Typography variant="body1Bold">Rescue Shelter</Typography>
                 <Typography variant="body1">
                   Provides home and care to stray animals
                 </Typography>
               </VerifyButton>
             </Box>
+            <RoleDialog
+              open={openDialog}
+              handleClose={handleClose}
+              handleSubmit={handleRoleSubmit}
+              role={role}
+            />
           </StyledPaper>
         </Container>
       </Background>
     </>
   );
 }
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const RoleDialog = ({ open, handleClose, handleSubmit, role }) => {
+  return (
+    <>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle variant="h5">{"Confirm Role Selection"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to select the role of {role}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleSubmit}>Agree</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};

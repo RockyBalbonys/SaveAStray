@@ -74,6 +74,7 @@ export function FilterOptions({
                 fontSize: "16px",
                 color: "#EE7200",
                 rowGap: "4px",
+                pl: "16px",
               }}
             >
               {filter.options.map((option, idx) => (

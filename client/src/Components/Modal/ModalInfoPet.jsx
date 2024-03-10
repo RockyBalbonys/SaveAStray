@@ -4,24 +4,15 @@ import {
   Typography,
   Box,
   Icon,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Button,
   Grid,
   IconButton,
-  Card,
 } from "@mui/material";
-import { AnimalImageCarousel } from "../CustomCarousel";
 import animalPaw from "../../assets/icons/animalPaw.svg";
-import { useState } from "react";
 import placeholder from "../../assets/icons/SAS_Logo4.png";
 import CloseIcon from "@mui/icons-material/Close";
 
 const ModalInfoPet = ({ open, onClose, animal }) => {
-  const { imageCollection } = animal;
-
   return (
     <Modal
       open={open}
@@ -123,7 +114,7 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                   height: "100%",
                 }}
               >
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center h-full">
                   <img
                     src={
                       !animal.photos || animal.photos.length === 0

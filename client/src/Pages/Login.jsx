@@ -8,8 +8,8 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Alert, Box, IconButton } from "@mui/material";
 import store from "../tools/store";
-import { useDispatch } from 'react-redux';
-import { loginFailed, loginSuccess } from '../tools/authActions'
+import { useDispatch } from "react-redux";
+import { loginFailed, loginSuccess } from "../tools/authActions";
 
 const Login = () => {
   // get the role from verify page
@@ -25,8 +25,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  //FIXME: Loop when clicking the back button, might try to research on fixing this:
-  //https://bobbyhadz.com/blog/react-remove-query-params
   const handleGoBack = () => {
     navigate(-1, { replace: true }); // Go back to the previous page
   };
@@ -62,22 +60,30 @@ const Login = () => {
         role: formData.loginRole,
       });
       if (response.data.status === 200 && response.data.checked === true) {
-          console.log(response.data);
-          console.log("initial State: ", store.getState());
-          const unsubscribe = store.subscribe(() => console.log('Updated state: ', store.getState()))
-          store.dispatch( loginSuccess(formData.loginRole) )
-          unsubscribe()
-
-      } else if(response.data.status === 401  && response.data.checked === true){
+        console.log(response.data);
         console.log("initial State: ", store.getState());
-        store.dispatch( loginFailed() )
-        const unsubscribe = store.subscribe(() => console.log('Updated state2: ', store.getState()))
+        const unsubscribe = store.subscribe(() =>
+          console.log("Updated state: ", store.getState())
+        );
+        store.dispatch(loginSuccess(formData.loginRole));
+        unsubscribe();
+      } else if (
+        response.data.status === 401 &&
+        response.data.checked === true
+      ) {
+        console.log("initial State: ", store.getState());
+        store.dispatch(loginFailed());
+        const unsubscribe = store.subscribe(() =>
+          console.log("Updated state2: ", store.getState())
+        );
         console.log("400");
-        store.dispatch( loginFailed() )
-        unsubscribe()
+        store.dispatch(loginFailed());
+        unsubscribe();
+        setLoginAttempted(true);
+        setUserIn(false);
       }
-  } catch (error) {
-    console.error("Error:", error);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -101,11 +107,15 @@ const Login = () => {
 
   const passwordsMatch = formData.regPass === formData.regConfirmPass;
 
-  const alertMessage = userIn ? (<Alert severity="success" onClose={() => setUserIn(false)}>
-  Login Successful
-</Alert>) : (<Alert severity="error" onClose={() => setUserIn(false)}>
-                Incorrect Credentials
-              </Alert>)
+  const alertMessage = userIn ? (
+    <Alert severity="success" onClose={() => setUserIn(false)}>
+      Login Successful
+    </Alert>
+  ) : (
+    <Alert severity="error" onClose={() => setUserIn(false)}>
+      Incorrect Credentials
+    </Alert>
+  );
 
   return (
     <div className={`${styles.container} px-4`}>
@@ -214,14 +224,14 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-            
-           {loginAttempted && alertMessage}
+
+            {loginAttempted && alertMessage}
             <button
               type="submit"
               className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]`}
               disabled={!passwordsMatch}
             >
-              Get Started
+              Continue
             </button>
             <hr />
             <div className={styles["my-2"]}>

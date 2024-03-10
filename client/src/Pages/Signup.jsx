@@ -23,6 +23,7 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [accept, setAccept] = useState(false);
+
   const navigate = useNavigate();
 
   const handleGoBack = () => {
@@ -259,6 +260,7 @@ function Signup() {
                 } else {
                   if (accept) {
                     regSubmit(e); // Call your form submission function here
+                    window.location.href = "/deadend";
                   }
                 }
               }}
