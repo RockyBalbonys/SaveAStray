@@ -9,6 +9,7 @@ import { FilterOptions } from "../Components/FilterOptions";
 import { SelectShelter } from "../Components/SelectShelter";
 import { ascendingPets, descendingPets } from "../constants/sortLogic";
 import PawrentCard from "../Components/Card/PawrentCard";
+import { filteredOptions } from "../constants/animals";
 
 const AnimalsPawrent = () => {
   const [animals, setAnimals] = useState([]);
@@ -76,14 +77,6 @@ const AnimalsPawrent = () => {
   const handleApplyFilters = () => {
     fetchFilteredPets();
   };
-
-  const filteredOptions = [
-    { propType: "Pet Type", options: ["Dog", "Cat"] },
-    { propType: "Sex", options: ["Male", "Female"] },
-    { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
-    { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
-    { propType: "Status", options: ["Available", "In Process", "Adopted"] },
-  ];
 
   // Sorting by names
   const [sortBy, setSortBy] = useState("");

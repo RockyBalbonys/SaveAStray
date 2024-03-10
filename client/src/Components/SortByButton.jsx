@@ -2,7 +2,7 @@ import { FormControl, MenuItem, Select } from "@mui/material";
 
 export function SortByButton({ value, onChange }) {
   return (
-    <FormControl width="195px">
+    <FormControl>
       <Select
         onChange={onChange}
         displayEmpty
@@ -14,7 +14,7 @@ export function SortByButton({ value, onChange }) {
           textAlign: "center",
           color: "#FF8210",
           fontWeight: "600",
-          width: "195px",
+          width: "215px",
           transition: "background border 300ms ease-out",
           "&:hover": {
             background: "hsl(29, 100%, 47%, 0.02)",

@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import placeholder from "../../assets/icons/SAS_Logo4.png";
-import ModalInfoPet from "../Modal/ModalInfoPet";
 import BadgeAnimal from "../Badge/BadgeAnimal";
+import ModalPawrentInfoPet from "../Modal/ModalPawrentInfoPet";
 
 const PawrentCard = ({ animals, height, width, setAnimals }) => {
   const [open, setOpen] = useState(false);
@@ -50,18 +50,6 @@ const PawrentCard = ({ animals, height, width, setAnimals }) => {
           }}
           elevation={0}
         >
-          {/* <CardActionArea
-            onClick={() => {
-              setOpen(true);
-            }}
-            disableTouchRipple
-            disableRipple
-            sx={{
-              "& .MuiCardActionArea-focusHighlight": {
-                background: "transparent",
-              },
-            }}
-          > */}
           <CardMedia
             image={
               !animals.photos || animals.photos.length === 0
@@ -83,7 +71,6 @@ const PawrentCard = ({ animals, height, width, setAnimals }) => {
               )}
             </Typography>
           </CardContent>
-          {/* </CardActionArea> */}
           <CardActions
             sx={{
               display: "flex",
@@ -107,7 +94,11 @@ const PawrentCard = ({ animals, height, width, setAnimals }) => {
               View
             </Button>
           </CardActions>
-          <ModalInfoPet open={open} onClose={handleClose} animal={animals} />
+          <ModalPawrentInfoPet
+            open={open}
+            onClose={handleClose}
+            animal={animals}
+          />
         </Card>
       </Box>
     </>

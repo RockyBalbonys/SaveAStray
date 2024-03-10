@@ -11,8 +11,9 @@ import {
 import animalPaw from "../../assets/icons/animalPaw.svg";
 import placeholder from "../../assets/icons/SAS_Logo4.png";
 import CloseIcon from "@mui/icons-material/Close";
+import { Link as RouterLink } from "react-router-dom";
 
-const ModalInfoPet = ({ open, onClose, animal }) => {
+const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
   return (
     <Modal
       open={open}
@@ -102,6 +103,21 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                   >
                     PHP {animal.price}.00
                   </Typography>
+
+                  {/* Redirect pawrent to questionnaire */}
+                  <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to={"/questionnaire"}
+                    sx={{
+                      color: "white",
+                      textTransform: "none",
+                      width: "100%",
+                      border: "7px",
+                    }}
+                  >
+                    Inquire Adoption
+                  </Button>
                 </Paper>
               </Box>
             </Grid>
@@ -155,7 +171,7 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
   );
 };
 
-export default ModalInfoPet;
+export default ModalPawrentInfoPet;
 
 const isPetTypeTernary = (property) =>
   property === "Pet Type" ? "species" : property.toLowerCase();

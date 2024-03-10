@@ -1,10 +1,10 @@
 // Sort Ascending
-const ascendingPets = () => {
+const ascendingPets = (animals) => {
   return animals.sort(compareByNameAscending);
 };
 
 // Sort Descending
-const descendingPets = () => {
+const descendingPets = (animals) => {
   return animals.sort(compareByNameDescending);
 };
 

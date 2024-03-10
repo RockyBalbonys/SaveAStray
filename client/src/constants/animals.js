@@ -43,4 +43,31 @@ const animalProps = [
   },
 ];
 
-export { animalProps };
+const filteredOptions = [
+  { propType: "Pet Type", options: ["Dog", "Cat"] },
+  { propType: "Sex", options: ["Male", "Female"] },
+  { propType: "Age", options: ["Young", "Adolescent", "Adult", "Senior"] },
+  { propType: "Size", options: ["Small", "Medium", "Large", "Giant"] },
+  { propType: "Status", options: ["Available", "In Process", "Adopted"] },
+];
+
+const defaultAnimalData = {
+  // Define default animal data
+  name: "",
+  description: "",
+  species: "",
+  breed: "",
+  sex: "",
+  age: "",
+  color: "",
+  size: "",
+};
+
+const defaultUploadedImages = [];
+
+export {
+  animalProps,
+  filteredOptions,
+  defaultAnimalData,
+  defaultUploadedImages,
+};

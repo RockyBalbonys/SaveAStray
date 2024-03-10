@@ -3,7 +3,7 @@ import React from "react";
 
 export const SelectShelter = ({ value, onChange, shelter }) => {
   return (
-    <FormControl width="195px">
+    <FormControl>
       <Select
         onChange={onChange}
         displayEmpty
@@ -15,7 +15,7 @@ export const SelectShelter = ({ value, onChange, shelter }) => {
           textAlign: "center",
           color: "#FF8210",
           fontWeight: "600",
-          width: "224px",
+          width: "215px",
           transition: "background border 300ms ease-out",
           "&:hover": {
             background: "hsl(29, 100%, 47%, 0.02)",

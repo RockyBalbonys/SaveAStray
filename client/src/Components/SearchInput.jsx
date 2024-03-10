@@ -10,7 +10,7 @@ export function SearchInput({ value, onChange }) {
         id="search-item"
         aria-label="Search pet name"
         placeholder="Search"
-        sx={{ width: "500px" }}
+        sx={{ width: "90%", px: "36px" }}
         variant="outlined"
         startAdornment={
           <InputAdornment position="start">
