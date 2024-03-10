@@ -123,7 +123,7 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                   height: "100%",
                 }}
               >
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center h-full">
                   <img
                     src={
                       !animal.photos || animal.photos.length === 0

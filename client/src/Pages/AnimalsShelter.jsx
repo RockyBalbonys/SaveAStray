@@ -18,6 +18,7 @@ import { SortByButton } from "../Components/SortByButton";
 import { FilterOptions } from "../Components/FilterOptions";
 import SearchIcon from "@mui/icons-material/Search";
 import ModalAddPet from "../Components/Modal/ModalAddPet";
+import { SearchInput } from "../Components/SearchInput";
 
 const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
@@ -203,7 +204,6 @@ const AnimalsShelter = () => {
           <Grid item order={{ xs: 2, sm: 2, md: 2, lg: 1 }}>
             <SortByButton value={sortBy} onChange={handleChangeSortBy} />
           </Grid>
-          {/* TODO: Search bar */}
           <Grid
             item
             order={{ xs: 1, sm: 1, md: 1, lg: 2 }}
@@ -296,27 +296,6 @@ const AnimalsShelter = () => {
 };
 
 export default AnimalsShelter;
-
-function SearchInput({ value, onChange }) {
-  return (
-    <>
-      <Input
-        value={value}
-        onChange={onChange}
-        id="search-item"
-        aria-label="Search pet name"
-        placeholder="Search"
-        sx={{ width: "500px" }}
-        variant="outlined"
-        startAdornment={
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        }
-      />
-    </>
-  );
-}
 
 function AddAnimal({ setAnimals }) {
   const [openAddModal, setOpenAddModal] = useState(false);

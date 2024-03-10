@@ -7,12 +7,13 @@ const Background = ({ children }) => {
     <Box
       sx={{
         position: "relative",
-        width: "100vw",
         height: "100vh",
-        backgroundImage: `url(${PawBG})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        width: "100vw",
+        // backgroundImage: `url(${PawBG})`,
+        // backgroundRepeat: "no-repeat",
+        // backgroundSize: "cover",
       }}
+      className="bg-gradient-to-bl from-amber-500 to-orange-600"
     >
       <Box
         sx={{

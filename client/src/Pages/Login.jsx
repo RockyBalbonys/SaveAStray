@@ -22,8 +22,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  //FIXME: Loop when clicking the back button, might try to research on fixing this:
-  //https://bobbyhadz.com/blog/react-remove-query-params
   const handleGoBack = () => {
     navigate(-1, { replace: true }); // Go back to the previous page
   };
@@ -61,13 +59,16 @@ const Login = () => {
       console.log("Response:", response.data);
       if (response.data.status === 200 && response.data.checked === true) {
         setLoginAttempted(true);
-        setUserIn(true)
-      } else if(response.data.status === 400 && response.data.checked === true){
+        setUserIn(true);
+      } else if (
+        response.data.status === 400 &&
+        response.data.checked === true
+      ) {
         setLoginAttempted(true);
-        setUserIn(false)
+        setUserIn(false);
       }
-  } catch (error) {
-    console.error("Error:", error);
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -91,11 +92,15 @@ const Login = () => {
 
   const passwordsMatch = formData.regPass === formData.regConfirmPass;
 
-  const alertMessage = userIn ? (<Alert severity="success" onClose={() => setUserIn(false)}>
-  Login Successful
-</Alert>) : (<Alert severity="error" onClose={() => setUserIn(false)}>
-                Incorrect Credentials
-              </Alert>)
+  const alertMessage = userIn ? (
+    <Alert severity="success" onClose={() => setUserIn(false)}>
+      Login Successful
+    </Alert>
+  ) : (
+    <Alert severity="error" onClose={() => setUserIn(false)}>
+      Incorrect Credentials
+    </Alert>
+  );
 
   return (
     <div className={`${styles.container} px-4`}>
@@ -204,8 +209,8 @@ const Login = () => {
                 </Link>
               </p>
             </div>
-            
-           {loginAttempted && alertMessage}
+
+            {loginAttempted && alertMessage}
             <button
               type="submit"
               className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]`}

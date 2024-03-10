@@ -1,11 +1,9 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Signup from "./Pages/Signup";
 import LandingPage from "./Pages/LandingPage";
 import NotFound from "./Pages/NotFound";
-import Navbar from "./Components/PageComponent/Navbar";
 import About from "./Pages/About";
 import AnimalsShelter from "./Pages/AnimalsShelter";
-import Learn from "./Pages/Learn";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
 import UploadImage from "./Pages/UploadImage";
@@ -19,24 +17,11 @@ import theme from "./theme";
 import Articles from "./Pages/Articles";
 import ArticlePage from "./Pages/ArticlePage";
 import FAQ from "./Pages/FAQ";
+import { DeadEnd } from "./Pages/DeadEnd";
+import { renderNavbar } from "./renderNavbar";
+import AnimalsPawrent from "./Pages/AnimalsPawrent";
 
 function App() {
-  const location = useLocation();
-
-  const renderNavbar = () => {
-    const { pathname } = location;
-    if (
-      pathname === "/login" ||
-      pathname === "/signup" ||
-      pathname === "/terms" ||
-      pathname === "/policy" ||
-      pathname === "/verify"
-    ) {
-      return null;
-    }
-    return <Navbar />;
-  };
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -46,11 +31,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
+          {/* TODO: Role Routing */}
           <Route path="/animals" element={<AnimalsShelter />} />
-          {/* <Route path="/animals" element={<Animals />} /> */}
-          {/* <Route path="/learn" element={<Learn />} /> */}
+          <Route path="/animalsPawrent" element={<AnimalsPawrent />} />
           <Route path="/articles/" element={<Articles />} />
           <Route path="/articles/:id" element={<ArticlePage />} />
+          <Route path="/deadend" element={<DeadEnd />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/contact" element={<Contact />} />

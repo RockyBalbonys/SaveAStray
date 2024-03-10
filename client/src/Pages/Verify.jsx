@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Background from "../Components/Background";
 import { Container, Box, Typography } from "@mui/material";
-import topImage from "../assets/images/formImage.png";
+import topImage from "../assets/images/passive2.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import { VerifyButton } from "../Components/Button/CustomButton";
 import SvgIcon from "@mui/material/SvgIcon";
@@ -85,6 +85,17 @@ export default function Verify() {
       console.log(err);
     });
 
+  // Dialog state
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <>
       <Background>
@@ -95,7 +106,6 @@ export default function Verify() {
               alt="top image"
               className="object-cover h-full w-full"
             />
-            <div className="bg-orange-400 opacity-50 absolute inset-0"></div>
             <div className="absolute inset-0 flex justify-center items-center z-10">
               <img src={logo} alt="logo" className="h-[91px] w-[91px]" />
               <Typography component="div" variant="h3" ml="22px" color="white">
@@ -126,7 +136,18 @@ export default function Verify() {
               <VerifyButton
                 component={RouterLink}
                 to="/login?role=Adoptive Parent"
-                sx={{ textTransform: "none" }}
+                sx={{
+                  textTransform: "none",
+                  "&:hover": {
+                    "& path": {
+                      fill: "#EE7200",
+                      stroke: "white",
+                      strokeWidth: "4.5",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                    },
+                  },
+                }}
               >
                 <PawrentIcon sx={{ fontSize: "4.5rem" }} />
                 <Typography variant="body1Bold">Adoptive Pawrent</Typography>
@@ -137,9 +158,20 @@ export default function Verify() {
               <VerifyButton
                 component={RouterLink}
                 to="/login?role=Rescue Shelter"
-                sx={{ textTransform: "none" }}
+                sx={{
+                  textTransform: "none",
+                  "&:hover": {
+                    "& path": {
+                      fill: "white",
+                    },
+                  },
+                }}
               >
-                <ShelterIcon sx={{ fontSize: "4.5rem" }} />
+                <ShelterIcon
+                  sx={{
+                    fontSize: "4.5rem",
+                  }}
+                />
                 <Typography variant="body1Bold">Rescue Shelter</Typography>
                 <Typography variant="body1">
                   Provides home and care to stray animals

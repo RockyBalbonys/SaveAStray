@@ -55,6 +55,7 @@ const Footer = () => {
       component="footer"
     >
       <Container maxWidth="xl">
+        {/* TODO: Fix responsiveness */}
         <Grid container spacing={2}>
           <Grid item md={6}>
             <Stack direction="column" rowGap={2}>

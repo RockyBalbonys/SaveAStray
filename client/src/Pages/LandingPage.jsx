@@ -49,7 +49,7 @@ export const LandingPage = () => {
                   item
                   xs={12}
                   sx={{ background: "#FAFAFB" }}
-                  padding={13.5}
+                  padding={"6.75rem 0px"}
                 >
                   <HelpContent />
                   <HelpCard />
@@ -104,7 +104,8 @@ function HeroContent() {
           sx={{
             typography: {
               xs: "body1",
-              sm: "body1",
+              sm: "h6",
+              md: "h6",
               lg: "h6",
             },
           }}
