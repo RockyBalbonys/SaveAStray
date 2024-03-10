@@ -103,10 +103,10 @@ export default function Verify() {
 
   const handleClickOpen = (role) => {
     if (role === "Adoptive Pawrent") {
-      setRole("Adoptive");
+      setRole("Adoptive Pawrent");
     }
     if (role === "Rescue Shelter") {
-      setRole("Shelter");
+      setRole("Rescue Shelter");
     }
 
     setOpenDialog(true);
@@ -116,6 +116,7 @@ export default function Verify() {
     setOpenDialog(false);
   };
 
+  //TOD: Logic for role submit
   const handleRoleSubmit = () => {
     console.log(role + " submitted");
   };
@@ -204,6 +205,7 @@ export default function Verify() {
               open={openDialog}
               handleClose={handleClose}
               handleSubmit={handleRoleSubmit}
+              role={role}
             />
           </StyledPaper>
         </Container>
@@ -216,7 +218,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const RoleDialog = ({ open, handleClose, handleSubmit }) => {
+const RoleDialog = ({ open, handleClose, handleSubmit, role }) => {
   return (
     <>
       <Dialog
@@ -226,11 +228,10 @@ const RoleDialog = ({ open, handleClose, handleSubmit }) => {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle variant="h5">{"Confirm Role Selection"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            Are you sure you want to select the role of {role}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -7,6 +7,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Alert, Box, IconButton } from "@mui/material";
+import store from "../tools/store";
+import { useDispatch } from "react-redux";
+import { loginFailed, loginSuccess } from "../tools/authActions";
 
 const Login = () => {
   // get the role from verify page
@@ -56,14 +59,26 @@ const Login = () => {
         password: formData.loginPass,
         role: formData.loginRole,
       });
-      console.log("Response:", response.data);
       if (response.data.status === 200 && response.data.checked === true) {
-        setLoginAttempted(true);
-        setUserIn(true);
+        console.log(response.data);
+        console.log("initial State: ", store.getState());
+        const unsubscribe = store.subscribe(() =>
+          console.log("Updated state: ", store.getState())
+        );
+        store.dispatch(loginSuccess(formData.loginRole));
+        unsubscribe();
       } else if (
-        response.data.status === 400 &&
+        response.data.status === 401 &&
         response.data.checked === true
       ) {
+        console.log("initial State: ", store.getState());
+        store.dispatch(loginFailed());
+        const unsubscribe = store.subscribe(() =>
+          console.log("Updated state2: ", store.getState())
+        );
+        console.log("400");
+        store.dispatch(loginFailed());
+        unsubscribe();
         setLoginAttempted(true);
         setUserIn(false);
       }
