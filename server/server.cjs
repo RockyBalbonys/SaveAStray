@@ -45,6 +45,44 @@ app.get(`/verify`, async (req, res) => {
   }
 });
 
+app.post('/verify', async(req,res) => {
+  const token = req.query.token;
+  try {
+    const user = await User.findOne({ verificationToken: token });
+    if (user) {
+      role = req.body.role
+      user.role = role;
+      const updatedUser = await user.save();
+      res.send(updatedUser);
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
+app.get(`/verifyRole`, async (req, res) => {
+  const token = req.query.token;
+
+  try {
+    const user = await User.findOne({ verificationToken: token });
+
+    if (user) {
+      user.verified = true;
+      const updatedUser = await user.save();
+      res.send(updatedUser);
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+
 app.post("/api/register", async (req, res) => {
   function generateVerificationToken() {
     return crypto.randomBytes(16).toString("hex");
