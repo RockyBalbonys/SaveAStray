@@ -216,7 +216,7 @@ const Login = () => {
               className={`${styles.btn} bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]`}
               disabled={!passwordsMatch}
             >
-              Get Started
+              Continue
             </button>
             <hr />
             <div className={styles["my-2"]}>

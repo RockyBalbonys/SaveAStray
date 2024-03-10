@@ -21,6 +21,7 @@ import { DeadEnd } from "./Pages/DeadEnd";
 import { renderNavbar } from "./renderNavbar";
 import AnimalsPawrent from "./Pages/AnimalsPawrent";
 import Questionnaire from "./Pages/Questionnaire";
+import { ManageAcc } from "./Pages/ManageAcc";
 
 function App() {
   return (
@@ -33,8 +34,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
           {/* TODO: Role Routing */}
+          <Route path="/manage" element={<ManageAcc />} />
+
           <Route path="/animals" element={<AnimalsShelter />} />
-          {/* <Route path="/animalsPawrent" element={<AnimalsPawrent />} /> */}
           <Route path="/questionnaire" element={<Questionnaire />} />
           <Route path="/articles/" element={<Articles />} />
           <Route path="/articles/:id" element={<ArticlePage />} />

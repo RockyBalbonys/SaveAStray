@@ -8,8 +8,8 @@ import dogCover from "../assets/images/dogCoverSmall.png";
 export const DeadEnd = () => {
   return (
     <>
-      <Background>
-        <Container sx={{ py: 10 }} maxWidth="lg">
+      <Background display={"flex"} align={"center"}>
+        <Container sx={{ py: 10, width: "100%" }} maxWidth="lg">
           <div className="h-[12vh] relative border-[5px] rounded-[7px]">
             <img
               src={passive}

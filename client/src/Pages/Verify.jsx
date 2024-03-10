@@ -1,7 +1,19 @@
 import { useState, useEffect } from "react";
+import * as React from "react";
 import axios from "axios";
 import Background from "../Components/Background";
-import { Container, Box, Typography } from "@mui/material";
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Slide,
+} from "@mui/material";
 import topImage from "../assets/images/passive2.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import { VerifyButton } from "../Components/Button/CustomButton";
@@ -87,8 +99,16 @@ export default function Verify() {
 
   // Dialog state
   const [openDialog, setOpenDialog] = useState(false);
+  const [role, setRole] = useState("");
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (role) => {
+    if (role === "Adoptive Pawrent") {
+      setRole("Adoptive");
+    }
+    if (role === "Rescue Shelter") {
+      setRole("Shelter");
+    }
+
     setOpenDialog(true);
   };
 
@@ -96,11 +116,15 @@ export default function Verify() {
     setOpenDialog(false);
   };
 
+  const handleRoleSubmit = () => {
+    console.log(role + " submitted");
+  };
+
   return (
     <>
-      <Background>
+      <Background display={"flex"} align={"center"}>
         <Container sx={{ py: 10 }}>
-          <div className="h-[12vh] relative">
+          <div className="h-[12vh] relative border-[5px] rounded-[7px]">
             <img
               src={topImage}
               alt="top image"
@@ -134,8 +158,7 @@ export default function Verify() {
             >
               {/* Redirect user to login page with the role value */}
               <VerifyButton
-                component={RouterLink}
-                to="/login?role=Adoptive Parent"
+                onClick={() => handleClickOpen("Adoptive Pawrent")}
                 sx={{
                   textTransform: "none",
                   "&:hover": {
@@ -156,8 +179,7 @@ export default function Verify() {
                 </Typography>
               </VerifyButton>
               <VerifyButton
-                component={RouterLink}
-                to="/login?role=Rescue Shelter"
+                onClick={() => handleClickOpen("Rescue Shelter")}
                 sx={{
                   textTransform: "none",
                   "&:hover": {
@@ -178,9 +200,44 @@ export default function Verify() {
                 </Typography>
               </VerifyButton>
             </Box>
+            <RoleDialog
+              open={openDialog}
+              handleClose={handleClose}
+              handleSubmit={handleRoleSubmit}
+            />
           </StyledPaper>
         </Container>
       </Background>
     </>
   );
 }
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const RoleDialog = ({ open, handleClose, handleSubmit }) => {
+  return (
+    <>
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Let Google help apps determine location. This means sending
+            anonymous location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleSubmit}>Agree</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};

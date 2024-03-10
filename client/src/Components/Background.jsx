@@ -2,16 +2,16 @@ import React from "react";
 import { Box, Container } from "@mui/material";
 import PawBG from "../assets/images/Paw.png";
 
-const Background = ({ children }) => {
+const Background = ({ children, justify, align, display }) => {
   return (
     <Box
       sx={{
         position: "relative",
         height: "100vh",
         width: "100vw",
-        // backgroundImage: `url(${PawBG})`,
-        // backgroundRepeat: "no-repeat",
-        // backgroundSize: "cover",
+        justifyContent: `${justify}`,
+        display: `${display}`,
+        alignItems: `${align}`,
       }}
       className="bg-gradient-to-bl from-amber-500 to-orange-600"
     >

@@ -2,13 +2,13 @@ import { Container, Typography, Box, Paper, Grid, Button } from "@mui/material";
 import Background from "../Components/Background";
 import passive from "../assets/images/passive2.png";
 import logo from "../assets/icons/SAS_Logo4.png";
-import dogCover from "../assets/images/dogCover2.png";
+import dogCover from "../assets/images/dogCover3.png";
 import { Link as RouterLink } from "react-router-dom";
 
 const NotFound = () => {
   return (
     <>
-      <Background>
+      <Background display={"flex"} align={"center"}>
         <Container sx={{ py: 10 }}>
           <div className="h-[12vh] relative border-[5px] rounded-[7px]">
             <img
@@ -27,7 +27,20 @@ const NotFound = () => {
             <Grid container>
               <Grid item xs={0} sm={6}>
                 <Box display={{ xs: "none", sm: "block" }}>
-                  <img src={dogCover} alt="dog cover" />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <img
+                      src={dogCover}
+                      alt="dog cover"
+                      width={"403px"}
+                      height={"403px"}
+                      className="self-center"
+                    />
+                  </Box>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6}>
