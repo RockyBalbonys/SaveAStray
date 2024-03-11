@@ -22,11 +22,13 @@ import { renderNavbar } from "./renderNavbar";
 import AnimalsPawrent from "./Pages/AnimalsPawrent";
 import Questionnaire from "./Pages/Questionnaire";
 import { ManageAcc } from "./Pages/ManageAcc";
+import { Provider, useSelector } from 'react-redux';
+import { store, persistor } from './tools/store';
 
 function App() {
   return (
-    <>
-      <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <ThemeProvider emeProvider theme={theme}>
         {renderNavbar()}
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -52,7 +54,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ThemeProvider>
-    </>
+    </Provider>
   );
 }
 

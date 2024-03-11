@@ -1,6 +1,7 @@
 
 const initialState = {
     isLoggedIn: false,
+    user: null,
     role: null
 };
 
@@ -10,6 +11,7 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoggedIn: true,
+                user: action.payload.user,
                 role: action.payload.role
             };
             case 'LOGIN_FAILED':

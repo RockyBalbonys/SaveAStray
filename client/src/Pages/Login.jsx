@@ -7,15 +7,22 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Alert, Box, IconButton } from "@mui/material";
-import store from "../tools/store";
-import { useDispatch } from "react-redux";
+import { store, persistor } from "../tools/store";
 import { loginFailed, loginSuccess } from "../tools/authActions";
+import { useSelector } from 'react-redux';
+import useAuth from '../hooks/useAuth';
 
 const Login = () => {
   // get the role from verify page
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const selectedRole = params.get("role");
+
+  const { isLoggedIn, user } = useAuth();
+
+  console.log(isLoggedIn);
+  console.log("helloworld");
+  console.log(user);
 
   const [formData, setFormData] = useState({
     loginEmail: "",
@@ -34,6 +41,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [userIn, setUserIn] = useState(false);
   const [loginAttempted, setLoginAttempted] = useState(false);
+
 
   useEffect(() => {
     // Update formData with the selected role whenever it changes
@@ -65,10 +73,10 @@ const Login = () => {
         const unsubscribe = store.subscribe(() =>
           console.log("Updated state: ", store.getState())
         );
-        store.dispatch(loginSuccess(formData.loginRole));
+        store.dispatch(loginSuccess(formData.loginRole, response.data.user));
         unsubscribe();
       } else if (
-        response.data.status === 401 &&
+        response.data.status === 400 &&
         response.data.checked === true
       ) {
         console.log("initial State: ", store.getState());
