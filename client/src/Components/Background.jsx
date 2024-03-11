@@ -1,19 +1,17 @@
 import React from "react";
-import { Box, Container } from "@mui/material";
-import PawBG from "../assets/images/Paw.png";
+import { Box } from "@mui/material";
 
 const Background = ({ children, justify, align, display }) => {
   return (
-    <Box
-      sx={{
-        position: "relative",
-        height: "100vh",
-        width: "100vw",
-        justifyContent: `${justify}`,
-        display: `${display}`,
-        alignItems: `${align}`,
-      }}
-      className="bg-gradient-to-bl from-amber-500 to-orange-600"
+    <div
+      // sx={{
+      //   position: "relative",
+      //   height: "100vh",
+      //   justifyContent: `${justify}`,
+      //   display: `${display}`,
+      //   alignItems: `${align}`,
+      // }}
+      className="bg-gradient-to-bl from-amber-500 to-orange-600 flex justify-center items-center relative h-screen"
     >
       <Box
         sx={{
@@ -25,7 +23,7 @@ const Background = ({ children, justify, align, display }) => {
         }}
       />
       {children}
-    </Box>
+    </div>
   );
 };
 

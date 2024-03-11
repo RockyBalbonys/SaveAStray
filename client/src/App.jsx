@@ -22,36 +22,40 @@ import { renderNavbar } from "./renderNavbar";
 import AnimalsPawrent from "./Pages/AnimalsPawrent";
 import Questionnaire from "./Pages/Questionnaire";
 import { ManageAcc } from "./Pages/ManageAcc";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 
 function App() {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        {renderNavbar()}
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<About />} />
-          {/* TODO: Role Routing */}
-          <Route path="/manage" element={<ManageAcc />} />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ThemeProvider theme={theme}>
+          {renderNavbar()}
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/about" element={<About />} />
+            {/* TODO: Role Routing */}
+            <Route path="/manage" element={<ManageAcc />} />
 
-          <Route path="/animals" element={<AnimalsShelter />} />
-          <Route path="/questionnaire" element={<Questionnaire />} />
-          <Route path="/articles/" element={<Articles />} />
-          <Route path="/articles/:id" element={<ArticlePage />} />
-          <Route path="/deadend" element={<DeadEnd />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/donate" element={<Donate />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/terms" element={<TermsOfServices />} />
-          <Route path="/policy" element={<PrivacyPolicy />} />
-          <Route path="/uploadImage" element={<UploadImage />} />
-          <Route path="/verify" element={<Verify />} />
-          <Route path="/api/sheets" element={<Sheets />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </ThemeProvider>
+            <Route path="/animals" element={<AnimalsShelter />} />
+            <Route path="/questionnaire" element={<Questionnaire />} />
+            <Route path="/articles/" element={<Articles />} />
+            <Route path="/articles/:id" element={<ArticlePage />} />
+            <Route path="/deadend" element={<DeadEnd />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/donate" element={<Donate />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/terms" element={<TermsOfServices />} />
+            <Route path="/policy" element={<PrivacyPolicy />} />
+            <Route path="/uploadImage" element={<UploadImage />} />
+            <Route path="/verify" element={<Verify />} />
+            <Route path="/api/sheets" element={<Sheets />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ThemeProvider>
+      </LocalizationProvider>
     </>
   );
 }

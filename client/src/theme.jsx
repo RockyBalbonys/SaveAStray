@@ -85,8 +85,19 @@ const typography = {
   },
 };
 
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 340,
+    md: 768,
+    lg: 1125,
+    xl: 1444,
+  },
+};
+
 const theme = createTheme({
   typography,
   palette,
+  breakpoints,
 });
 export default theme;

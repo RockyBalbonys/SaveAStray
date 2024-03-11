@@ -29,7 +29,7 @@ const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
 
   // Role and Login state variable; Default: Pawrent
-  const isShelter = true;
+  const isShelter = false;
   const isLoggedIn = true;
 
   console.log(isShelter, isLoggedIn);

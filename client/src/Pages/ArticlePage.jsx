@@ -1,9 +1,10 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { articlesCardContent } from "../constants/article";
 import { ArticleCard } from "../Components/Card/CustomCard";
 import { Link as RouterLink } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const ArticlePage = () => {
   const { id } = useParams(); // Extract the id parameter from the URL
@@ -21,7 +22,15 @@ const ArticlePage = () => {
 
   return (
     <>
-      <Container maxWidth="xl" sx={{ pt: "64px", pb: "108px" }}>
+      <Button
+        startIcon={<ArrowBackIcon />}
+        sx={{ m: "34px 0 0 34px" }}
+        component={RouterLink}
+        to={"/articles"}
+      >
+        Back to Articles
+      </Button>
+      <Container maxWidth="xl" sx={{ pt: "24px", pb: "108px" }}>
         <Grid container spacing="50px">
           <Grid item xs={12} lg={8}>
             <img
@@ -53,6 +62,7 @@ const ArticlePage = () => {
               ))}
             </Box>
           </Grid>
+
           <Grid
             item
             xs={4}
@@ -63,19 +73,23 @@ const ArticlePage = () => {
               },
             }}
           >
-            {limitedOtherArticles.map((article) => (
-              <Box
-                key={article.id}
-                to={`/articles/${article.id}`}
-                component={RouterLink}
-              >
-                <ArticleCard
-                  imageUrl={article.image}
-                  title={article.title}
-                  summary={article.summary}
-                />
-              </Box>
-            ))}
+            <Grid container spacing={3}>
+              {limitedOtherArticles.map((article, idx) => (
+                <Grid item key={idx}>
+                  <Box
+                    key={article.id}
+                    to={`/articles/${article.id}`}
+                    component={RouterLink}
+                  >
+                    <ArticleCard
+                      imageUrl={article.image}
+                      title={article.title}
+                      summary={article.summary}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
         </Grid>
       </Container>
