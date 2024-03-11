@@ -1,18 +1,32 @@
-import {
-  Modal,
-  Paper,
-  Typography,
-  Box,
-  Icon,
-  Button,
-  Grid,
-  IconButton,
-} from "@mui/material";
-import animalPaw from "../../assets/icons/animalPaw.svg";
-import placeholder from "../../assets/icons/SAS_Logo4.png";
-import CloseIcon from "@mui/icons-material/Close";
+import React from 'react';
+import { Modal, Paper, Typography, Box, IconButton, Button, Grid, Icon } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
+import animalPaw from '../../assets/icons/animalPaw.svg';
+import placeholder from '../../assets/icons/SAS_Logo4.png';
 
 const ModalInfoPet = ({ open, onClose, animal }) => {
+  const navigate = useNavigate();
+
+  const handleInquireAdoptionClick = () => {
+    console.log('Inquire Adoption button clicked');
+    if (PawrentIsLoggedIn) {
+      console.log('Pawrent is logged in, navigating to /questionnaire');
+      navigate("/questionnaire");
+    } else if (ShelterIsLoggedIn) {
+      console.log('Shelter is logged in, hiding the Inquire Adoption button');
+      // The button will be hidden by not rendering it in the return statement
+    } else {
+      console.log('No one is logged in, navigating to /login');
+      navigate("/login");
+    }
+  };
+
+  const { imageCollection } = animal;
+
+  const PawrentIsLoggedIn = true;
+  const ShelterIsLoggedIn = false;
+
   return (
     <Modal
       open={open}
@@ -64,7 +78,6 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
         </IconButton>
         <Box sx={{ padding: "32px 48px 0px 48px" }}>
           <Grid container spacing={3} mb={4} justifyContent="center">
-            {/* xs = flip phone, sm = mobile, md = tablet, lg = desktop, xl = widescreen */}
             <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
               <Box sx={{ color: "#2F4858" }}>
                 <Typography variant="h6" fontWeight={600} component="p">
@@ -73,7 +86,6 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                 <Typography variant="body2" fontWeight={300}>
                   {animal.description}
                 </Typography>
-                {/* Adoption Fee */}
                 <Paper
                   sx={{
                     marginTop: "16px",
@@ -81,10 +93,6 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                     padding: "16px",
                     borderRadius: "7px",
                     boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-                    transition: "box-shadow 0.3s ease",
-                    "&:hover": {
-                      boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
-                    },
                   }}
                 >
                   <Typography
@@ -102,11 +110,17 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                   >
                     PHP {animal.price}.00
                   </Typography>
+                  <Button
+                    variant="contained"
+                    onClick={handleInquireAdoptionClick}
+                    sx={{ width: "100%", maxWidth: "120%", marginTop: "16px", py: "12px", color: "white", backgroundColor: "#EA7200" }}
+                  >
+                    Inquire Adoption
+                  </Button>
                 </Paper>
               </Box>
             </Grid>
             <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>
-              {/* Animal Image */}
               <Box
                 sx={{
                   position: "relative",
@@ -114,7 +128,7 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                   height: "100%",
                 }}
               >
-                <div className="flex justify-center items-center h-full">
+                <div className="flex justify-center items-center">
                   <img
                     src={
                       !animal.photos || animal.photos.length === 0
@@ -128,8 +142,6 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
               </Box>
             </Grid>
           </Grid>
-
-          {/* Animal Properties */}
           <Grid container spacing={2}>
             {animalProperties.map((property, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
@@ -141,8 +153,6 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
             ))}
           </Grid>
         </Box>
-
-        {/* Close Button */}
         <Button
           variant="contained"
           onClick={onClose}
@@ -155,14 +165,14 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
   );
 };
 
-export default ModalInfoPet;
-
 const isPetTypeTernary = (property) =>
   property === "Pet Type" ? "species" : property.toLowerCase();
 
 const animalProperties = ["Pet Type", "Breed", "Sex", "Age", "Color", "Size"];
 
 function AnimalFoo({ property, values }) {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -171,17 +181,12 @@ function AnimalFoo({ property, values }) {
         border: "0.5px solid rgba(238, 114, 0, 0.50)",
         borderRadius: "7px",
         backgroundColor: "#FFFFFF",
-        transition: "boxShadow 0.3s ease",
         boxShadow: "none",
-        "&:hover": {
-          boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.15)",
-        },
       }}
     >
       <Icon>
-        <img src={animalPaw} />
+        <img src={animalPaw} alt="Animal Paw" />
       </Icon>
-      {/* Animal Property value */}
       <Typography variant="body1" fontWeight={600} component="p">
         {property}
       </Typography>
@@ -191,3 +196,5 @@ function AnimalFoo({ property, values }) {
     </Box>
   );
 }
+
+export default ModalInfoPet;
