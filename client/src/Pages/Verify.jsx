@@ -57,7 +57,15 @@ export default function Verify() {
 
   //TOD: Logic for role submit
   const handleRoleSubmit = () => {
-    console.log(role + " submitted");
+    axios.post(`http://localhost:3001/verify?token=${token}`, {
+      role
+    })
+        .then(response => {
+          console.log('Response from POST request:', response.data);
+        })
+        .catch(error => {
+          console.error('Error in POST request:', error);
+        });
   };
 
   return (
