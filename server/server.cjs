@@ -10,8 +10,6 @@ const port = 3001;
 const uri = `mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB`;
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
-const { GoogleSpreadsheet } = require("google-spreadsheet");
-const { JWT } = require("google-auth-library");
 
 //db connection >>
 mongoose
@@ -305,88 +303,6 @@ app.get("/api/filteredPets", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-app.get("/api/sheets", async (req, res) => {
-  try {
-    const serviceAccountAuth = new JWT({
-      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      key: process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
-    const doc = new GoogleSpreadsheet(
-      process.env.GOOGLE_SHEETS_DOCUMENT_ID,
-      serviceAccountAuth
-    );
-
-    await doc.loadInfo(); // loads document properties and worksheets
-
-    // Access the first sheet by index (assuming it's the first sheet)
-    const sheet = doc.sheetsByIndex[0];
-
-    // Load all rows from the sheet
-    await sheet.loadCells();
-
-    // Find the last row and column with content
-    let lastRow = sheet.rowCount - 1;
-    let lastColumn = sheet.columnCount - 1;
-    while (lastRow >= 0 && isEmptyRow(sheet, lastRow)) {
-      lastRow--;
-    }
-    while (lastColumn >= 0 && isEmptyColumn(sheet, lastColumn)) {
-      lastColumn--;
-    }
-
-    // Construct a two-dimensional array containing only the non-empty cells
-    const cells = [];
-    for (let i = 0; i <= lastRow; i++) {
-      const row = [];
-      for (let j = 0; j <= lastColumn; j++) {
-        const cell = sheet.getCell(i, j);
-        if (cell.value !== null && cell.value !== "") {
-          row.push(cell.value);
-        }
-      }
-      if (row.length > 0) {
-        cells.push(row);
-      }
-    }
-
-    // Respond with the cell values
-    const formQuestions = cells[0];
-    const questions = [];
-    for (let i = 0; i < formQuestions.length; i++) {
-      const question = formQuestions[i];
-      questions.push(question);
-    }
-
-    console.log(questions);
-    res.json({ questions });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// Function to check if a row is empty
-function isEmptyRow(sheet, rowIndex) {
-  for (let j = 0; j < sheet.columnCount; j++) {
-    const cell = sheet.getCell(rowIndex, j);
-    if (cell.value !== null && cell.value !== "") {
-      return false;
-    }
-  }
-  return true;
-}
-// Function to check if a column is empty
-function isEmptyColumn(sheet, columnIndex) {
-  for (let i = 0; i < sheet.rowCount; i++) {
-    const cell = sheet.getCell(i, columnIndex);
-    if (cell.value !== null && cell.value !== "") {
-      return false;
-    }
-  }
-  return true;
-}
 
 app.listen(port, () => {
   console.log("Connected to PORT ", port);
