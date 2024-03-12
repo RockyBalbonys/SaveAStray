@@ -1,4 +1,6 @@
-export function ShelterIcon(props) {
+import { SvgIcon } from "@mui/material";
+
+function ShelterIcon(props) {
   return (
     <SvgIcon {...props}>
       <svg
@@ -17,3 +19,5 @@ export function ShelterIcon(props) {
     </SvgIcon>
   );
 }
+
+export default ShelterIcon;

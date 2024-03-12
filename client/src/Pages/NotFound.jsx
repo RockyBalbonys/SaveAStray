@@ -1,6 +1,6 @@
 import { Container, Typography, Box, Paper, Grid, Button } from "@mui/material";
 import Background from "../Components/Background";
-import passive from "../assets/images/passive2.png";
+import passive from "../assets/images/top.jpg";
 import logo from "../assets/icons/SAS_Logo4.png";
 import dogCover from "../assets/images/dogCover3.png";
 import { Link as RouterLink } from "react-router-dom";
@@ -24,7 +24,7 @@ const NotFound = () => {
             </div>
           </div>
           <Paper sx={{ mt: 2, p: "32px 31px", border: "7px" }}>
-            <Grid container>
+            <Grid container columnSpacing={8.5}>
               <Grid item xs={0} sm={6}>
                 <Box display={{ xs: "none", sm: "block" }}>
                   <Box
@@ -39,6 +39,7 @@ const NotFound = () => {
                       width={"403px"}
                       height={"403px"}
                       className="self-center"
+                      loading="lazy"
                     />
                   </Box>
                 </Box>
@@ -54,6 +55,7 @@ const NotFound = () => {
                     height: "100%",
                     rowGap: "24px",
                     color: "#2F4858",
+                    width: "398px",
                   }}
                 >
                   <Typography

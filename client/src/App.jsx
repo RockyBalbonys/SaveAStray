@@ -19,9 +19,8 @@ import ArticlePage from "./Pages/ArticlePage";
 import FAQ from "./Pages/FAQ";
 import { DeadEnd } from "./Pages/DeadEnd";
 import { renderNavbar } from "./renderNavbar";
-import AnimalsPawrent from "./Pages/AnimalsPawrent";
 import Questionnaire from "./Pages/Questionnaire";
-import { ManageAcc } from "./Pages/ManageAcc";
+import { AccountPawrent } from "./Pages/AccountPawrent";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 
@@ -36,9 +35,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />
+            <Route path="/manage" element={<AccountPawrent />} />
             {/* TODO: Role Routing */}
-            <Route path="/manage" element={<ManageAcc />} />
-
             <Route path="/animals" element={<AnimalsShelter />} />
             <Route path="/questionnaire" element={<Questionnaire />} />
             <Route path="/articles/" element={<Articles />} />

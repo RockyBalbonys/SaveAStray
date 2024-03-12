@@ -152,9 +152,9 @@ const Login = () => {
                 type="radio"
                 name="loginRole"
                 id="adoptiveParent"
-                value="Adoptive Parent"
+                value="Adoptive Pawrent"
                 onChange={handleChange}
-                checked={formData.loginRole === "Adoptive Parent"}
+                checked={formData.loginRole === "Adoptive Pawrent"}
                 required
               />
               <label htmlFor="adoptiveParent" className="text-sm">

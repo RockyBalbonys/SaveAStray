@@ -1,3 +1,5 @@
+import { SvgIcon } from "@mui/material";
+
 export function PawrentIcon(props) {
   return (
     <SvgIcon {...props}>

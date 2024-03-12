@@ -14,14 +14,13 @@ import {
   DialogActions,
   Slide,
 } from "@mui/material";
-import topImage from "../assets/images/passive2.png";
+import topImage from "../assets/images/top.jpg";
 import logo from "../assets/icons/SAS_Logo4.png";
 import { VerifyButton } from "../Components/Button/CustomButton";
 import { StyledPaper } from "../Components/Paper/StyledPaper";
-import {
-  PawrentIcon,
-  ShelterIcon,
-} from "../assets/icons/RoleIcons/PawrentIcon";
+import { PawrentIcon } from "../assets/icons/RoleIcons/PawrentIcon";
+import ShelterIcon from "../assets/icons/RoleIcons/ShelterIcon";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 export default function Verify() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -55,108 +54,119 @@ export default function Verify() {
     setOpenDialog(false);
   };
 
-  //TOD: Logic for role submit
+  // navigate router
+  const navigate = useNavigate();
+
   const handleRoleSubmit = () => {
-    axios.post(`http://localhost:3001/verify?token=${token}`, {
-      role
-    })
-        .then(response => {
-          console.log('Response from POST request:', response.data);
-        })
-        .catch(error => {
-          console.error('Error in POST request:', error);
-        });
+    axios
+      .post(`http://localhost:3001/verify?token=${token}`, {
+        role,
+      })
+      .then((response) => {
+        console.log("Response from POST request:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error in POST request:", error);
+        navigate(`/login?role=${role}`);
+      });
   };
 
   return (
     <>
-      <Background display={"flex"} align={"center"}>
-        <Container sx={{ py: 10 }}>
-          <div className="h-[12vh] relative border-[5px] rounded-[7px]">
-            <img
-              src={topImage}
-              alt="top image"
-              className="object-cover h-full w-full"
-            />
-            <div className="absolute inset-0 flex justify-center items-center z-10">
-              <img src={logo} alt="logo" className="h-[91px] w-[91px]" />
-              <Typography component="div" variant="h3" ml="22px" color="white">
-                SaveAStray
-              </Typography>
+      <div className="bg-gradient-to-bl from-amber-500 to-orange-600 flex justify-center items-center relative h-screen">
+        <div className="absolute">
+          <Container sx={{ py: 10 }}>
+            <div className="h-[12vh] relative border-[5px] rounded-[7px]">
+              <img
+                src={topImage}
+                alt="top image"
+                className="object-cover h-full w-full"
+              />
+              <div className="absolute inset-0 flex justify-center items-center z-10">
+                <img src={logo} alt="logo" className="h-[91px] w-[91px]" />
+                <Typography
+                  component="div"
+                  variant="h3"
+                  ml="22px"
+                  color="white"
+                >
+                  SaveAStray
+                </Typography>
+              </div>
             </div>
-          </div>
-          <StyledPaper sx={{ mt: 2 }}>
-            <Typography variant="h3">
-              Your Account Has Been Verified!
-            </Typography>
-            <Box width="600px">
-              <Typography>
-                We're excited to have you onboard! Just one last question - what
-                describes your role on our website?
+            <StyledPaper sx={{ mt: 2 }}>
+              <Typography variant="h3">
+                Your Account Has Been Verified!
               </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                flexWrap: "wrap",
-                gap: "32px",
-              }}
-            >
-              {/* Redirect user to login page with the role value */}
-              <VerifyButton
-                onClick={() => handleClickOpen("Adoptive Pawrent")}
-                sx={{
-                  textTransform: "none",
-                  "&:hover": {
-                    "& path": {
-                      fill: "#EE7200",
-                      stroke: "white",
-                      strokeWidth: "4.5",
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                    },
-                  },
-                }}
-              >
-                <PawrentIcon sx={{ fontSize: "4.5rem" }} />
-                <Typography variant="body1Bold">Adoptive Pawrent</Typography>
-                <Typography variant="body1">
-                  Adopts and cares for a pet from shelters
+              <Box width="600px">
+                <Typography>
+                  We're excited to have you onboard! Just one last question -
+                  what describes your role on our website?
                 </Typography>
-              </VerifyButton>
-              <VerifyButton
-                onClick={() => handleClickOpen("Rescue Shelter")}
+              </Box>
+              <Box
                 sx={{
-                  textTransform: "none",
-                  "&:hover": {
-                    "& path": {
-                      fill: "white",
-                    },
-                  },
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                  gap: "32px",
                 }}
               >
-                <ShelterIcon
+                {/* Redirect user to login page with the role value */}
+                <VerifyButton
+                  onClick={() => handleClickOpen("Adoptive Pawrent")}
                   sx={{
-                    fontSize: "4.5rem",
+                    textTransform: "none",
+                    "&:hover": {
+                      "& path": {
+                        fill: "#EE7200",
+                        stroke: "white",
+                        strokeWidth: "4.5",
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                      },
+                    },
                   }}
-                />
-                <Typography variant="body1Bold">Rescue Shelter</Typography>
-                <Typography variant="body1">
-                  Provides home and care to stray animals
-                </Typography>
-              </VerifyButton>
-            </Box>
-            <RoleDialog
-              open={openDialog}
-              handleClose={handleClose}
-              handleSubmit={handleRoleSubmit}
-              role={role}
-            />
-          </StyledPaper>
-        </Container>
-      </Background>
+                >
+                  <PawrentIcon sx={{ fontSize: "4.5rem" }} />
+                  <Typography variant="body1Bold">Adoptive Pawrent</Typography>
+                  <Typography variant="body1">
+                    Adopts and cares for a pet from shelters
+                  </Typography>
+                </VerifyButton>
+                <VerifyButton
+                  onClick={() => handleClickOpen("Rescue Shelter")}
+                  sx={{
+                    textTransform: "none",
+                    "&:hover": {
+                      "& path": {
+                        fill: "white",
+                      },
+                    },
+                  }}
+                >
+                  <ShelterIcon
+                    sx={{
+                      fontSize: "4.5rem",
+                    }}
+                  />
+                  <Typography variant="body1Bold">Rescue Shelter</Typography>
+                  <Typography variant="body1">
+                    Provides home and care to stray animals
+                  </Typography>
+                </VerifyButton>
+              </Box>
+              <RoleDialog
+                open={openDialog}
+                handleClose={handleClose}
+                handleSubmit={handleRoleSubmit}
+                role={role}
+              />
+            </StyledPaper>
+          </Container>
+        </div>
+      </div>
     </>
   );
 }
