@@ -1,7 +1,7 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
 import React from "react";
 
-export const SelectShelter = ({ value, onChange, shelter }) => {
+export const SelectShelter = ({ value, onChange, shelters }) => {
   return (
     <FormControl>
       <Select

@@ -9,8 +9,8 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Alert, Box, IconButton } from "@mui/material";
 import { store, persistor } from "../tools/store";
 import { loginFailed, loginSuccess } from "../tools/authActions";
-import { useSelector } from 'react-redux';
-import useAuth from '../hooks/useAuth';
+import { useSelector } from "react-redux";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   // get the role from verify page
@@ -18,11 +18,7 @@ const Login = () => {
   const params = new URLSearchParams(location.search);
   const selectedRole = params.get("role");
 
-  const { isLoggedIn, user } = useAuth();
-
-  console.log(isLoggedIn);
-  console.log("helloworld");
-  console.log(user);
+  const { isLoggedIn, user, role } = useAuth();
 
   const [formData, setFormData] = useState({
     loginEmail: "",
@@ -36,12 +32,9 @@ const Login = () => {
     navigate(-1, { replace: true }); // Go back to the previous page
   };
 
-  console.log({ formData });
-
   const [showPassword, setShowPassword] = useState(false);
   const [userIn, setUserIn] = useState(false);
   const [loginAttempted, setLoginAttempted] = useState(false);
-
 
   useEffect(() => {
     // Update formData with the selected role whenever it changes
@@ -75,6 +68,7 @@ const Login = () => {
         );
         store.dispatch(loginSuccess(formData.loginRole, response.data.user));
         unsubscribe();
+        navigate("/Animals");
       } else if (
         response.data.status === 400 &&
         response.data.checked === true
@@ -160,9 +154,9 @@ const Login = () => {
                 type="radio"
                 name="loginRole"
                 id="adoptiveParent"
-                value="Adoptive Parent"
+                value="Adoptive Pawrent"
                 onChange={handleChange}
-                checked={formData.loginRole === "Adoptive Parent"}
+                checked={formData.loginRole === "Adoptive Pawrent"}
                 required
               />
               <label htmlFor="adoptiveParent" className="text-sm">

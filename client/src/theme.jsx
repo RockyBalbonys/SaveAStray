@@ -1,4 +1,4 @@
-import { createTheme, responsiveFontSizes } from "@mui/material";
+import { createTheme } from "@mui/material";
 
 // Define custom color palette
 const palette = {
@@ -19,7 +19,6 @@ const palette = {
   },
 };
 
-// Define custom typography variants
 const typography = {
   fontFamily: "Poppins",
   fontSize: 16, // Base font size
@@ -82,11 +81,23 @@ const typography = {
   btn: {
     fontSize: 18, // 18px converted to rem // 1.125rem
     fontWeight: "700",
+    color: palette.secondary.main,
+  },
+};
+
+const breakpoints = {
+  values: {
+    xs: 0,
+    sm: 340,
+    md: 768,
+    lg: 1125,
+    xl: 1444,
   },
 };
 
 const theme = createTheme({
   typography,
   palette,
+  breakpoints,
 });
 export default theme;

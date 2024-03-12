@@ -11,9 +11,25 @@ import {
 import animalPaw from "../../assets/icons/animalPaw.svg";
 import placeholder from "../../assets/icons/SAS_Logo4.png";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
+  const { isLoggedIn, user, role } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleInquireAdoptionClick = () => {
+    console.log("Inquire Adoption button clicked");
+    if (isLoggedIn) {
+      console.log("Pawrent is logged in, navigating to /questionnaire");
+      navigate("/questionnaire");
+    } else {
+      console.log("No one is logged in, navigating to /login");
+      navigate("/login");
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -67,7 +83,14 @@ const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
           <Grid container spacing={3} mb={4} justifyContent="center">
             {/* xs = flip phone, sm = mobile, md = tablet, lg = desktop, xl = widescreen */}
             <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
-              <Box sx={{ color: "#2F4858" }}>
+              <Box
+                sx={{
+                  color: "#2F4858",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
                 <Typography variant="h6" fontWeight={600} component="p">
                   {animal.name.slice(0, 1).toUpperCase() + animal.name.slice(1)}
                 </Typography>
@@ -75,50 +98,59 @@ const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
                   {animal.description}
                 </Typography>
                 {/* Adoption Fee */}
-                <Paper
+                <Box
                   sx={{
-                    marginTop: "16px",
-                    textAlign: "center",
-                    padding: "16px",
-                    borderRadius: "7px",
-                    boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-                    transition: "box-shadow 0.3s ease",
-                    "&:hover": {
-                      boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
-                    },
+                    flexGrow: 1,
+                    display: "flex",
+                    width: "100%",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
                   }}
                 >
-                  <Typography
-                    variant="body2"
-                    fontWeight={300}
-                    sx={{ color: "#2F4858" }}
-                  >
-                    Adoption Fee
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    fontWeight={600}
-                    component="p"
-                    sx={{ color: "#2F4858" }}
-                  >
-                    PHP {animal.price}.00
-                  </Typography>
-
-                  {/* Redirect pawrent to questionnaire */}
-                  <Button
-                    variant="contained"
-                    component={RouterLink}
-                    to={"/questionnaire"}
+                  <Paper
                     sx={{
-                      color: "white",
-                      textTransform: "none",
-                      width: "100%",
-                      border: "7px",
+                      marginTop: "16px",
+                      textAlign: "center",
+                      padding: "16px",
+                      borderRadius: "7px",
+                      boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+                      transition: "box-shadow 0.3s ease",
+                      "&:hover": {
+                        boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
+                      },
                     }}
                   >
-                    Inquire Adoption
-                  </Button>
-                </Paper>
+                    <Typography
+                      variant="body2"
+                      fontWeight={300}
+                      sx={{ color: "#2F4858" }}
+                    >
+                      Adoption Fee
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      fontWeight={600}
+                      component="p"
+                      sx={{ color: "#2F4858" }}
+                    >
+                      PHP {animal.price}.00
+                    </Typography>
+
+                    {/* Redirect pawrent to questionnaire */}
+                    <Button
+                      variant="contained"
+                      onClick={handleInquireAdoptionClick}
+                      sx={{
+                        color: "white",
+                        textTransform: "none",
+                        width: "100%",
+                        border: "7px",
+                      }}
+                    >
+                      Inquire Adoption
+                    </Button>
+                  </Paper>
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>

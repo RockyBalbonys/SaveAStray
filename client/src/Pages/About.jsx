@@ -57,7 +57,6 @@ function SecondSection({ contents }) {
           <Box key={index}>
             <Typography
               variant="h5"
-              color="initial"
               fontWeight="bold"
               mb={4}
               textAlign="center"

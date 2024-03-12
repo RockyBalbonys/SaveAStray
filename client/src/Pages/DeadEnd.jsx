@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
 import Background from "../Components/Background";
-import passive from "../assets/images/passive2.png";
+import passive from "../assets/images/top.jpg";
 import logo from "../assets/icons/SAS_Logo4.png";
 import dogCover from "../assets/images/dogCoverSmall.png";
 
@@ -37,6 +37,7 @@ export const DeadEnd = () => {
                     rowGap: "24px",
                     color: "#2F4858",
                     ml: "32px",
+                    width: "398px",
                   }}
                 >
                   <Typography
@@ -88,6 +89,7 @@ export const DeadEnd = () => {
                       width={"403px"}
                       height={"403px"}
                       className="self-center"
+                      loading={"lazy"}
                     />
                   </Box>
                 </Box>
