@@ -28,6 +28,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import IconLinks from "../IconLinks";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CustomLink from "../CustomLink";
+import useAuth from '../../hooks/useAuth';
 
 const icons = [
   { icon: facebook_icon, alt: "facebook icon" },
@@ -39,6 +40,12 @@ export default function Navbar() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const { isLoggedIn, user } = useAuth();
+
+console.log(isLoggedIn);
+console.log("helloworld from navbar");
+console.log(user);
+
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
