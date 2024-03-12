@@ -119,7 +119,7 @@ function HeroContent() {
           sx={{ justifyContent: "center", alignContent: "center" }}
         >
           <Grid item>
-            <Link to="/login?role=Adoptive Parent" component={RouterLink}>
+            <Link to="/login?role=Adoptive Pawrent" component={RouterLink}>
               <CustomButton variant="contained" sx={{ padding: "8px 48px" }}>
                 I am a <span className="font-bold">&nbsp;Pawrent</span>
               </CustomButton>

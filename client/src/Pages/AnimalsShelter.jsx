@@ -24,15 +24,17 @@ import {
   defaultAnimalData,
 } from "../constants/animals";
 import { ascendingPets, descendingPets } from "../constants/sortLogic";
+import useAuth from "../hooks/useAuth";
 
 const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
+  const { isLoggedIn, user, role } = useAuth();
 
-  // Role and Login state variable; Default: Pawrent
-  const isShelter = false;
-  const isLoggedIn = true;
+  console.log("Logged in: " + isLoggedIn);
+  console.log(user);
+  console.log(role);
 
-  console.log(isShelter, isLoggedIn);
+  const isShelter = role === "Rescue Shelter";
 
   console.table(animals);
 
@@ -49,6 +51,7 @@ const AnimalsShelter = () => {
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
+        console.log(allPets);
       })
       .catch(function (error) {
         console.log(error);

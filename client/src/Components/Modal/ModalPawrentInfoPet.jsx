@@ -11,9 +11,25 @@ import {
 import animalPaw from "../../assets/icons/animalPaw.svg";
 import placeholder from "../../assets/icons/SAS_Logo4.png";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
+  const { isLoggedIn, user, role } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleInquireAdoptionClick = () => {
+    console.log("Inquire Adoption button clicked");
+    if (isLoggedIn) {
+      console.log("Pawrent is logged in, navigating to /questionnaire");
+      navigate("/questionnaire");
+    } else {
+      console.log("No one is logged in, navigating to /login");
+      navigate("/login");
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -123,8 +139,7 @@ const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
                     {/* Redirect pawrent to questionnaire */}
                     <Button
                       variant="contained"
-                      component={RouterLink}
-                      to={"/questionnaire"}
+                      onClick={handleInquireAdoptionClick}
                       sx={{
                         color: "white",
                         textTransform: "none",
