@@ -55,7 +55,7 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/api/login", {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/login`, {
         email: formData.loginEmail,
         password: formData.loginPass,
         role: formData.loginRole,
@@ -97,7 +97,7 @@ const Login = () => {
     /*  global google */
     google.accounts.id.initialize({
       client_id:
-        "367854237850-6nomj4kp7i22ikmlcv0n4d0qkj332mhe.apps.googleusercontent.com",
+        process.env.REACT_APP_google_oauth_client_id,
       callback: handleCallbackResponse,
     });
 

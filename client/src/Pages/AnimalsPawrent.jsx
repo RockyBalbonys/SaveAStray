@@ -25,7 +25,7 @@ const AnimalsPawrent = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/getPet")
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet`)
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
@@ -38,7 +38,7 @@ const AnimalsPawrent = () => {
   const fetchFilteredPets = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3001/api/filteredPets",
+        `${process.env.REACT_APP_SERVER_URL}/api/filteredPets`,
         {
           params: filters,
         }

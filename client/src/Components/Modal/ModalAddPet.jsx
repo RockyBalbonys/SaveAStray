@@ -91,12 +91,12 @@ const ModalAddPet = ({
 
       // Send data and images in a single request
       await axios.post(
-        "http://localhost:3001/api/addAnimal",
+        `${process.env.REACT_APP_SERVER_URL}/api/addAnimal`,
         animalDataWithImages
       );
 
       // After successfully adding the new pet, fetch the updated list of pets
-      const response = await axios.get("http://localhost:3001/getPet");
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet`);
       const allPets = response.data.allPets;
       setAnimals(allPets);
 

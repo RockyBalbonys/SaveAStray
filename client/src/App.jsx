@@ -11,7 +11,6 @@ import Login from "./Pages/Login";
 import Verify from "./Pages/Verify";
 import TermsOfServices from "./Pages/TermsOfServices";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
-import Sheets from "./Pages/Sheets";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
 import Articles from "./Pages/Articles";

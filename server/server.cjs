@@ -102,7 +102,7 @@ app.post("/api/register", async (req, res) => {
         from: process.env.USER_EMAIL,
         to: email,
         subject: "Email Verification",
-        text: `Please click the following link to verify your email: http://localhost:3000/verify?token=${verificationToken}`,
+        text: `Please click the following link to verify your email: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
       });
 
       console.log("Verification email sent:", info);

@@ -47,7 +47,7 @@ function Signup() {
   const regSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/api/register", {
+      const response = await axios.post(`REACT_APP_SERVER_URL/api/register`, {
         userID: "",
         email: formData.regEmail,
         pass: formData.regPass,
@@ -72,7 +72,7 @@ function Signup() {
   useEffect(() => {
     google.accounts.id.initialize({
       client_id:
-        "367854237850-6nomj4kp7i22ikmlcv0n4d0qkj332mhe.apps.googleusercontent.com",
+      process.env.REACT_APP_google_oauth_client_id,
       callback: handleCallbackResponse,
     });
 

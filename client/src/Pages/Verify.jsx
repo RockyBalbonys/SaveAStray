@@ -27,7 +27,7 @@ export default function Verify() {
   const token = searchParams.get("token");
 
   axios
-    .get(`http://localhost:3001/verify?token=${token}`)
+    .get(`${process.env.SERVER_URL}/verify?token=${token}`)
     .then(function (res) {
       console.log(res.data, token);
     })
@@ -59,7 +59,7 @@ export default function Verify() {
 
   const handleRoleSubmit = () => {
     axios
-      .post(`http://localhost:3001/verify?token=${token}`, {
+      .post(`${process.env.SERVER_URL}/verify?token=${token}`, {
         role,
       })
       .then((response) => {
