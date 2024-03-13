@@ -25,7 +25,7 @@ const AnimalsPawrent = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet`)
+      .get(`https://vast-erin-pelican-suit.cyclic.app/getPet`)
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
@@ -38,7 +38,7 @@ const AnimalsPawrent = () => {
   const fetchFilteredPets = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/filteredPets`,
+        `https://vast-erin-pelican-suit.cyclic.app/api/filteredPets`,
         {
           params: filters,
         }
