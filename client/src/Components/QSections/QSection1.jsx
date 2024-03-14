@@ -7,8 +7,22 @@ import {
 import { Input } from "@mui/material";
 import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useState } from "react";
+import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 
 const QSection1 = () => {
+  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { email, bestDescribe } = answers.section1;
+
+  const handleEmailChange = (e) => {
+    const emailValue = e.target.value;
+    updateAnswer("section1", "email", emailValue);
+  };
+
+  const handleRadioChange = (e) => {
+    const radioValue = e.target.value;
+    updateAnswer("section1", "bestDescribe", radioValue);
+  };
+
   return (
     <Paper sx={paperStyle}>
       <div className="paper-format">
@@ -17,7 +31,13 @@ const QSection1 = () => {
           <label htmlFor="email" className="font-bold lg:w-1/5">
             1. Enter your Email:
           </label>
-          <Input id="email" type="email" fullWidth />
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            fullWidth
+          />
         </div>
         <div className="flex flex-col">
           <FormControl>
@@ -25,7 +45,7 @@ const QSection1 = () => {
               2. Which of the following best describes why you're filling out
               this form?
             </label>
-            <RadioOptions />
+            <RadioOptions value={bestDescribe} onChange={handleRadioChange} />
           </FormControl>
         </div>
       </div>
@@ -33,11 +53,7 @@ const QSection1 = () => {
   );
 };
 
-const RadioOptions = () => {
-  const [value, setValue] = useState("");
-  const handleChange = (e) => {
-    setValue(e.target.value);
-  };
+const RadioOptions = ({ value, onChange }) => {
   return (
     <RadioGroup
       id="best-describe"
@@ -48,13 +64,13 @@ const RadioOptions = () => {
         },
       }}
       value={value}
+      onChange={onChange}
     >
       {options.map((option) => (
         <FormControlLabel
           key={option.label}
           label={option.label}
           value={option.label}
-          onChange={handleChange}
           control={<RadioSmall />}
         />
       ))}

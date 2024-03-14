@@ -1,13 +1,27 @@
 import { Paper, FormControl, FormControlLabel } from "@mui/material";
-import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
+import {
+  CheckboxSmall,
+  RadioSmall,
+  paperStyle,
+} from "../../Pages/Questionnaire";
+import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 
 const QSection2 = () => {
+  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { awareAdoptionFee } = answers.section2;
+
+  console.log(answers);
+
+  const handleRadioChange = (e) => {
+    updateAnswer("section2", "awareAdoptionFee", !awareAdoptionFee);
+  };
+
   return (
     <Paper sx={paperStyle}>
       <div className="paper-format font-light">
         <p className="q-section-text">SECTION 2 : ADOPTION FEE</p>
         <Introduction />
-        <Awareness />
+        <Awareness value={awareAdoptionFee} onChange={handleRadioChange} />
       </div>
     </Paper>
   );
@@ -27,7 +41,7 @@ const Introduction = () => {
   );
 };
 
-const Awareness = () => {
+const Awareness = ({ value, onChange }) => {
   return (
     <>
       <p className="font-bold">
@@ -36,9 +50,11 @@ const Awareness = () => {
       </p>
       <FormControl>
         <FormControlLabel
+          checked={value}
+          onChange={onChange}
           sx={{ color: "#FF8210" }}
           label="Yes, I am fully aware about adoption fee and willing to pay it."
-          control={<RadioSmall />}
+          control={<CheckboxSmall />}
         />
       </FormControl>
     </>

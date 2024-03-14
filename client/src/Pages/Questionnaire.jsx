@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import top from "../assets/images/top.jpg";
 import {
   Paper,
@@ -18,6 +18,10 @@ import QSection3 from "../Components/QSections/QSection3";
 import QSection4 from "../Components/QSections/QSection4";
 import QSection5 from "../Components/QSections/QSection5";
 import QSection6 from "../Components/QSections/QSection6";
+import {
+  QuestionnaireProvider,
+  useQuestionnaireContext,
+} from "../hooks/useQuestionnaire.jsx";
 
 const Questionnaire = () => {
   const showButton = useScroll(500);
@@ -33,19 +37,15 @@ const Questionnaire = () => {
       <div className="background-questionnaire flex-col">
         <QHeader />
         <QWelcome />
-        <QSection1 />
-        <QSection2 />
-        <QSection3 />
-        <QSection4 />
-        <QSection5 />
-        <QSection6 />
-        <Paper
-          sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-        >
-          <Button sx={{ textTransform: "none" }}>
-            Submit Questionnaire Form
-          </Button>
-        </Paper>
+        <QuestionnaireProvider>
+          <QSection1 />
+          <QSection2 />
+          <QSection3 />
+          <QSection4 />
+          <QSection5 />
+          <QSection6 />
+          <SubmitButton />
+        </QuestionnaireProvider>
         {/* Button to go back to the top */}
         {showButton && (
           <Tooltip title="Back to top">
@@ -177,5 +177,23 @@ function QWelcome() {
       </Paper>
       ;
     </>
+  );
+}
+
+function SubmitButton() {
+  const { submitAnswers } = useQuestionnaireContext();
+  return (
+    <Paper
+      sx={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        p: "16px 32px",
+      }}
+    >
+      <Button onClick={submitAnswers} sx={{ textTransform: "none" }}>
+        Submit Questionnaire Form
+      </Button>
+    </Paper>
   );
 }
