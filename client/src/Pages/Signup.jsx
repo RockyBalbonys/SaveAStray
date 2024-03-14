@@ -47,7 +47,7 @@ function Signup() {
   const regSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`REACT_APP_SERVER_URL/api/register`, {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/register`, {
         userID: "",
         email: formData.regEmail,
         pass: formData.regPass,
@@ -66,7 +66,18 @@ function Signup() {
   };
 
   function handleCallbackResponse(response) {
+    const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
+      cred
+    })
+    .then(function (res) {
+      console.log(res.data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  
   }
 
   useEffect(() => {

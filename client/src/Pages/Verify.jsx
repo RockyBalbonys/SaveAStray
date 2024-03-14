@@ -29,7 +29,7 @@ export default function Verify() {
   axios
     .get(`${process.env.SERVER_URL}/verify?token=${token}`)
     .then(function (res) {
-      console.log(res.data, token);
+      console.log(res, token);
     })
     .catch(function (err) {
       console.log(err);
@@ -59,7 +59,7 @@ export default function Verify() {
 
   const handleRoleSubmit = () => {
     axios
-      .post(`${process.env.SERVER_URL}/verify?token=${token}`, {
+      .post(`${process.env.REACT_APP_SERVER_URL}/verify?token=${token}`, {
         role,
       })
       .then((response) => {
