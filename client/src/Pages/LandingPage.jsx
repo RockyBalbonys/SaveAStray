@@ -89,7 +89,7 @@ function HeroContent() {
         <Typography
           sx={{
             typography: {
-              xs: "h3",
+              xs: "h4",
               sm: "h2",
               md: "h1",
               lg: "h1",

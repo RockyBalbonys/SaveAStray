@@ -60,7 +60,13 @@ const Footer = () => {
           <Grid item md={6}>
             <Stack direction="column" rowGap={2}>
               <Box display="flex" alignItems="center" gap={1}>
-                <img src={logo} width={85} height={85} alt="Logo" />
+                <img
+                  src={logo}
+                  width={85}
+                  height={85}
+                  alt="Logo"
+                  className="hidden"
+                />
                 <Typography sx={{ fontSize: "36px", fontWeight: "bold" }}>
                   SaveAStray
                 </Typography>
@@ -78,11 +84,17 @@ const Footer = () => {
             </Stack>
           </Grid>
           <Grid item md={6}>
-            <Stack direction="row" columnGap={11.8} marginBottom={3}>
-              <LinksItem items={pages} category="Websites" />
-              <LinksItem items={legal} category="Legal" />
-              <LinksItem items={contacts} category="Contacts" />
-            </Stack>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} md={4}>
+                <LinksItem items={pages} category="Websites" />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <LinksItem items={legal} category="Legal" />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <LinksItem items={contacts} category="Contacts" />
+              </Grid>
+            </Grid>
           </Grid>
           <Divider
             orientation="horizontal"
