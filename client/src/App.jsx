@@ -26,6 +26,7 @@ import { Provider, useSelector } from "react-redux";
 import { store, persistor } from "./tools/store";
 import { AccountShelter } from "./Pages/AccountShelter";
 import useAuth from "./hooks/useAuth";
+import Test from "./Pages/Test";
 
 function App() {
   const { isLoggedIn, role } = useAuth();
@@ -57,6 +58,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/deadend" element={<DeadEnd />} />
+            <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

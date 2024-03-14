@@ -51,7 +51,6 @@ const NotFound = () => {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignContent: "center",
-                    width: "100%",
                     height: "100%",
                     rowGap: "24px",
                     color: "#2F4858",
