@@ -1,9 +1,11 @@
 import { FormControlLabel, RadioGroup } from "@mui/material";
 import { RadioSmall } from "../../Pages/Questionnaire";
 
-export default function RadioGroupWithLabels({ id, options }) {
+export default function RadioGroupWithLabels({ id, options, onChange, value }) {
   return (
     <RadioGroup
+      value={value}
+      onChange={(e) => onChange(id, e.target.value)}
       id={id}
       sx={{
         color: "#FF8210",
@@ -13,7 +15,12 @@ export default function RadioGroupWithLabels({ id, options }) {
       }}
     >
       {options.map((option, idx) => (
-        <FormControlLabel key={idx} label={option} control={<RadioSmall />} />
+        <FormControlLabel
+          value={option}
+          key={idx}
+          label={option}
+          control={<RadioSmall />}
+        />
       ))}
     </RadioGroup>
   );

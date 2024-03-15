@@ -22,6 +22,6 @@
     @apply flex flex-col justify-start items-start w-full text-[#2F4858] space-y-6;
   }
   .input-container {
-    @apply flex flex-col lg:flex-row lg:justify-center lg:items-center w-full;
+    @apply flex flex-col sm:flex-row sm:items-center md:flex-row md:items-start lg:flex-row lg:justify-center lg:items-start w-full;
   }
 }

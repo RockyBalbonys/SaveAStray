@@ -42,7 +42,7 @@ const useQuestionnaire = () => {
       responsibleForCaring: "",
       responsibleForFinance: "",
       emergency: "",
-      listOfPets: [],
+      listOfPets: "",
     },
     section6: {
       prompted: "",

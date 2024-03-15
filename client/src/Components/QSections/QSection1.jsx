@@ -6,7 +6,6 @@ import {
 } from "@mui/material";
 import { Input } from "@mui/material";
 import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
-import { useState } from "react";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 
 const QSection1 = () => {
@@ -27,8 +26,8 @@ const QSection1 = () => {
     <Paper sx={paperStyle}>
       <div className="paper-format">
         <p className="q-section-text">SECTION 1 : INTRODUCTION</p>
-        <div className="input-container">
-          <label htmlFor="email" className="font-bold lg:w-1/5">
+        <div className="input-container mb-6 ">
+          <label htmlFor="email" className="font-bold sm:w-1/2 lg:w-1/5">
             1. Enter your Email:
           </label>
           <Input
@@ -66,9 +65,9 @@ const RadioOptions = ({ value, onChange }) => {
       value={value}
       onChange={onChange}
     >
-      {options.map((option) => (
+      {options.map((option, idx) => (
         <FormControlLabel
-          key={option.label}
+          key={idx}
           label={option.label}
           value={option.label}
           control={<RadioSmall />}

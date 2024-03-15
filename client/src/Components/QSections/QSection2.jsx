@@ -1,9 +1,5 @@
 import { Paper, FormControl, FormControlLabel } from "@mui/material";
-import {
-  CheckboxSmall,
-  RadioSmall,
-  paperStyle,
-} from "../../Pages/Questionnaire";
+import { CheckboxSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 
 const QSection2 = () => {
