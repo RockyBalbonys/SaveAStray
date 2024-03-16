@@ -165,7 +165,8 @@ app.post("/api/googleSignup", async (req, res) => {
         const payload = ticket.getPayload();
         const email = payload.email;
         const email_verified = payload.email_verified;
-        const name = payload.name;
+        const firstName = payload.firstName;
+        const surname = payload.surname;
 
         console.log(payload);
         console.log(email);
@@ -181,22 +182,20 @@ app.post("/api/googleSignup", async (req, res) => {
         } else {
           const newGoogleUser = new GoogleUser({
             email,
-
+            verified: email_verified,
+            role: null,
+            firstName,
+            surname
           });
+          const savedUser = await newGoogleUser.save();
+          console.log(savedUser);
+          if (savedUser) {
+            res.send({
+              status: 200,
+              message: "Google user signed up!"
+            })
+          }
         }
-
-          const savedUser = await newUser.save();
-    
-
-
-
-        res.send({
-          status: 200,
-          given_name: payload.given_name,
-          family_name: payload.family_name
-          // email_verified: true
-          // email
-        })
     } catch (error) {
         console.error("Error verifying token:", error);
         res.status(401).json({ message: "Invalid Google Sign-In token" });
@@ -324,6 +323,43 @@ app.post("/api/login", async (req, res) => {
       return res.status(500).send("Internal Server Error");
   }
 });
+
+app.post("/api/googleLogin", async (req, res) => {
+  const token = req.body.cred
+  const client = new OAuth2Client(process.env.CLIENT_ID);
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID, 
+        });
+        const payload = ticket.getPayload();
+        const email = payload.email;
+
+        console.log(payload);
+        console.log(email);
+
+        const userExists = await User.findOne({ email });
+        const existingGoogleUser = await GoogleUser.findOne({ email });
+
+        if ( !userExists ) {
+          res.send({
+            message: "Not exists!",
+            status: 400,
+          });
+        } else {
+          res.send({
+            message: "User Logged in!",
+            status: 200,
+          });
+        }
+    } catch (error) {
+        console.error("Error verifying token:", error);
+        res.status(401).json({ message: "Invalid Google Sign-In token" });
+    }
+})
+
+
+
 
 
 app.get("/getPet", async (req, res) => {
