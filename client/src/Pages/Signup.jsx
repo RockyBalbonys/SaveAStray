@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../styles/Signup.module.css";
 import bgImg from "../assets/images/passive.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -47,7 +47,7 @@ function Signup() {
   const regSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`REACT_APP_SERVER_URL/api/register`, {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/register`, {
         userID: "",
         email: formData.regEmail,
         pass: formData.regPass,
@@ -66,7 +66,21 @@ function Signup() {
   };
 
   function handleCallbackResponse(response) {
+    const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
+      cred
+    })
+    .then(function (res) {
+      console.log(res.data);
+    /*   if (res.data.status == 200) {
+        console.log(res.data);
+      } */
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  
   }
 
   useEffect(() => {

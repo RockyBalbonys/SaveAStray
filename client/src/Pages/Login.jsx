@@ -90,7 +90,18 @@ const Login = () => {
   };
 
   function handleCallbackResponse(response) {
+    const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
+      cred
+    })
+    .then(function (res) {
+      console.log(res.data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+  
   }
 
   useEffect(() => {

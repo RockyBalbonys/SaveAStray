@@ -1,5 +1,5 @@
-require("dotenv").config();
 const express = require("express");
+require('dotenv').config();
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -7,13 +7,15 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 3001;
-const uri = `mongodb+srv://Lyfie:pass123@dbsas.mtpeotb.mongodb.net/SAS_DB`;
+const uri = process.env.DB_URI;
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
+const { OAuth2Client } = require('google-auth-library');
+const GoogleUser = require("./Models/googleUserSchema.js");
 
 //db connection >>
 mongoose
-  .connect(uri)
+  .connect(process.env.DB_URI)
   .then(() => {
     console.log("Connected to db");
   })
@@ -49,6 +51,7 @@ app.post('/verify', async(req,res) => {
     const user = await User.findOne({ verificationToken: token });
     if (user) {
       role = req.body.role
+      user.verified = true;
       user.role = role;
       const updatedUser = await user.save();
       res.send(updatedUser);
@@ -85,7 +88,6 @@ app.post("/api/register", async (req, res) => {
   function generateVerificationToken() {
     return crypto.randomBytes(16).toString("hex");
   }
-
   async function sendVerificationEmail(email, verificationToken) {
     try {
       // Create a Nodemailer transporter using SMTP
@@ -104,7 +106,6 @@ app.post("/api/register", async (req, res) => {
         subject: "Email Verification",
         text: `Please click the following link to verify your email: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
       });
-
       console.log("Verification email sent:", info);
     } catch (error) {
       console.error("Error sending verification email:", error);
@@ -153,8 +154,60 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
+app.post("/api/googleSignup", async (req, res) => {
+  const token = req.body.cred
+  const client = new OAuth2Client(process.env.CLIENT_ID);
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID, 
+        });
+        const payload = ticket.getPayload();
+        const email = payload.email;
+        const email_verified = payload.email_verified;
+        const firstName = payload.firstName;
+        const surname = payload.surname;
+
+        console.log(payload);
+        console.log(email);
+
+        const existingUser = await User.findOne({ email });
+        const existingGoogleUser = await GoogleUser.findOne({ email });
+
+        if (existingUser || existingGoogleUser) {
+          res.send({
+            message: "Email is taken",
+            status: 409,
+          });
+        } else {
+          const newGoogleUser = new GoogleUser({
+            email,
+            verified: email_verified,
+            role: null,
+            firstName,
+            surname
+          });
+          const savedUser = await newGoogleUser.save();
+          console.log(savedUser);
+          if (savedUser) {
+            res.send({
+              status: 200,
+              message: "Google user signed up!"
+            })
+          }
+        }
+    } catch (error) {
+        console.error("Error verifying token:", error);
+        res.status(401).json({ message: "Invalid Google Sign-In token" });
+    }
+})
+
+
 app.post("/api/addAnimal", async (req, res) => {
   console.log(req.body);
+  console.log("uri", uri)
+  console.log("user email: ", process.env.USER_EMAIL);
+
   const { name, description, species, breed, sex, age, color, size, photos } =
     req.body;
 
@@ -270,6 +323,43 @@ app.post("/api/login", async (req, res) => {
       return res.status(500).send("Internal Server Error");
   }
 });
+
+app.post("/api/googleLogin", async (req, res) => {
+  const token = req.body.cred
+  const client = new OAuth2Client(process.env.CLIENT_ID);
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID, 
+        });
+        const payload = ticket.getPayload();
+        const email = payload.email;
+
+        console.log(payload);
+        console.log(email);
+
+        const userExists = await User.findOne({ email });
+        const existingGoogleUser = await GoogleUser.findOne({ email });
+
+        if ( !userExists ) {
+          res.send({
+            message: "Not exists!",
+            status: 400,
+          });
+        } else {
+          res.send({
+            message: "User Logged in!",
+            status: 200,
+          });
+        }
+    } catch (error) {
+        console.error("Error verifying token:", error);
+        res.status(401).json({ message: "Invalid Google Sign-In token" });
+    }
+})
+
+
+
 
 
 app.get("/getPet", async (req, res) => {
