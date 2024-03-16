@@ -57,7 +57,7 @@ const AccountForm = () => {
             item
             md={4}
             lg={3}
-            sx={{ display: { sm: "none", md: "block" } }}
+            sx={{ display: { xs: "none", sm: "none", md: "block" } }}
           >
             <Box sx={{ height: "100%" }}>
               <AccountAvatar
