@@ -44,16 +44,19 @@ function Signup() {
     });
   };
 
-  const regSubmit = async (event) => {
+  const regSubmit = async (event, formData) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/register`, {
-        userID: "",
-        email: formData.regEmail,
-        pass: formData.regPass,
-        role: formData.regRole,
-        verified: false,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/register`,
+        {
+          userID: "",
+          email: formData.regEmail,
+          pass: formData.regPass,
+          role: formData.regRole,
+          verified: false,
+        }
+      );
       if (response.data.status == 409) {
         setUserExists(true);
       } else {
@@ -68,25 +71,24 @@ function Signup() {
   function handleCallbackResponse(response) {
     const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
-      cred
-    })
-    .then(function (res) {
-      console.log(res.data);
-    /*   if (res.data.status == 200) {
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
+        cred,
+      })
+      .then(function (res) {
+        console.log(res.data);
+        /*   if (res.data.status == 200) {
         console.log(res.data);
       } */
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
     google.accounts.id.initialize({
-      client_id:
-      process.env.REACT_APP_google_oauth_client_id,
+      client_id: process.env.REACT_APP_google_oauth_client_id,
       callback: handleCallbackResponse,
     });
 

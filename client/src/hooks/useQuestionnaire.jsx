@@ -48,7 +48,7 @@ const useQuestionnaire = () => {
       prompted: "",
       considerToAdopt: "",
       preferInterview: "",
-      preferTime: "",
+      preferTime: [],
       validID: "",
     },
   });

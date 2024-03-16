@@ -34,8 +34,10 @@ function App() {
   const isPawrent =
     isLoggedIn && role === "Adoptive Pawrent" ? (
       <AccountPawrent />
-    ) : (
+    ) : isLoggedIn && role === "Rescue Shelter" ? (
       <AccountShelter />
+    ) : (
+      <Login />
     );
 
   return (

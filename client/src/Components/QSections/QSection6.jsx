@@ -113,7 +113,7 @@ const QSection6 = () => {
             </Alert>
           </Snackbar>
           <label htmlFor={validID}>
-            <span className="font-bold">6. Upload a copy of your valid ID</span>
+            <span className="font-bold">5. Upload a copy of your valid ID</span>
             <br />
             Please upload a Government-issued ID or any Personal ID with your
             picture and name. Make sure the name you indicated in this
@@ -168,20 +168,36 @@ const RadioGroupQuestion = ({ id, value, onChange, label, options }) => {
 };
 
 const DateTimePickerWithLabel = ({ id, value, handleValueChange, label }) => {
+  const [dv1, setDv1] = useState("");
+  const [dv2, setDv2] = useState("");
+  const [dv3, setDv3] = useState("");
+
   const handleDateChange = (date) => {
     const dateString = format(date, "MM/dd/yyyy hh:mm aa");
     handleValueChange(id, dateString);
   };
   return (
-    <div className="input-container sm:items-center">
-      <label htmlFor={id} className="font-bold">
+    <div className="input-container sm:items-center sm:flex-col md:flex-col md:items-start">
+      <label htmlFor={id} className="font-bold w-full mb-4">
         {label}
       </label>
-      <DateTimePicker
-        value={value}
-        onChange={handleDateChange}
-        sx={{ width: "100%" }}
-      />
+      <div className="flex flex-col items-center justify-center w-full space-y-4">
+        <DateTimePicker
+          value={dv1}
+          onChange={handleDateChange}
+          sx={{ width: "50%" }}
+        />
+        <DateTimePicker
+          value={dv2}
+          onChange={handleDateChange}
+          sx={{ width: "50%" }}
+        />
+        <DateTimePicker
+          value={dv3}
+          onChange={handleDateChange}
+          sx={{ width: "50%" }}
+        />
+      </div>
     </div>
   );
 };

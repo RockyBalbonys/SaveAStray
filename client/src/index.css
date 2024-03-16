@@ -4,7 +4,7 @@
 
 @layer components {
   .background-account {
-    @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[20vh] w-full flex justify-end items-center;
+    @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 h-fit py-9 w-full flex justify-end items-center;
   }
   .background {
     @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center;

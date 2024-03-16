@@ -7,6 +7,7 @@ import {
   Button,
   IconButton,
   Tooltip,
+  Container,
 } from "@mui/material";
 import logo from "../assets/icons/SAS_Logo4.png";
 import formIcon from "../assets/icons/formIcon.svg";
@@ -35,35 +36,42 @@ const Questionnaire = () => {
   return (
     <>
       <div className="background-questionnaire flex-col">
-        <QHeader />
-        <QWelcome />
-        <QuestionnaireProvider>
-          <QSection1 />
-          <QSection2 />
-          <QSection3 />
-          <QSection4 />
-          <QSection5 />
-          <QSection6 />
-          <SubmitButton />
-        </QuestionnaireProvider>
-        {/* Button to go back to the top */}
-        {showButton && (
-          <Tooltip title="Back to top">
-            <IconButton
-              sx={{
-                position: "fixed",
-                backgroundColor: "#2F4858",
-                color: "white",
-                bottom: 20,
-                right: 20,
-              }}
-              variant="contained"
-              onClick={scrollToTop}
-            >
-              <KeyboardArrowUpRoundedIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        <Container maxWidth="lg" className="space-y-6">
+          <QHeader />
+          <QWelcome />
+          <QuestionnaireProvider>
+            <QSection1 />
+            <QSection2 />
+            <QSection3 />
+            <QSection4 />
+            <QSection5 />
+            <QSection6 />
+            <SubmitButton />
+          </QuestionnaireProvider>
+          {/* Button to go back to the top */}
+          {showButton && (
+            <Tooltip title="Back to top">
+              <IconButton
+                sx={{
+                  position: "fixed",
+                  backgroundColor: "hsl(203, 30%, 26%, 0.7)",
+                  color: "white",
+                  bottom: 20,
+                  right: 20,
+                  width: "60px",
+                  height: "60px",
+                  border: "2px solid white",
+                }}
+                variant="contained"
+                onClick={scrollToTop}
+              >
+                <KeyboardArrowUpRoundedIcon
+                  sx={{ opacity: 1, fontSize: "2rem" }}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Container>
       </div>
     </>
   );
@@ -81,6 +89,8 @@ export const paperStyle = {
   flexDirection: "column",
   alignItems: "center",
   width: "100%",
+  boxShadow: "none",
+  borderRadius: "7px",
 };
 
 export function RadioSmall(props) {
@@ -175,7 +185,6 @@ function QWelcome() {
           </p>
         </div>
       </Paper>
-      ;
     </>
   );
 }
@@ -183,17 +192,33 @@ function QWelcome() {
 function SubmitButton() {
   const { submitAnswers } = useQuestionnaireContext();
   return (
-    <Paper
+    // <Paper
+    //   sx={{
+    //     width: "100%",
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     p: "16px 32px",
+    //   }}
+    // >
+    <Button
+      onClick={submitAnswers}
       sx={{
+        textTransform: "none",
+        boxShadow: "none",
+        backgroundColor: "white",
         width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        p: "16px 32px",
+        p: "16px 0",
+        color: "#EE7200",
+        fontWeight: "700",
+        "&:hover": {
+          backgroundColor: "#F8DFC9",
+          boxShadow: "none",
+        },
       }}
+      variant="contained"
     >
-      <Button onClick={submitAnswers} sx={{ textTransform: "none" }}>
-        Submit Questionnaire Form
-      </Button>
-    </Paper>
+      Submit Questionnaire Form
+    </Button>
+    // </Paper>
   );
 }

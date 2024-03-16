@@ -55,11 +55,14 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/login`, {
-        email: formData.loginEmail,
-        password: formData.loginPass,
-        role: formData.loginRole,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/login`,
+        {
+          email: formData.loginEmail,
+          password: formData.loginPass,
+          role: formData.loginRole,
+        }
+      );
       if (response.data.status === 200 && response.data.checked === true) {
         console.log(response.data);
         console.log("initial State: ", store.getState());
@@ -92,23 +95,22 @@ const Login = () => {
   function handleCallbackResponse(response) {
     const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
-      cred
-    })
-    .then(function (res) {
-      console.log(res.data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
+        cred,
+      })
+      .then(function (res) {
+        console.log(res.data);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
     /*  global google */
     google.accounts.id.initialize({
-      client_id:
-        process.env.REACT_APP_google_oauth_client_id,
+      client_id: process.env.REACT_APP_google_oauth_client_id,
       callback: handleCallbackResponse,
     });
 

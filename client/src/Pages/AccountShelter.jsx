@@ -29,25 +29,44 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import avatar_placeholder from "../assets/images/avatar_placeholder.png";
 import { AccountHeader } from "../Components/Account/AccountHeader";
 import { AccountAvatar } from "../Components/Account/AccountAvatar";
+import AccountDrawer from "../Components/Account/AccountDrawer";
 
 export const AccountShelter = () => {
   return (
     <>
       <AccountHeader />
       <AccountForm />
+      <AccountDrawer />
+      <Footer />
     </>
   );
 };
 
 const AccountForm = () => {
+  const handleSaveChanges = () => {
+    console.log("Update account.");
+  };
+  const handleLogout = () => {
+    console.log("Logout account.");
+  };
   return (
     <>
       <Container sx={{ py: "64px" }}>
         <Grid container spacing={3}>
-          <Grid item md={3}>
-            <AccountAvatar />
+          <Grid
+            item
+            md={4}
+            lg={3}
+            sx={{ display: { sm: "none", md: "block" } }}
+          >
+            <Box sx={{ height: "100%" }}>
+              <AccountAvatar
+                onClick={handleSaveChanges}
+                onLogout={handleLogout}
+              />
+            </Box>
           </Grid>
-          <Grid item md={9}>
+          <Grid item md={8} lg={9}>
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
                 <ShelterInfo />
@@ -68,6 +87,37 @@ const AccountForm = () => {
                 <DeleteAcc />
               </Grid>
             </Grid>
+          </Grid>
+          <Grid
+            item
+            sx={{
+              width: "100%",
+              display: {
+                xs: "block",
+                md: "none",
+              },
+            }}
+          >
+            <Stack direction={"column"} sx={{ rowGap: "16px" }}>
+              <Button
+                variant="contained"
+                onClick={handleSaveChanges}
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                  borderRadius: "7px",
+                }}
+              >
+                Save Changes
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ textTransform: "none", borderRadius: "7px" }}
+                onClick={handleLogout}
+              >
+                Log Out
+              </Button>
+            </Stack>
           </Grid>
         </Grid>
       </Container>

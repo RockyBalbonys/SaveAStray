@@ -121,6 +121,9 @@ export default function Navbar() {
                       key={index}
                       sx={{
                         color: isRoot ? "white" : "#2F4858",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
                       to={isLearn ? "articles" : page}
                       component={RouterLink}
@@ -135,17 +138,7 @@ export default function Navbar() {
                       aria-disabled={isLearn}
                     >
                       {page}
-                      {isLearn ? (
-                        <IconButton
-                          sx={{
-                            padding: 0,
-                            margin: 0,
-                            color: isRoot ? "white" : "",
-                          }}
-                        >
-                          <KeyboardArrowDownIcon />
-                        </IconButton>
-                      ) : null}
+                      {isLearn ? <KeyboardArrowDownIcon /> : null}
                     </CustomLink>
                   );
                 })}
@@ -208,7 +201,16 @@ export default function Navbar() {
           anchor="right"
           open={openDrawer}
           onClose={handleDrawerClose}
-          sx={{ "& .MuiDrawer-paper": { width: "50%" }, display: "flex" }}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: {
+                xs: "80%",
+                sm: "70%",
+                md: "50%",
+              },
+            },
+            display: "flex",
+          }}
         >
           <Box
             sx={{
