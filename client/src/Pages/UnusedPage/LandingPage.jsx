@@ -12,16 +12,16 @@ import {
   Link,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { CustomButton } from "../Components/Button/CustomButton";
-import heroImage from "../assets/images/image_13.png";
-import catImage from "../assets/images/Cats.png";
-import dogImage from "../assets/images/Dogs.png";
-import aboutImage from "../assets/images/image_14.png";
+import { CustomButton } from "../../Components/Button/CustomButton";
+import heroImage from "../../assets/images/image_13.png";
+import catImage from "../../assets/images/Cats.png";
+import dogImage from "../../assets/images/Dogs.png";
+import aboutImage from "../../assets/images/image_14.png";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import Donate from "../Components/PageComponent/Donate";
-import Footer from "../Components/PageComponent/Footer";
-import { cardContent, helpContent, filter } from "../constants/landingPage";
+import Donate from "../../Components/PageComponent/Donate";
+import Footer from "../../Components/PageComponent/Footer";
+import { cardContent, helpContent, filter } from "../../constants/landingPage";
 
 const headerImage = {
   backgroundImage: `url(${heroImage})`,
