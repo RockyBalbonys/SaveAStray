@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -9,6 +9,7 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Badge from "@mui/material/Badge";
 import { Link as RouterLink } from "react-router-dom";
 import { CustomButton } from "../Components/Button/CustomButton";
 import heroImage from "../assets/images/Herocopy.png";
@@ -77,6 +78,40 @@ const H2Style = {
   },
 };
 
+const cardHeroStyle = {
+  boxShadow: "0px 0px 7px 1px rgba(0, 0, 0, 0.05)",
+  borderRadius: "7px",
+  border: "1px solid rgba(0, 0, 0, 0.10);",
+  backgroundColor: "#FAFAFB",
+  padding: "32px",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  color: "#2F4858",
+  transition: "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out",
+
+  "&:hover": {
+    boxShadow: "0px 4px 20px 3px rgba(0, 0, 0, 0.15)",
+    transform: "scaleY(1.1)",
+    transformOrigin: "top",
+  },
+};
+
+const cardHelpStyle = {
+  boxShadow: "0px 0px 7px 1px rgba(0, 0, 0, 0.05)",
+  borderRadius: "7px",
+  border: "1px solid rgba(0, 0, 0, 0.10);",
+  backgroundColor: "#FAFAFB",
+  padding: "32px",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  color: "#2F4858",
+  "&:hover": {
+    boxShadow: "0px 4px 20px 3px rgba(0, 0, 0, 0.15)",
+  },
+};
+
 function HeroSection() {
   return (
     <Box
@@ -138,6 +173,16 @@ function HeroSection() {
 }
 
 function HeroCard() {
+  const [hovered, setHovered] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHovered(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(null);
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: "-10rem", zIndex: "100" }}>
       <Grid
@@ -149,13 +194,9 @@ function HeroCard() {
         {cardContent.map((card, index) => (
           <Grid item md={4} key={index} width="300px">
             <Card
-              sx={{
-                padding: "32px",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-              }}
-              elevation={4}
+              sx={cardHeroStyle}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeave}
             >
               <CardContent sx={{ padding: 0, flexGrow: 1 }}>
                 <Stack spacing="12px" direction="column">
@@ -167,17 +208,25 @@ function HeroCard() {
                       borderRadius: "7px",
                     }}
                   >
-                    <img
-                      src={card.icon}
-                      alt={card.icon}
-                      width="40px"
-                      height="40px"
-                    />
+                    <Box
+                      sx={{
+                        backgroundImage: `url(${
+                          hovered === index ? card.iconFilled : card.icon
+                        })`,
+                        display: "flex",
+                        alignItems: "center",
+                        width: "60px",
+                        height: "60px",
+                        transition: "background-image 0.3s ease-in-out",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center",
+                      }}
+                    ></Box>
                   </Paper>
-                  <Typography variant="h6" component="div">
+                  <Typography variant="h6" component="div" fontWeight={600}>
                     {card.title}
                   </Typography>
-                  <Typography>{card.description}</Typography>
+                  <Typography fontWeight={400}>{card.description}</Typography>
                 </Stack>
               </CardContent>
               <CardActions sx={{ padding: 0, margin: 0 }}>
@@ -207,6 +256,7 @@ function AboutContent() {
           md: "108px",
         },
         my: { xs: "40px", sm: "50px", md: "0px" },
+        color: "#2F4858",
       }}
     >
       <Grid container>
@@ -271,6 +321,7 @@ function HelpContent() {
           flexDirection: "column",
           alignItems: "center",
           marginBottom: "32px",
+          color: "#2F4858",
         }}
       >
         <Typography mb={4} variant="h4" component="div" fontWeight="bold">
@@ -297,80 +348,121 @@ function HelpCard() {
         columnSpacing={3}
       >
         {helpContent.map((card, index) => (
-          <Grid
-            item
-            key={index}
-            xs={12}
-            sm={6}
-            md={4}
-            sx={{
-              minWidth: {
-                xs: "326px",
-                sm: "326px",
-              },
-            }}
-          >
-            <Card
-              sx={{
-                padding: "32px",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-              }}
-              elevation={4}
-            >
-              <CardContent sx={{ padding: 0, flexGrow: 1 }}>
-                <Stack
-                  spacing="12px"
-                  direction="column"
-                  alignItems="center"
-                  justifyContent="center"
-                  textAlign="center"
-                >
-                  <Box
-                    sx={{
-                      display: "inline-block",
-                      padding: "8px",
-                      width: "fit-content",
-                    }}
-                  >
-                    <FavoriteBorderIcon
-                      sx={{ width: "40px", height: "35px" }}
-                    />
-                  </Box>
-                  <Typography variant="h6" component="div">
-                    {card.title}
-                  </Typography>
-                  <Typography>{card.description}</Typography>
-                </Stack>
-              </CardContent>
-              <CardActions>
-                <Box textAlign="center" width="100%">
-                  <CustomButton
-                    sx={{
-                      padding: 0,
-                      margin: 0,
-                      textTransform: "none",
-                    }}
-                    endIcon={<ChevronRightIcon />}
-                  >
-                    Read more
-                  </CustomButton>
-                </Box>
-              </CardActions>
-            </Card>
-          </Grid>
+          <HelpCardItem key={index} card={card} index={index} />
         ))}
       </Grid>
     </Container>
   );
 }
 
+function HelpCardItem({ card, index }) {
+  const [hovered, setHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
+
+  const badgeStyle = {
+    position: "absolute",
+    top: -10,
+    left: 16,
+    backgroundColor: hovered ? "#EE7200" : "#FFF",
+    boxShadow: "0px 1px 2.5px rgba(0, 0, 0, 0.10)",
+    border: hovered ? "0.5px solid white" : "0.5px solid transparent",
+    color: hovered ? "white" : "#2F4858",
+    transition: "background-color border color 0.3s ease-in-out",
+    borderRadius: "50%",
+    width: "22px",
+    height: "22px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "12px",
+  };
+
+  return (
+    <Grid
+      item
+      xs={12}
+      sm={6}
+      md={4}
+      sx={{
+        minWidth: {
+          xs: "326px",
+          sm: "326px",
+        },
+      }}
+    >
+      <Card
+        sx={cardHelpStyle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <CardContent sx={{ padding: 0, flexGrow: 1 }}>
+          <Stack
+            spacing="12px"
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+          >
+            <Box
+              sx={{
+                display: "inline-block",
+                padding: "8px",
+                width: "fit-content",
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundImage: `url(${
+                    hovered ? card.iconFilled : card.icon
+                  })`,
+                  width: "57px",
+                  height: "57px",
+                  transition: "background-image 0.3s ease-in-out",
+                  position: "relative",
+                }}
+              >
+                <Badge sx={badgeStyle}>0{index + 1}</Badge>
+              </Box>
+            </Box>
+            <Typography variant="h6" component="div">
+              {card.title}
+            </Typography>
+            <Typography>{card.description}</Typography>
+          </Stack>
+        </CardContent>
+        <CardActions>
+          <Box textAlign="center" width="100%">
+            <CustomButton
+              sx={{
+                padding: 0,
+                margin: 0,
+                textTransform: "none",
+              }}
+              endIcon={<ChevronRightIcon />}
+            >
+              Read more
+            </CustomButton>
+          </Box>
+        </CardActions>
+      </Card>
+    </Grid>
+  );
+}
+
 function MeetTheRescues() {
   return (
     <Container
-      maxWidth="md"
-      sx={{ mt: { xs: "40px", sm: "50px", md: "195px" } }}
+      maxWidth="lg"
+      sx={{
+        mt: { xs: "40px", sm: "50px", md: "195px", color: "#2F4858" },
+      }}
     >
       <Box
         sx={{

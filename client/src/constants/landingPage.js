@@ -4,6 +4,18 @@ import heart from "../assets/icons/landingIcons/heart.svg";
 import heartFilled from "../assets/icons/landingIcons/heart-filled.svg";
 import paw from "../assets/icons/landingIcons/paw.svg";
 import pawFilled from "../assets/icons/landingIcons/paw-filled.svg";
+import adopt from "../assets/icons/landingIcons/helpIcons/adopt.png";
+import adopt_filled from "../assets/icons/landingIcons/helpIcons/adopt_filled.png";
+import advocate from "../assets/icons/landingIcons/helpIcons/advocate.png";
+import advocate_filled from "../assets/icons/landingIcons/helpIcons/advocate_filled.png";
+import donate from "../assets/icons/landingIcons/helpIcons/donate.png";
+import donate_filled from "../assets/icons/landingIcons/helpIcons/donate_filled.png";
+import sponsor from "../assets/icons/landingIcons/helpIcons/sponsor.png";
+import sponsor_filled from "../assets/icons/landingIcons/helpIcons/sponsor_filled.png";
+import stw from "../assets/icons/landingIcons/helpIcons/stw.png";
+import stw_filled from "../assets/icons/landingIcons/helpIcons/stw_filled.png";
+import volunteer from "../assets/icons/landingIcons/helpIcons/volunteer.png";
+import volunteer_filled from "../assets/icons/landingIcons/helpIcons/volunteer_filled.png";
 
 // Footer and Navbar content links
 const pages = ["About", "Animals", "Learn", "Donate", "Contact"];
@@ -49,31 +61,43 @@ const helpContent = [
     title: "Donate",
     description:
       "Shelters need money to cover the costs of food, shelter, and medical care for the animals",
+    icon: donate,
+    iconFilled: donate_filled,
   },
   {
     title: "Adopt",
     description:
       "There are so many animals in shelters waiting for loving homes",
+    icon: adopt,
+    iconFilled: adopt_filled,
   },
   {
     title: "Volunteer",
     description:
       "Rescue shelters are always in need of volunteers to help with a variety of tasks",
+    icon: volunteer,
+    iconFilled: volunteer_filled,
   },
   {
     title: "Sponsor",
     description:
       "If you can't adopt an animal permanently, you can consider sponsoring one",
+    icon: sponsor,
+    iconFilled: sponsor_filled,
   },
   {
     title: "Advocate",
     description:
       "Help animal adoption centers by advocating for animal welfare laws and policies.",
+    icon: advocate,
+    iconFilled: advocate_filled,
   },
   {
     title: "Spread The Word",
     description:
       "Tell your friends about your local animal adoption center and encourage them to help out",
+    icon: stw,
+    iconFilled: stw_filled,
   },
 ];
 
