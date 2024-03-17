@@ -28,10 +28,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate(-1, { replace: true }); // Go back to the previous page
-  };
-
   const [showPassword, setShowPassword] = useState(false);
   const [userIn, setUserIn] = useState(false);
   const [loginAttempted, setLoginAttempted] = useState(false);
@@ -55,11 +51,14 @@ const Login = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/login`, {
-        email: formData.loginEmail,
-        password: formData.loginPass,
-        role: formData.loginRole,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/login`,
+        {
+          email: formData.loginEmail,
+          password: formData.loginPass,
+          role: formData.loginRole,
+        }
+      );
       if (response.data.status === 200 && response.data.checked === true) {
         console.log(response.data);
         console.log("initial State: ", store.getState());
@@ -92,23 +91,22 @@ const Login = () => {
   function handleCallbackResponse(response) {
     const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
-      cred
-    })
-    .then(function (res) {
-      console.log(res.data);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
-  
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
+        cred,
+      })
+      .then(function (res) {
+        console.log(res.data);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
     /*  global google */
     google.accounts.id.initialize({
-      client_id:
-        process.env.REACT_APP_google_oauth_client_id,
+      client_id: process.env.REACT_APP_google_oauth_client_id,
       callback: handleCallbackResponse,
     });
 
@@ -143,10 +141,7 @@ const Login = () => {
               className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] "
             >
               <IconButton position="absolute" disableRipple>
-                <Link
-                  to="/"
-                  // onClick={handleGoBack}
-                >
+                <Link to="/">
                   <KeyboardBackspaceIcon
                     sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
                   />
@@ -248,7 +243,7 @@ const Login = () => {
             </button>
             <hr />
             <div className={styles["my-2"]}>
-              <div id="signinDiv" className="mt-5"></div>
+              <div id="signinDiv" className="mt-5 w-[230.188px] "></div>
             </div>
           </form>
         </div>

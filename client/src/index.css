@@ -4,9 +4,24 @@
 
 @layer components {
   .background-account {
-    @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[20vh] w-full flex justify-end items-center;
+    @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 h-fit py-9 w-full flex justify-end items-center;
   }
   .background {
     @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center;
+  }
+  .background-questionnaire {
+    @apply relative bg-gradient-to-bl from-amber-500 to-orange-600 flex justify-start space-y-4 items-center px-[16px] py-16 lg:px-[108px];
+  }
+  .text-highlight {
+    @apply font-semibold text-[#EE7200];
+  }
+  .q-section-text {
+    @apply font-bold text-[1.2rem] lg:text-[1.75rem] text-[#EE7200];
+  }
+  .paper-format {
+    @apply flex flex-col justify-start items-start w-full text-[#2F4858] space-y-6;
+  }
+  .input-container {
+    @apply flex flex-col sm:flex-row sm:items-center md:flex-row md:items-start lg:flex-row lg:justify-center lg:items-start w-full;
   }
 }

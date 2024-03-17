@@ -1,16 +1,16 @@
 import { Route, Routes } from "react-router-dom";
 import Signup from "./Pages/Signup";
-import LandingPage from "./Pages/LandingPage";
+import LandingPage from "./Pages/UnusedPage/LandingPage";
 import NotFound from "./Pages/NotFound";
 import About from "./Pages/About";
 import AnimalsShelter from "./Pages/AnimalsShelter";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
-import UploadImage from "./Pages/UploadImage";
+import UploadImage from "./Pages/UnusedPage/UploadImage";
 import Login from "./Pages/Login";
 import Verify from "./Pages/Verify";
-import TermsOfServices from "./Pages/TermsOfServices";
-import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
+import PrivacyPolicy from "./Pages/UnusedPage/PrivacyPolicy";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
 import Articles from "./Pages/Articles";
@@ -26,6 +26,8 @@ import { Provider, useSelector } from "react-redux";
 import { store, persistor } from "./tools/store";
 import { AccountShelter } from "./Pages/AccountShelter";
 import useAuth from "./hooks/useAuth";
+import Test from "./Pages/UnusedPage/Test";
+import { Home } from "./Pages/Home";
 
 function App() {
   const { isLoggedIn, role } = useAuth();
@@ -33,8 +35,10 @@ function App() {
   const isPawrent =
     isLoggedIn && role === "Adoptive Pawrent" ? (
       <AccountPawrent />
-    ) : (
+    ) : isLoggedIn && role === "Rescue Shelter" ? (
       <AccountShelter />
+    ) : (
+      <Login />
     );
 
   return (
@@ -43,11 +47,12 @@ function App() {
         <ThemeProvider theme={theme}>
           {renderNavbar()}
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />
             <Route path="/manage" element={isPawrent} />
+            {/* <Route path="/test" element={<Home />} /> */}
             <Route path="/animals" element={<AnimalsShelter />} />
             <Route path="/questionnaire" element={<Questionnaire />} />
             <Route path="/articles/" element={<Articles />} />
@@ -57,6 +62,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/deadend" element={<DeadEnd />} />
+            <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>
