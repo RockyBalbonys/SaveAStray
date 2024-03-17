@@ -76,9 +76,9 @@ const Login = () => {
         console.log("initial State: ", store.getState());
         store.dispatch(loginFailed());
         const unsubscribe = store.subscribe(() =>
-          console.log("Updated state2: ", store.getState())
+          console.log("Updated state: ", store.getState())
         );
-        console.log("400");
+        console.log("401");
         store.dispatch(loginFailed());
         unsubscribe();
         setLoginAttempted(true);
