@@ -53,6 +53,9 @@ const petSchema = new mongoose.Schema({
   },
   photos: {
     type: Array
+  },
+  fromShelter: {
+    type: String,
   }
 });
 

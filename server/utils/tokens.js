@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 // Replace with your secret key (store securely in environment variables)
-const secretKey = 'your_secret_key';
+const secretKey = process.env.TOKEN_SECRET_KEY;
 
 const generateTokens = (payload) => {
   // Define payload for access token (e.g., user ID)

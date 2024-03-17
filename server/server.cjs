@@ -12,6 +12,7 @@ const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
 const { OAuth2Client } = require('google-auth-library');
 const GoogleUser = require("./Models/googleUserSchema.js");
+const { generateTokens } = require('./utils/tokens');
 
 //db connection >>
 mongoose
@@ -72,6 +73,7 @@ app.get(`/verifyRole`, async (req, res) => {
 
     if (user) {
       user.verified = true;
+      user.verificationToken = undefined;
       const updatedUser = await user.save();
       res.send(updatedUser);
     } else {
@@ -292,31 +294,31 @@ app.post("/api/login", async (req, res) => {
       // Find user by email and role
       const user = await User.findOne({ email: loginEmail, role: loginRole }).exec();
 
-      // If user is not found, return a 404 response
       if (!user) {
           console.log("User not found");
-          return res.status(401 ).send({ status: 401 , message: "User not found!" });
-      }
-
-      // Compare passwords using bcrypt.compare
-      const match = await bcrypt.compare(loginPass, user.password);
-
-      if (match) {
-          // Passwords match, send success response
-          res.send({
-              status: 200,
-              message: "Log in Success",
-              checked: true,
-              user: user._id
-          });
+          return res.send({ status: 400, checked: true, message: "User not found!" });
       } else {
-          // Passwords don't match, send failure response
-          res.send({
-              status: 400,
-              message: "Wrong Email/Pass",
-              checked: true,
-          });
+            // Compare passwords using bcrypt.compare
+          const match = await bcrypt.compare(loginPass, user.password);
+
+          if (match) {
+              // Passwords match, send success response
+              res.send({
+                  status: 200,
+                  message: "Log in Success",
+                  checked: true,
+                  user: user._id
+              });
+          } else {
+              // Passwords don't match, send failure response
+              res.send({
+                  status: 400,
+                  message: "Wrong Email/Pass",
+                  checked: true,
+              });
+          }
       }
+
   } catch (err) {
       // Handle server errors
       console.error(err);
