@@ -10,31 +10,79 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { myPolicy, myTerms } from "../constants/termsAndPolicy";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const TermsAndPrivacyModal = ({
   open,
   onClose,
   formData,
-  setAccept,
-  regSubmit,
+  setUserExists,
+  googleResponse,
+  isGoogle,
 }) => {
+  const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
 
-  const handleContinueClick = () => {
+  console.log(isGoogle);
+
+  const handleContinueClick = async () => {
     // Redirect the user to another page if the checkbox is checked
     if (isChecked) {
-      setAccept(true);
-      regSubmit();
-      onClose();
+      // google sign up
+      if (isGoogle) {
+        const response = googleResponse;
+        const cred = response.credential;
+        console.log("Encoded JWT ID token: " + response.credential);
+        axios
+          .post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
+            cred,
+          })
+          .then(function (res) {
+            console.log(res.data);
+            /*   if (res.data.status == 200) {
+        console.log(res.data);
+      } */
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
+        onClose();
+        navigate("/deadend");
+      } else {
+        //local sign up
+        try {
+          const response = await axios.post(
+            `${process.env.REACT_APP_SERVER_URL}/api/register`,
+            {
+              userID: "",
+              email: formData.regEmail,
+              pass: formData.regPass,
+              role: formData.regRole,
+              verified: false,
+            }
+          );
+          if (response.data.status === 409) {
+            setUserExists(true);
+            onClose();
+          } else {
+            console.log("Response:", response.data);
+            onClose();
+            navigate("/deadend");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
     }
   };
+
   const handleBackdropClick = (event) => {
     if (event.target === event.currentTarget) {
-      // Close the modal only if the backdrop is clicked directly
       onClose();
     }
   };
@@ -150,7 +198,7 @@ const TermsAndPrivacyModal = ({
             size="small"
             sx={{ color: "white" }}
           >
-            Accept
+            Continue
           </Button>
         </Stack>
       </Paper>

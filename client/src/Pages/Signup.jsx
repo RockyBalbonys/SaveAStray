@@ -22,7 +22,9 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [accept, setAccept] = useState(false);
+
+  const [isGoogle, setIsGoogle] = useState(false);
+  const [googleResponse, setGoogleResponse] = useState(null);
 
   const navigate = useNavigate();
 
@@ -44,46 +46,10 @@ function Signup() {
     });
   };
 
-  const regSubmit = async (event, formData) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/api/register`,
-        {
-          userID: "",
-          email: formData.regEmail,
-          pass: formData.regPass,
-          role: formData.regRole,
-          verified: false,
-        }
-      );
-      if (response.data.status == 409) {
-        setUserExists(true);
-      } else {
-        console.log("Response:", response.data);
-        setUserCreated(true);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
   function handleCallbackResponse(response) {
-    const cred = response.credential;
-    console.log("Encoded JWT ID token: " + response.credential);
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
-        cred,
-      })
-      .then(function (res) {
-        console.log(res.data);
-        /*   if (res.data.status == 200) {
-        console.log(res.data);
-      } */
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
+    setIsGoogle(true);
+    setGoogleResponse(response);
+    setModalOpen(true);
   }
 
   useEffect(() => {
@@ -142,11 +108,7 @@ function Signup() {
             <h2 className="mb-[36px]">Create Account</h2>
           </div>
 
-          <form
-            id="form"
-            className={`${styles.form} flex flex-col`}
-            onSubmit={regSubmit}
-          >
+          <form id="form" className={`${styles.form} flex flex-col`}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -270,18 +232,13 @@ function Signup() {
               className="bg-orange-500 text-white p-2 rounded-xl mt-5 mb-[22px]"
               disabled={!passwordsMatch}
               onClick={(e) => {
-                if (!accept && isFormSubmitted && passwordsMatch) {
+                if (isFormSubmitted && passwordsMatch) {
                   e.preventDefault();
                   setModalOpen(true);
-                } else {
-                  if (accept) {
-                    regSubmit(e); // Call your form submission function here
-                    window.location.href = "/deadend";
-                  }
                 }
               }}
             >
-              {accept ? "Continue" : "Get Started"}
+              Get Started
             </button>
 
             {/* Terms and Privacy Modal */}
@@ -289,7 +246,9 @@ function Signup() {
               open={modalOpen}
               onClose={handleModalClose}
               formData={formData}
-              setAccept={setAccept}
+              setUserExists={setUserExists}
+              googleResponse={googleResponse}
+              isGoogle={isGoogle}
             />
             <hr />
             <div className={styles["my-2"]}>

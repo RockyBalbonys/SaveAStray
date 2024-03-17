@@ -28,10 +28,6 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate(-1, { replace: true }); // Go back to the previous page
-  };
-
   const [showPassword, setShowPassword] = useState(false);
   const [userIn, setUserIn] = useState(false);
   const [loginAttempted, setLoginAttempted] = useState(false);
@@ -145,10 +141,7 @@ const Login = () => {
               className="ml-5 mt-5 -top-[3rem] -left-20 sm:-top-[3rem] "
             >
               <IconButton position="absolute" disableRipple>
-                <Link
-                  to="/"
-                  // onClick={handleGoBack}
-                >
+                <Link to="/">
                   <KeyboardBackspaceIcon
                     sx={{ fontSize: "2rem", color: "hsl(29, 100%, 53%)" }}
                   />
@@ -250,7 +243,7 @@ const Login = () => {
             </button>
             <hr />
             <div className={styles["my-2"]}>
-              <div id="signinDiv" className="mt-5"></div>
+              <div id="signinDiv" className="mt-5 w-[230.188px] "></div>
             </div>
           </form>
         </div>

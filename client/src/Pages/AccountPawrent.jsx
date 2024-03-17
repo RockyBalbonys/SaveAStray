@@ -238,7 +238,7 @@ const DeleteAcc = () => {
 const FormHeader = ({ color, header }) => {
   return (
     <>
-      <Stack direction={"row"} alignItems={"cent er"} mb={"4px"}>
+      <Stack direction={"row"} alignItems={"center"} mb={"4px"}>
         <AccountCircleRoundedIcon sx={{ color: color, mr: "4px" }} />
         <Typography sx={{ color: color, fontWeight: "600" }}>
           {header}
