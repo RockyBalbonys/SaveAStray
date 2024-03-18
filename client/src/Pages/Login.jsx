@@ -95,8 +95,32 @@ const Login = () => {
       .post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
         cred,
       })
-      .then(function (res) {
-        console.log(res.data);
+      .then(function (response) {
+        console.log(response.data);
+        if (response.data.status === 200/*  && response.data.checked === true */) {
+          console.log(response.data);
+          console.log("initial State: ", store.getState());
+          const unsubscribe = store.subscribe(() =>
+            console.log("Updated state: ", store.getState())
+          );
+          store.dispatch(loginSuccess(formData.loginRole, response.data.user));
+          unsubscribe();
+          navigate("/Animals");
+        } else if (
+          response.data.status === 400 &&
+          response.data.checked === true
+        ) {
+          console.log("initial State: ", store.getState());
+          store.dispatch(loginFailed());
+          const unsubscribe = store.subscribe(() =>
+            console.log("Updated state: ", store.getState())
+          );
+          console.log("401");
+          store.dispatch(loginFailed());
+          unsubscribe();
+          setLoginAttempted(true);
+          setUserIn(false);
+        }
       })
       .catch(function (err) {
         console.log(err);
