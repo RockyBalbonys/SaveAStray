@@ -21,6 +21,9 @@ const googleUserSchema = new mongoose.Schema(
           },
           surname: {
             type: String
+          },
+          verificationToken: {
+            type: String,
           }
     }
 )

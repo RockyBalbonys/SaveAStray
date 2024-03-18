@@ -27,7 +27,7 @@ mongoose
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
-
+/* 
 app.get(`/verify`, async (req, res) => {
   const token = req.query.token;
 
@@ -45,16 +45,24 @@ app.get(`/verify`, async (req, res) => {
     console.log(err);
   }
 });
-
+ */
 app.post('/verify', async(req,res) => {
   const token = req.query.token;
   try {
+    const gUser = await GoogleUser.findOne({ verificationToken: token });
     const user = await User.findOne({ verificationToken: token });
     if (user) {
       role = req.body.role
       user.verified = true;
       user.role = role;
+      user.verificationToken = undefined;
       const updatedUser = await user.save();
+      res.send(updatedUser);
+    } else if (gUser){
+      role = req.body.role
+      gUser.role = role;
+      gUser.verificationToken = undefined;
+      const updatedUser = await gUser.save();
       res.send(updatedUser);
     } else {
       res.status(404).send({ message: "User not found" });
@@ -63,7 +71,6 @@ app.post('/verify', async(req,res) => {
     console.log(error);
   }
 })
-
 
 app.get(`/verifyRole`, async (req, res) => {
   const token = req.query.token;
@@ -157,6 +164,35 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/googleSignup", async (req, res) => {
+  function generateVerificationToken() {
+    return crypto.randomBytes(16).toString("hex");
+  }
+
+  async function sendVerificationEmail(email, verificationToken) {
+    try {
+      // Create a Nodemailer transporter using SMTP
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.USER_PASSWORD,
+        },
+      });
+
+      // Send verification email
+      let info = await transporter.sendMail({
+        from: process.env.USER_EMAIL,
+        to: email,
+        subject: "Choose A Role",
+        text: `Please click the following link to choose your role: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
+      });
+      console.log("Verification email sent:", info);
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+      throw error; // Rethrow the error to be handled by the caller
+    }
+  }
+
   const token = req.body.cred
   const client = new OAuth2Client(process.env.CLIENT_ID);
     try {
@@ -182,21 +218,30 @@ app.post("/api/googleSignup", async (req, res) => {
             status: 409,
           });
         } else {
+          const verificationToken = generateVerificationToken();
           const newGoogleUser = new GoogleUser({
             email,
             verified: email_verified,
             role: null,
             firstName,
-            surname
+            surname,
+            verificationToken
           });
           const savedUser = await newGoogleUser.save();
           console.log(savedUser);
-          if (savedUser) {
-            res.send({
-              status: 200,
-              message: "Google user signed up!"
-            })
-          }
+
+          await sendVerificationEmail(email, verificationToken);
+
+          res.send({
+            status: 201,
+            message: "User Created!",
+            user: {
+              email,
+              role,
+              verificationToken,
+            },
+          });
+
         }
     } catch (error) {
         console.error("Error verifying token:", error);
@@ -343,15 +388,15 @@ app.post("/api/googleLogin", async (req, res) => {
         const userExists = await User.findOne({ email });
         const existingGoogleUser = await GoogleUser.findOne({ email });
 
-        if ( !userExists ) {
-          res.send({
-            message: "Not exists!",
-            status: 400,
-          });
-        } else {
+        if ( existingGoogleUser ) {
           res.send({
             message: "User Logged in!",
             status: 200,
+          });
+        } else {
+          res.send({
+            message: "Not exists!",
+            status: 400,
           });
         }
     } catch (error) {
