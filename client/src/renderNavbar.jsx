@@ -19,6 +19,7 @@ export const renderNavbar = () => {
     "/Contact",
     "/animalsPawrent",
     "/manage",
+    "/test",
   ];
 
   // Check if the current path is a valid path

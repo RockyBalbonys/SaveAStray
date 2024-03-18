@@ -1,28 +1,47 @@
 import React from "react";
-import PawPng from "../assets/images/Paw.png";
+import PawPng from "../../assets/images/Paw.png";
+import TopImage from "../../assets/images/Paw.png"; // Replace with your actual image path
 
-export default function TermsOfServices() {
+export default function PrivacyPolicy() {
   return (
-    // Container div
     <div
-      className="flex justify-center items-center h-[1444px] py-14"
+      className="relative flex justify-center items-center h-[1444px] pt-20"
       style={{ backgroundImage: `url(${PawPng})`, backgroundSize: "cover" }}
     >
-      <div className="w-[1027px] h-full px-[31px] py-8 bg-white rounded-[7px] flex flex-col justify-center items-center gap-6 overflow-y-auto">
+      <img
+        src={TopImage}
+        alt="Top Outside Image"
+        className="absolute top-[-1450px] w-[1029px] h-[1450px]"
+      />{" "}
+      {/* Adjust dimensions as needed */}
+      <div className="w-[1027px] h-[1183px] px-[31px] py-8 bg-white rounded-[7px] flex flex-col justify-center items-center gap-6 inline-flex">
         <div className="w-[84px] h-[84px] justify-center items-center inline-flex">
           <div className="w-[84px] h-[84px] relative flex flex-col justify-start items-start" />
         </div>
-        <div className="w-[965px] h-[39px] relative">
-          <div className="left-[328.50px] top-0 absolute text-orange-500 text-[32px] font-bold font-['Inter']">
+        <div className="w-[965px] h-[39px] relative flex justify-center items-center">
+          <img
+            className="w-[328px] h-px absolute left-0 top-[19px]"
+            src="https://via.placeholder.com/328x1"
+          />
+          <div className="text-orange-500 text-[32px] font-bold font-['Inter']">
             PRIVACY POLICY
           </div>
           <img
-            className="w-[965px] h-px left-0 top-[19px] absolute"
-            src="https://via.placeholder.com/965x1"
+            className="w-[328px] h-px absolute right-0 top-[19px]"
+            src="https://via.placeholder.com/328x1"
           />
         </div>
-        <div className="h-[885px] px-[81px] pt-0.5 flex flex-col justify-end items-center overflow-y-auto">
-          <div className="w-[656px] text-justify text-orange-500">
+        <div
+          className="h-[885px] px-[81px] pt-0.5 flex flex-col justify-end items-center overflow-y-auto"
+          style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "transparent transparent",
+          }}
+        >
+          <div
+            className="w-[656px] text-justify text-orange-500"
+            style={{ overflowY: "auto", maxHeight: "800px" }}
+          >
             <span className="text-base font-bold font-['Inter']">
               Your privacy is important to us.
             </span>
@@ -32,6 +51,7 @@ export default function TermsOfServices() {
               discloses information about you when you visit and use our website
               and services.
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               1. Information We Collect:
@@ -43,19 +63,20 @@ export default function TermsOfServices() {
             </span>
             <span className="text-base font-normal font-['Poppins'] leading-normal">
               {" "}
-              Name
+              -Name
               <br />
-              Email address
+              -Email address
               <br />
-              Phone number
+              -Phone number
               <br />
-              Demographic information (age, gender, etc.)
+              -Demographic information (age, gender, etc.)
               <br />
-              Information about your pets, including photos and descriptions
+              -Information about your pets, including photos and descriptions
               <br />
-              Adoption-related information, such as adoption history and
+              -Adoption-related information, such as adoption history and
               preferences
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               2. How We Use Your Information:
@@ -64,19 +85,20 @@ export default function TermsOfServices() {
               {" "}
               We use your PII to:
               <br />
-              Create and manage your account
+              -Create and manage your account
               <br />
-              Process adoption applications
+              -Process adoption applications
               <br />
-              Connect you with shelters and rescue organizations
+              -Connect you with shelters and rescue organizations
               <br />
-              Provide you with information and updates about adoptable animals
+              -Provide you with information and updates about adoptable animals
               and adoption news
               <br />
-              Respond to your inquiries and requests
+              -Respond to your inquiries and requests
               <br />
-              Personalize your experience on our website
+              -Personalize your experience on our website
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               3. Sharing Your Information:
@@ -86,20 +108,21 @@ export default function TermsOfServices() {
               We will not share your PII with any third party except in the
               following limited circumstances:
               <br />
-              With your consent.
+              -With your consent.
               <br />
-              With shelters and rescue organizations you poppinsact with during
+              -With shelters and rescue organizations you poppinsact with during
               the adoption process.
               <br />
-              With service providers who help us operate our website and
+              -With service providers who help us operate our website and
               services (these providers are obligated to keep your information
               confidential).
               <br />
-              To comply with legal requirements, such as a court order or
+              -To comply with legal requirements, such as a court order or
               subpoena.
               <br />
-              To prevent fraud or harm to others.
+              -To prevent fraud or harm to others.
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               4. Data Security:
@@ -111,6 +134,7 @@ export default function TermsOfServices() {
               However, no security measure is perfect, and we cannot guarantee
               the complete security of any information you transmit to us.
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               5. Cookies and Tracking Technologies:
@@ -123,6 +147,7 @@ export default function TermsOfServices() {
               cookie is placed on your device. However, if you disable cookies,
               some features of our website may not function properly.
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               6. Your Choices:
@@ -136,6 +161,7 @@ export default function TermsOfServices() {
               You can also opt out of receiving promotional emails from us by
               clicking on the "unsubscribe" link in any email.
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               7. Changes to this Privacy Policy:
@@ -147,6 +173,7 @@ export default function TermsOfServices() {
               Policy periodically for the latest information about our privacy
               practices.
               <br />
+              <br></br>
             </span>
             <span className="text-base font-bold font-['Inter']">
               8. Contact Us:
@@ -158,7 +185,7 @@ export default function TermsOfServices() {
             </span>
           </div>
         </div>
-        <div className="flex justify-start items-start gap-2">
+        <div className="flex justify-start items-start gap-2 inline-flex">
           <div className="h-[35px] px-8 py-2 bg-white rounded-[7px] border border-orange-500 justify-center items-center gap-[8.82px] flex">
             <div className="w-[59px] text-center text-orange-500 text-base font-bold font-['Inter']">
               Decline

@@ -28,6 +28,7 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 // Avatar Component
 import { AccountAvatar } from "../Components/Account/AccountAvatar";
+import AccountDrawer from "../Components/Account/AccountDrawer";
 
 export const AccountPawrent = () => {
   return (
@@ -35,19 +36,36 @@ export const AccountPawrent = () => {
       <AccountHeader />
       <AccountForm />
       <Footer />
+      <AccountDrawer />
     </>
   );
 };
 
 const AccountForm = () => {
+  const handleSaveChanges = () => {
+    console.log("Update account.");
+  };
+  const handleLogout = () => {
+    console.log("Logout account.");
+  };
   return (
     <>
       <Container sx={{ py: "64px" }}>
         <Grid container spacing={3}>
-          <Grid item md={3}>
-            <AccountAvatar />
+          <Grid
+            item
+            md={4}
+            lg={3}
+            sx={{ display: { xs: "none", sm: "none", md: "block" } }}
+          >
+            <Box sx={{ height: "100%" }}>
+              <AccountAvatar
+                onClick={handleSaveChanges}
+                onLogout={handleLogout}
+              />
+            </Box>
           </Grid>
-          <Grid item md={9}>
+          <Grid item md={8} lg={9}>
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
                 <PersonalInfoCard />
@@ -59,6 +77,37 @@ const AccountForm = () => {
                 <DeleteAcc />
               </Grid>
             </Grid>
+          </Grid>
+          <Grid
+            item
+            sx={{
+              width: "100%",
+              display: {
+                xs: "block",
+                md: "none",
+              },
+            }}
+          >
+            <Stack direction={"column"} sx={{ rowGap: "16px" }}>
+              <Button
+                variant="contained"
+                onClick={handleSaveChanges}
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                  borderRadius: "7px",
+                }}
+              >
+                Save Changes
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ textTransform: "none", borderRadius: "7px" }}
+                onClick={handleLogout}
+              >
+                Log Out
+              </Button>
+            </Stack>
           </Grid>
         </Grid>
       </Container>
@@ -73,7 +122,7 @@ const PersonalInfoCard = () => {
       <Box className="px-4 pt-4">
         <FormControl>
           <Grid container spacing={3}>
-            <Grid item sm={6} md={6}>
+            <Grid item sm={12} md={6}>
               <TextField
                 label="First Name"
                 id="pawrent-first-name"
@@ -82,7 +131,7 @@ const PersonalInfoCard = () => {
               />
             </Grid>
 
-            <Grid item sm={6} md={6}>
+            <Grid item sm={12} md={6}>
               <TextField
                 label="Last Name"
                 id="pawrent-last-name"
@@ -100,7 +149,7 @@ const PersonalInfoCard = () => {
               />
             </Grid>
 
-            <Grid item sm={8} md={8}>
+            <Grid item sm={12} md={8}>
               <TextField
                 label="City Address"
                 id="pawrent-city-address"
@@ -109,7 +158,7 @@ const PersonalInfoCard = () => {
               />
             </Grid>
 
-            <Grid item sm={4} md={4}>
+            <Grid item sm={12} md={4}>
               <TextField
                 label="ZIP Code"
                 id="pawrent-zip-code"
@@ -118,7 +167,7 @@ const PersonalInfoCard = () => {
               />
             </Grid>
 
-            <Grid item sm={6}>
+            <Grid item sm={12}>
               <DatePicker label="Birthdate" sx={{ width: "100%" }} />
             </Grid>
           </Grid>
@@ -173,8 +222,11 @@ const DeleteAcc = () => {
         sx={{
           color: "white",
           textTransform: "none",
-          width: "216px",
           borderRadius: "7px",
+          width: {
+            xs: "100%",
+            md: "216px",
+          },
         }}
       >
         Delete Account
@@ -186,7 +238,7 @@ const DeleteAcc = () => {
 const FormHeader = ({ color, header }) => {
   return (
     <>
-      <Stack direction={"row"} alignItems={"cent er"} mb={"4px"}>
+      <Stack direction={"row"} alignItems={"center"} mb={"4px"}>
         <AccountCircleRoundedIcon sx={{ color: color, mr: "4px" }} />
         <Typography sx={{ color: color, fontWeight: "600" }}>
           {header}

@@ -1,24 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import {
-  AppBar,
-  Container,
-  Toolbar,
-  Box,
-  IconButton,
-  Typography,
-  Stack,
-  Link,
-  Drawer,
-  List,
-  ListItemText,
-  Divider,
-  ListItemButton,
-  Menu,
-  MenuItem,
-  Avatar,
-  Tooltip,
-} from "@mui/material";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
+import ListItemButton from "@mui/material/ListItemButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import facebook_icon from "../../assets/icons/facebook.png";
@@ -69,6 +66,22 @@ export default function Navbar() {
 
   const location = useLocation();
   const isRoot = location.pathname === "/";
+  const [isHero, setIsHero] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      const isScrolled = scrollY > window.innerHeight * 0.7; // Change 0.9 to adjust the scroll threshold
+
+      setIsHero(!isScrolled);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <>
@@ -76,139 +89,151 @@ export default function Navbar() {
       <AppBar
         position="sticky"
         sx={{
-          backgroundColor: isRoot ? "transparent" : "white",
-          color: isRoot ? "white" : "black",
+          backgroundColor: isRoot && isHero ? "transparent" : "white",
+          color: isRoot && isHero ? "white" : "black",
         }}
-        elevation={isRoot ? 0 : 7}
+        elevation={isRoot && isHero ? 0 : 7}
         component="header"
       >
-        <Container maxWidth="xl">
-          {" "}
-          {/* Add margin to left and right */}
-          <Toolbar component="nav">
+        {/* <Container maxWidth="xl"> */}
+        <Toolbar component="nav">
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              px: {
+                md: "100px",
+              },
+            }}
+          >
             <Box
-              display="flex"
-              alignItems="center"
-              component="nav"
-              width="100%"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexGrow: 1,
+              }}
             >
               <Link to="/" component={RouterLink}>
                 <img src={logo} alt="logo" width={46} height={46} />
               </Link>
 
-              <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" fontWeight="bold">
                 <Link
                   to="/"
                   component={RouterLink}
-                  color={isRoot ? "inherit" : "#2F4858"}
+                  color={isRoot && isHero ? "inherit" : "#2F4858"}
                   underline="none"
                   ml={2}
                 >
                   SaveAStray
                 </Link>
               </Typography>
-
-              <Stack
-                spacing={3}
-                direction="row"
-                alignItems="center"
-                sx={{ display: { xs: "none", md: "flex" } }}
-              >
-                {pages.map((page, index) => {
-                  const isLearn = page === "Learn";
-                  return (
-                    <CustomLink
-                      key={index}
-                      sx={{
-                        color: isRoot ? "white" : "#2F4858",
-                      }}
-                      to={isLearn ? "articles" : page}
-                      component={RouterLink}
-                      aria-label={page}
-                      fontSize={16}
-                      id={isLearn ? "learn-button" : undefined}
-                      onMouseOver={isLearn ? handleClick : undefined}
-                      onClick={isLearn ? handleClick : undefined}
-                      aria-controls={open ? "learn-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      aria-disabled={isLearn}
-                    >
-                      {page}
-                      {isLearn ? (
-                        <IconButton
-                          sx={{
-                            padding: 0,
-                            margin: 0,
-                            color: isRoot ? "white" : "",
-                          }}
-                        >
-                          <KeyboardArrowDownIcon />
-                        </IconButton>
-                      ) : null}
-                    </CustomLink>
-                  );
-                })}
-
-                {/* Menu hamburger when mobile view */}
-                <Menu
-                  id="learn-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  MenuListProps={{
-                    "aria-labelledby": "learn-button",
-                    onMouseLeave: handleMenuClose,
-                  }}
-                  onClose={() => setAnchorEl(null)}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                >
-                  <MenuItem component={RouterLink} to="/articles">
-                    <Typography variant="body2">Articles</Typography>
-                  </MenuItem>
-                  <MenuItem component={RouterLink} to="/faq">
-                    <Typography variant="body2">FAQ's</Typography>
-                  </MenuItem>
-                </Menu>
-
-                {isLoggedIn ? (
-                  <DisplayUserComponents />
-                ) : (
-                  <CustomButton
-                    variant="contained"
-                    size="small"
-                    component={RouterLink}
-                    to="signup"
-                    startIcon={<AccountCircleIcon />}
-                    sx={{ padding: "6px 16px" }}
-                  >
-                    Get Started
-                  </CustomButton>
-                )}
-              </Stack>
-              <IconButton
-                onClick={handleDrawerOpen}
-                color="inherit"
-                sx={{ display: { md: "none" } }}
-              >
-                <MenuIcon sx={{ fontSize: "2rem" }} />
-              </IconButton>
             </Box>
-          </Toolbar>
-        </Container>
+
+            <Stack
+              spacing={3}
+              direction="row"
+              alignItems="center"
+              sx={{ display: { xs: "none", lg: "flex" } }}
+            >
+              {pages.map((page, index) => {
+                const isLearn = page === "Learn";
+                return (
+                  <CustomLink
+                    key={index}
+                    sx={{
+                      color: isRoot && isHero ? "white" : "#2F4858",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    to={isLearn ? "articles" : page}
+                    component={RouterLink}
+                    aria-label={page}
+                    fontSize={16}
+                    id={isLearn ? "learn-button" : undefined}
+                    onMouseOver={isLearn ? handleClick : undefined}
+                    onClick={isLearn ? handleClick : undefined}
+                    aria-controls={open ? "learn-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    aria-disabled={isLearn}
+                  >
+                    {page}
+                    {isLearn ? <KeyboardArrowDownIcon /> : null}
+                  </CustomLink>
+                );
+              })}
+
+              {/* Menu hamburger when mobile view */}
+              <Menu
+                id="learn-menu"
+                anchorEl={anchorEl}
+                open={open}
+                MenuListProps={{
+                  "aria-labelledby": "learn-button",
+                  onMouseLeave: handleMenuClose,
+                }}
+                onClose={() => setAnchorEl(null)}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <MenuItem component={RouterLink} to="/articles">
+                  <Typography variant="body2">Articles</Typography>
+                </MenuItem>
+                <MenuItem component={RouterLink} to="/faq">
+                  <Typography variant="body2">FAQ's</Typography>
+                </MenuItem>
+              </Menu>
+
+              {isLoggedIn ? (
+                <DisplayUserComponents />
+              ) : (
+                <CustomButton
+                  variant="contained"
+                  size="small"
+                  component={RouterLink}
+                  to="signup"
+                  startIcon={<AccountCircleIcon />}
+                  sx={{ padding: "6px 16px" }}
+                >
+                  Get Started
+                </CustomButton>
+              )}
+            </Stack>
+            <IconButton
+              onClick={handleDrawerOpen}
+              color="inherit"
+              sx={{ display: { lg: "none" } }}
+            >
+              <MenuIcon sx={{ fontSize: "2rem" }} />
+            </IconButton>
+          </Box>
+        </Toolbar>
+        {/* </Container> */}
 
         {/* Drawer for mobile */}
         <Drawer
           anchor="right"
           open={openDrawer}
           onClose={handleDrawerClose}
-          sx={{ "& .MuiDrawer-paper": { width: "50%" }, display: "flex" }}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: {
+                xs: "80%",
+                sm: "70%",
+                md: "50%",
+              },
+            },
+            display: "flex",
+          }}
         >
           <Box
             sx={{
