@@ -107,8 +107,8 @@ const Login = () => {
           unsubscribe();
           navigate("/Animals");
         } else if (
-          response.data.status === 400 &&
-          response.data.checked === true
+          response.data.status === 400/*  &&
+          response.data.checked === true */
         ) {
           console.log("initial State: ", store.getState());
           store.dispatch(loginFailed());
