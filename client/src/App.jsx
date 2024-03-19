@@ -28,6 +28,8 @@ import { AccountShelter } from "./Pages/AccountShelter";
 import useAuth from "./hooks/useAuth";
 import Test from "./Pages/UnusedPage/Test";
 import { Home } from "./Pages/Home";
+import RequestShelter from "./Pages/RequestShelter";
+import RequestPawrent from "./Pages/RequestPawrent";
 
 function App() {
   const { isLoggedIn, role } = useAuth();
@@ -64,6 +66,8 @@ function App() {
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/reqshelter" element={<RequestShelter />} />
+            <Route path="/reqpawrent" element={<RequestPawrent />} />
           </Routes>
         </ThemeProvider>
       </LocalizationProvider>
