@@ -28,6 +28,7 @@ import { AccountShelter } from "./Pages/AccountShelter";
 import useAuth from "./hooks/useAuth";
 import Test from "./Pages/UnusedPage/Test";
 import { Home } from "./Pages/Home";
+import { NewLogin } from "./Pages/NewLogin";
 
 function App() {
   const { isLoggedIn, role } = useAuth();
@@ -49,6 +50,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/newLogin" element={<NewLogin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />
             <Route path="/manage" element={isPawrent} />
