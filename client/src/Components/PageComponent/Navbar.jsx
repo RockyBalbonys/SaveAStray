@@ -45,7 +45,6 @@ export default function Navbar() {
   const { isLoggedIn, user } = useAuth();
 
   console.log(isLoggedIn);
-  console.log("helloworld from navbar");
   console.log(user);
 
   const handleDrawerOpen = () => {

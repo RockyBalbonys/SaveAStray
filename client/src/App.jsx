@@ -30,7 +30,7 @@ import Test from "./Pages/UnusedPage/Test";
 import { Home } from "./Pages/Home";
 
 function App() {
-  const { isLoggedIn, role } = useAuth();
+  const { isLoggedIn, role, user } = useAuth();
   // Reroute user to manage account depending on their role
   const isPawrent =
     isLoggedIn && role === "Adoptive Pawrent" ? (
