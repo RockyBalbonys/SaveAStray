@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, Typography, Container } from "@mui/material";
+import {
+  Button,
+  Typography,
+  Container,
+  SpeedDial,
+  SpeedDialAction,
+  Box,
+  Tooltip,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -12,6 +20,7 @@ import pugdoyImage from "../assets/images/animals/pugdoy.jpg";
 import ramboImage from "../assets/images/animals/rambo.jpg";
 import Frame200Send from "../assets/images/Frame 200Send.svg";
 import Footer from "../Components/PageComponent/Footer";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 
 const headerStyles = {
   display: "flex",
@@ -21,7 +30,6 @@ const headerStyles = {
   alignItems: "flex-start",
   gap: "10px",
   alignSelf: "stretch",
-  background: "linear-gradient(229deg, #F59A0B 22.72%, #EA5A0C 101.08%)",
   width: "100%",
 };
 
@@ -37,6 +45,7 @@ const buttonStyle = {
   padding: "10px",
   minWidth: "auto",
   height: "100%",
+  backgroundColor: "#EE7200",
 };
 
 const AdoptionRequests = [
@@ -78,6 +87,12 @@ const AdoptionRequests = [
   },
 ];
 
+const actions = [
+  { icon: <GetAppIcon />, name: "Print" },
+  { icon: <ClearIcon />, name: "Reject" },
+  { icon: <CheckIcon />, name: "Accept" },
+];
+
 function RequestShelter() {
   const navigate = useNavigate();
 
@@ -97,7 +112,10 @@ function RequestShelter() {
                     }
                 `}
       </style>
-      <div style={headerStyles}>
+      <div
+        style={headerStyles}
+        className="bg-gradient-to-bl from-amber-500 to-orange-600"
+      >
         <Typography variant="h4" style={{ color: "#FFFFFF" }}>
           Animal Request Adoption Information
         </Typography>
@@ -106,76 +124,132 @@ function RequestShelter() {
           furry companion!
         </Typography>
       </div>
-      <Container sx={{ padding: "1rem", marginY: "5rem" }}>
-        {AdoptionRequests.map((request, index) => (
-          <div
-            key={index}
-            onClick={() => handleClick(request.redirectTo)}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
-              padding: "16px",
-              borderBottom: "2px solid orange",
-              borderRadius: "10px",
-              width: "100%",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <img
-                src={request.imageUrl}
-                alt={request.name}
-                style={imageStyle}
-              />
-              <div>
-                <Typography>
-                  <strong>{request.name}</strong> requested an adoption
-                </Typography>
-                <Typography variant="caption" color="#2F4858">
-                  {request.time}
-                </Typography>
-              </div>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ backgroundColor: "#EE7200", ...buttonStyle }}
-              >
-                <CheckIcon style={{ color: "#FFFFFF" }} />
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                style={{ backgroundColor: "#EE7200", ...buttonStyle }}
-              >
-                <ClearIcon style={{ color: "#FFFFFF" }} />
-              </Button>
-              {/* Replaced SendIcon with the imported SVG */}
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ backgroundColor: "#EE7200", ...buttonStyle }}
+      <div className="bg-[#FAFAFB] h-full">
+        <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
+          {AdoptionRequests.map((request, index) => (
+            <div
+              key={index}
+              onClick={() => handleClick(request.redirectTo)}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
+                padding: "16px",
+                borderBottom: "1px solid #EE7200",
+                borderRadius: "7px",
+                width: "100%",
+                marginBottom: "8px",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexGrow: 1,
+                }}
               >
                 <img
-                  src={Frame200Send}
-                  alt="Send"
-                  style={{ minWidth: "24px", minHeight: "24px" }}
+                  src={request.imageUrl}
+                  alt={request.name}
+                  style={imageStyle}
                 />
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                style={{ backgroundColor: "#EE7200", ...buttonStyle }}
+                <div>
+                  <Typography>
+                    <strong>{request.name}</strong> requested an adoption
+                  </Typography>
+                  <Typography variant="caption" color="#2F4858">
+                    {request.time}
+                  </Typography>
+                </div>
+              </div>
+              <Box
+                sx={{
+                  position: "relative",
+                  width: "350px",
+                  height: "100%",
+                }}
               >
-                <GetAppIcon style={{ color: "#FFFFFF" }} />
-              </Button>
+                <Box
+                  sx={{
+                    display: {
+                      xs: "none",
+                      sm: "none",
+                      md: "flex",
+                    },
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: "10px",
+                  }}
+                >
+                  <Tooltip title="Accept">
+                    <Button variant="contained" style={buttonStyle}>
+                      <CheckIcon style={{ color: "#FFFFFF" }} />
+                    </Button>
+                  </Tooltip>
+
+                  <Tooltip title="Reject">
+                    <Button variant="contained" style={buttonStyle}>
+                      <ClearIcon style={{ color: "#FFFFFF" }} />
+                    </Button>
+                  </Tooltip>
+
+                  <Tooltip title="Send Message">
+                    <Button variant="contained" style={buttonStyle}>
+                      <img
+                        src={Frame200Send}
+                        alt="Send"
+                        style={{ minWidth: "24px", minHeight: "24px" }}
+                      />
+                    </Button>
+                  </Tooltip>
+
+                  <Tooltip title="Print">
+                    <Button variant="contained" style={buttonStyle}>
+                      <GetAppIcon style={{ color: "#FFFFFF" }} />
+                    </Button>
+                  </Tooltip>
+                </Box>
+
+                <Box
+                  sx={{
+                    position: "relative",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <SpeedDial
+                    direction="left"
+                    ariaLabel="SpeedDial basic example"
+                    sx={{
+                      position: "absolute",
+                      bottom: 0,
+                      right: 0,
+                      display: {
+                        xs: "block",
+                        sm: "block",
+                        md: "none",
+                      },
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    icon={<SpeedDialIcon sx={{ color: "white" }} />}
+                  >
+                    {actions.map((action, idx) => (
+                      <SpeedDialAction
+                        key={idx}
+                        icon={action.icon}
+                        tooltipTitle={action.name}
+                      />
+                    ))}
+                  </SpeedDial>
+                </Box>
+              </Box>
             </div>
-          </div>
-        ))}
-      </Container>
+          ))}
+        </Container>
+      </div>
       <Footer />
     </div>
   );
