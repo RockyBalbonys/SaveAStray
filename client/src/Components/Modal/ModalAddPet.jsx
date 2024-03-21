@@ -18,6 +18,7 @@ import { AnimalProp } from "../AnimalProp";
 import { UploadImage } from "../UploadImage";
 import CloseIcon from "@mui/icons-material/Close";
 import SnackbarAnimal from "../Snackbar/SnackbarAnimal";
+import useAuth from "../../hooks/useAuth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
@@ -44,6 +45,8 @@ const ModalAddPet = ({
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
 
+  const { isLoggedIn, user, role } = useAuth();
+
   useEffect(() => {
     if (!open) {
       setAnimalData(defaultAnimal);
@@ -56,7 +59,7 @@ const ModalAddPet = ({
 
     const { name, description, species, breed, sex, age, color, size } =
       animalData;
-
+    const shelter = user
     try {
       setLoadingButton(true);
       const animalDataWithImages = {
@@ -69,6 +72,7 @@ const ModalAddPet = ({
         color,
         size,
         photos: [],
+        shelter
       };
 
       // Upload images and get download URLs
@@ -88,11 +92,10 @@ const ModalAddPet = ({
       );
 
       console.log("Animal Data with Images:", animalDataWithImages);
-
       // Send data and images in a single request
       await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/addAnimal`,
-        animalDataWithImages
+          animalDataWithImages
       );
 
       // After successfully adding the new pet, fetch the updated list of pets

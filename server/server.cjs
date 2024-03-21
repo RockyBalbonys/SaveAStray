@@ -12,7 +12,6 @@ const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
 const { OAuth2Client } = require('google-auth-library');
 const GoogleUser = require("./Models/googleUserSchema.js");
-const { generateTokens } = require('./utils/tokens');
 const QuestRes = require("./Models/questResSchema.js");
 //db connection >>
 mongoose
@@ -257,10 +256,7 @@ app.post("/api/googleSignup", async (req, res) => {
 
 app.post("/api/addAnimal", async (req, res) => {
   console.log(req.body);
-  console.log("uri", uri)
-  console.log("user email: ", process.env.USER_EMAIL);
-
-  const { name, description, species, breed, sex, age, color, size, photos } =
+  const { name, description, species, breed, sex, age, color, size, photos, shelter } =
     req.body;
 
   try {
@@ -275,6 +271,7 @@ app.post("/api/addAnimal", async (req, res) => {
       size,
       status: "Available",
       photos,
+      shelter
     });
     const savedPet = await newPet.save();
     //const petId  = savedPet._id
@@ -394,9 +391,14 @@ app.post("/api/googleLogin", async (req, res) => {
         const existingGoogleUser = await GoogleUser.findOne({ email });
 
         if ( existingGoogleUser ) {
+          const user = existingGoogleUser._id
+          const role = existingGoogleUser.role
+          console.log("user ro;e: ", role);
           res.send({
+            user,
+            role,
             message: "User Logged in!",
-            status: 200,
+            status: 200
           });
         } else {
           res.send({
