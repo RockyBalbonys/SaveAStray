@@ -13,7 +13,7 @@ const Pet = require("./Models/petSchema.js");
 const { OAuth2Client } = require('google-auth-library');
 const GoogleUser = require("./Models/googleUserSchema.js");
 const { generateTokens } = require('./utils/tokens');
-
+const QuestRes = require("./Models/questResSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -410,9 +410,42 @@ app.post("/api/googleLogin", async (req, res) => {
     }
 })
 
-
-
-
+app.post('/api/sendAnswers', async (req, res) => {
+  const data = req.body
+  const respondent = data.respondent
+  const section1 = data.section1
+  const section2 = data.section2 
+  const section3 = data.section3
+  const section4 = data.section4
+  const section5 = data.section5
+  const section6 = data.section6
+  
+  if (data) {
+    try {
+      const newQuestRes = new QuestRes({
+        respondent,
+        answers: {
+          section1,
+          section2,
+          section3,
+          section4,
+          section5,
+          section6,
+        }
+      });
+      const savedQuestRes = await newQuestRes.save();
+      console.log(savedQuestRes);
+    } catch (error) {
+      
+    }
+  } else{
+    res.send({
+      status: 400,
+      message: "No response!"
+    })
+  }
+  
+})
 
 app.get("/getPet", async (req, res) => {
   try {
