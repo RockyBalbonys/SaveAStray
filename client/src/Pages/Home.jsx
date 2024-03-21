@@ -15,12 +15,14 @@ import { CustomButton } from "../Components/Button/CustomButton";
 import heroImage from "../assets/images/Herocopy.png";
 import catImage from "../assets/images/Cats.png";
 import dogImage from "../assets/images/Dogs.png";
-import aboutImage from "../assets/images/image_14.png";
+import aboutImage from "../assets/images/HomeAbout.png";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Donate from "../Components/PageComponent/Donate";
 import Footer from "../Components/PageComponent/Footer";
 import { cardContent, helpContent } from "../constants/landingPage";
+
+
 
 export const Home = () => {
   return (
@@ -134,9 +136,10 @@ function HeroSection() {
           flexDirection: "column",
           alignItems: "center",
           gap: 4,
+          paddingBottom: 8,
         }}
       >
-        <Typography sx={H1Style}>Rescue.Adopt.Love</Typography>
+        <Typography sx={H1Style}>Rescue. Adopt. Love.</Typography>
         <Typography sx={H2Style}>
           Looking for a loyal adventure buddy? Look no further than your local
           shelter! Adopt a pup and fill your life with pawsitive memories.
@@ -189,10 +192,11 @@ function HeroCard() {
         container
         justifyContent="center"
         spacing={2}
-        alignContent="baseline"
+        alignContent="top"
       >
         {cardContent.map((card, index) => (
           <Grid item md={4} key={index} width="300px">
+            <RouterLink to={`/articles/${index+5}`}>
             <Card
               sx={cardHeroStyle}
               onMouseEnter={() => handleMouseEnter(index)}
@@ -238,6 +242,7 @@ function HeroCard() {
                 </CustomButton>
               </CardActions>
             </Card>
+            </RouterLink>
           </Grid>
         ))}
       </Grid>
@@ -278,7 +283,7 @@ function AboutContent() {
               </Typography>
             </Box>
             <Stack direction="row" spacing={1}>
-              <CustomButton variant="contained" endIcon={<ChevronRightIcon />}>
+              <CustomButton variant="contained" endIcon={<ChevronRightIcon />} href="/About">
                 Read more
               </CustomButton>
               <CustomButton variant="outlined">Donate</CustomButton>
@@ -301,9 +306,10 @@ function AboutContent() {
               backgroundSize: "cover",
               display: "flex",
               justifyContent: "flex-end",
+              paddingLeft: 10,
             }}
           >
-            <img src={aboutImage} alt="about image" />
+            <img src={aboutImage} style={{borderRadius: "7px" }} alt="about image" />
           </Box>
         </Grid>
       </Grid>
@@ -324,10 +330,10 @@ function HelpContent() {
           color: "#2F4858",
         }}
       >
-        <Typography mb={4} variant="h4" component="div" fontWeight="bold">
+        <Typography mb={2} variant="h4" component="div" fontWeight="bold">
           How You Can Help
         </Typography>
-        <Typography maxWidth="600px">
+        <Typography maxWidth="600px" >
           A little help with caring hearts can become a wave of compassion,
           protecting a multitude of our animal companions
         </Typography>
@@ -341,14 +347,14 @@ function HelpCard() {
     <Container maxWidth="lg">
       <Grid
         container
-        justifyContent="center"
+        justifyContent={"center"}
         spacing={2}
-        alignContent="baseline"
-        rowSpacing={4}
+        alignContent="center"
+        rowSpacing={3}
         columnSpacing={3}
       >
         {helpContent.map((card, index) => (
-          <HelpCardItem key={index} card={card} index={index} />
+           <HelpCardItem card={card} index={index} />
         ))}
       </Grid>
     </Container>
@@ -464,49 +470,34 @@ function MeetTheRescues() {
         mt: { xs: "40px", sm: "50px", md: "195px", color: "#2F4858" },
       }}
     >
-      <Box
+
+        <Box
+        textAlign="center"
         sx={{
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
           marginBottom: "32px",
-          gap: 4,
+          color: "#2F4858",
         }}
       >
-        <Typography
-          textAlign="center"
-          variant="h4"
-          component="div"
-          fontWeight="bold"
-          sx={{
-            mb: {
-              xs: 1,
-              sm: 2,
-              md: 4,
-            },
-          }}
-        >
+        <Typography mb={2} variant="h4" component="div" fontWeight="bold">
           Meet The Rescues
         </Typography>
-        <Typography>
-          <Typography fontWeight="bold" component="span">
-            Across the country, dedicated shelters open their doors to hundreds
-            of rescued animals, each with a story of hardship and resilience.
-          </Typography>
-          These havens become sanctuaries, offering not just food and shelter,
-          but a chance at healing and a future filled with love. Be moved by the
-          power of rescue - together, we can ensure the voiceless are heard.
+        <Typography maxWidth="600px" mb={3}>
+          In shelters everywhere, rescued animals find solace and hope. Join us in giving them a voice through rescue.
         </Typography>
         <Grid container textAlign="center" columnSpacing={4}>
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={6} mb={2}>
             <Box>
               <ButtonAnimals img={dogImage} />
-              <Typography color="initial">Dogs</Typography>
+              <Typography color="initial" mt={1}>Dogs</Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={6} mb={2}>
             <Box>
               <ButtonAnimals img={catImage} />
-              <Typography color="initial">Cats</Typography>
+              <Typography color="initial" mt={1}>Cats</Typography>
             </Box>
           </Grid>
         </Grid>
