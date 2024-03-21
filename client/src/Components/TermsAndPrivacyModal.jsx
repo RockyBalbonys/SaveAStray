@@ -56,7 +56,7 @@ const TermsAndPrivacyModal = ({
                     console.log(err);
                   })
                 onClose();
-                /* navigate("/deadend"); */
+                navigate("/deadend");
               } else if (res.data.status == 409){
                 console.log(res.data);
               }
