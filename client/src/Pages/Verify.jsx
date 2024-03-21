@@ -14,7 +14,7 @@ import {
   DialogActions,
   Slide,
 } from "@mui/material";
-import topImage from "../assets/images/top.jpg";
+import topImage from "../assets/images/top.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import { VerifyButton } from "../Components/Button/CustomButton";
 import { StyledPaper } from "../Components/Paper/StyledPaper";

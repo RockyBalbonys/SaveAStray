@@ -233,6 +233,8 @@ function HeroCard() {
                 <CustomButton
                   endIcon={<ChevronRightIcon />}
                   sx={{ textTransform: "none" }}
+                  component={RouterLink}
+                  to="/articles"
                 >
                   Read more
                 </CustomButton>
