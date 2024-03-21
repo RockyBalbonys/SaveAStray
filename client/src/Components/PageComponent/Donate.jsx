@@ -30,14 +30,14 @@ const Donate = () => {
           gap: 7.8,
         }}
       >
-        <Typography variant="h5" fontWeight="bold" color="white">
+        <Typography variant="h4" fontWeight="bold" color="white">
           Help SaveAStray to end animal loneliness
         </Typography>
         <CustomButton
           variant="contained"
           size="large"
           component={Link}
-          to="/donate"
+          to="/Donate"
         >
           Donate Now
         </CustomButton>

@@ -32,7 +32,7 @@ import RequestShelter from "./Pages/RequestShelter";
 import RequestPawrent from "./Pages/RequestPawrent";
 
 function App() {
-  const { isLoggedIn, role } = useAuth();
+  const { isLoggedIn, role, user } = useAuth();
   // Reroute user to manage account depending on their role
   const isPawrent =
     isLoggedIn && role === "Adoptive Pawrent" ? (

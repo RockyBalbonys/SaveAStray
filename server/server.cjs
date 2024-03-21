@@ -13,7 +13,7 @@ const Pet = require("./Models/petSchema.js");
 const { OAuth2Client } = require('google-auth-library');
 const GoogleUser = require("./Models/googleUserSchema.js");
 const { generateTokens } = require('./utils/tokens');
-
+const QuestRes = require("./Models/questResSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -27,25 +27,7 @@ mongoose
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
-/* 
-app.get(`/verify`, async (req, res) => {
-  const token = req.query.token;
 
-  try {
-    const user = await User.findOne({ verificationToken: token });
-
-    if (user) {
-      user.verified = true;
-      const updatedUser = await user.save();
-      res.send(updatedUser);
-    } else {
-      res.status(404).send({ message: "User not found" });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-});
- */
 app.post('/verify', async(req,res) => {
   const token = req.query.token;
   try {
@@ -163,7 +145,44 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
+app.post("/api/googleAccVerify", async (req, res) => {
+  try {
+    const token = req.body.cred
+    const client = new OAuth2Client(process.env.CLIENT_ID);
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.CLIENT_ID, 
+        });
+      if (ticket) {
+        res.send({
+          status: 200,
+          ticket,
+          message: "Google Verification success!"
+        })
+      } else (
+        res.send({
+          status: 400,
+          messge: "Google Verification failed!"
+        })
+      )
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
 app.post("/api/googleSignup", async (req, res) => {
+
+  //console.log(req.body.data.ticket);
+  const payload = req.body.data.ticket.payload;
+  console.log(payload);
+  const email = payload.email;
+  const email_verified = payload.email_verified;
+  const firstName = payload.firstName;
+  const surname = payload.surname;
+
+  console.log(payload);
+
   function generateVerificationToken() {
     return crypto.randomBytes(16).toString("hex");
   }
@@ -193,21 +212,7 @@ app.post("/api/googleSignup", async (req, res) => {
     }
   }
 
-  const token = req.body.cred
-  const client = new OAuth2Client(process.env.CLIENT_ID);
     try {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.CLIENT_ID, 
-        });
-        const payload = ticket.getPayload();
-        const email = payload.email;
-        const email_verified = payload.email_verified;
-        const firstName = payload.firstName;
-        const surname = payload.surname;
-
-        console.log(payload);
-        console.log(email);
 
         const existingUser = await User.findOne({ email });
         const existingGoogleUser = await GoogleUser.findOne({ email });
@@ -233,11 +238,11 @@ app.post("/api/googleSignup", async (req, res) => {
           await sendVerificationEmail(email, verificationToken);
 
           res.send({
-            status: 201,
+            status: 200,
             message: "User Created!",
             user: {
               email,
-              role,
+              //role: null,
               verificationToken,
             },
           });
@@ -405,9 +410,42 @@ app.post("/api/googleLogin", async (req, res) => {
     }
 })
 
-
-
-
+app.post('/api/sendAnswers', async (req, res) => {
+  const data = req.body
+  const respondent = data.respondent
+  const section1 = data.section1
+  const section2 = data.section2 
+  const section3 = data.section3
+  const section4 = data.section4
+  const section5 = data.section5
+  const section6 = data.section6
+  
+  if (data) {
+    try {
+      const newQuestRes = new QuestRes({
+        respondent,
+        answers: {
+          section1,
+          section2,
+          section3,
+          section4,
+          section5,
+          section6,
+        }
+      });
+      const savedQuestRes = await newQuestRes.save();
+      console.log(savedQuestRes);
+    } catch (error) {
+      
+    }
+  } else{
+    res.send({
+      status: 400,
+      message: "No response!"
+    })
+  }
+  
+})
 
 app.get("/getPet", async (req, res) => {
   try {
