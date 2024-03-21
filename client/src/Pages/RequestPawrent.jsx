@@ -1,8 +1,10 @@
 import React from "react";
-import { Button, Typography, Container, Tooltip } from "@mui/material";
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Container from '@mui/material/Container'
+import Tooltip from '@mui/material/Tooltip'
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import actionImage from "../assets/images/Frame 200Send.svg"; // Import actionImage
+import actionImage from "../assets/images/Frame 200Send.svg"; 
 import jembotImage from "../assets/images/animals/jembot.jpg";
 import felixImage from "../assets/images/animals/felix.jpg";
 import inibamImage from "../assets/images/animals/inibam.jpg";
