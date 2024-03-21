@@ -111,7 +111,6 @@ const Login = () => {
           response.data.checked === true */
         ) {
           console.log("initial State: ", store.getState());
-          store.dispatch(loginFailed());
           const unsubscribe = store.subscribe(() =>
             console.log("Updated state: ", store.getState())
           );

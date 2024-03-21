@@ -14,6 +14,13 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
   </head>
   <body>
+    <style>
+      input::-ms-reveal,
+      input::-ms-clear {
+        display: none;
+      }
+    </style>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
