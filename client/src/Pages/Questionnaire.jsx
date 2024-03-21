@@ -1,5 +1,5 @@
 import React from "react";
-import top from "../assets/images/top.jpg";
+import top from "../assets/images/top.png";
 import {
   Paper,
   Radio,

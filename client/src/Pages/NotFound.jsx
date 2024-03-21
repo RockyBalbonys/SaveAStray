@@ -1,6 +1,6 @@
 import { Container, Typography, Box, Paper, Grid, Button } from "@mui/material";
 import Background from "../Components/Background";
-import passive from "../assets/images/top.jpg";
+import passive from "../assets/images/top.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import dogCover from "../assets/images/dogCover3.png";
 import { Link as RouterLink } from "react-router-dom";
