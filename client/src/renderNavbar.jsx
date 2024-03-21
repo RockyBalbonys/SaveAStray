@@ -9,21 +9,23 @@ export const renderNavbar = () => {
   const { pathname } = location;
   const validPaths = [
     "/",
-    "/About",
-    "/Animals",
-    `/articles`, // Include /articles path
-    `/articles/${id}`, // Include /articles/:id path
+    "/about",
+    "/animals",
+    `/articles`,
+    `/articles/${id}`,
     "/Articles",
     "/faq",
-    "/Donate",
-    "/Contact",
+    "/donate",
+    "/contact",
     "/animalsPawrent",
     "/manage",
     "/test",
+    "/reqshelter",
+    "/reqpawrent",
   ];
 
   // Check if the current path is a valid path
-  if (validPaths.includes(pathname)) {
+  if (validPaths.includes(pathname.toLowerCase())) {
     return <Navbar />;
   }
 

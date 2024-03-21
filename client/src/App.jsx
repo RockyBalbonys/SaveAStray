@@ -1,16 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import Signup from "./Pages/Signup";
-import LandingPage from "./Pages/UnusedPage/LandingPage";
 import NotFound from "./Pages/NotFound";
 import About from "./Pages/About";
 import AnimalsShelter from "./Pages/AnimalsShelter";
 import Donate from "./Pages/Donate";
 import Contact from "./Pages/Contact";
-import UploadImage from "./Pages/UnusedPage/UploadImage";
 import Login from "./Pages/Login";
 import Verify from "./Pages/Verify";
-import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
-import PrivacyPolicy from "./Pages/UnusedPage/PrivacyPolicy";
 import { ThemeProvider } from "@emotion/react";
 import theme from "./theme";
 import Articles from "./Pages/Articles";
@@ -22,12 +18,14 @@ import Questionnaire from "./Pages/Questionnaire";
 import { AccountPawrent } from "./Pages/AccountPawrent";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { Provider, useSelector } from "react-redux";
-import { store, persistor } from "./tools/store";
 import { AccountShelter } from "./Pages/AccountShelter";
 import useAuth from "./hooks/useAuth";
 import Test from "./Pages/UnusedPage/Test";
 import { Home } from "./Pages/Home";
+import { NewLogin } from "./Pages/NewLogin";
+import RequestShelter from "./Pages/RequestShelter";
+import RequestPawrent from "./Pages/RequestPawrent";
+import ScrollToTop from "./tools/scrollToTop";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -46,13 +44,14 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           {renderNavbar()}
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/newLogin" element={<NewLogin />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/about" element={<About />} />
             <Route path="/manage" element={isPawrent} />
-            {/* <Route path="/test" element={<Home />} /> */}
             <Route path="/animals" element={<AnimalsShelter />} />
             <Route path="/questionnaire" element={<Questionnaire />} />
             <Route path="/articles/" element={<Articles />} />
@@ -64,6 +63,8 @@ function App() {
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/reqshelter" element={<RequestShelter />} />
+            <Route path="/reqpawrent" element={<RequestPawrent />} />
           </Routes>
         </ThemeProvider>
       </LocalizationProvider>
