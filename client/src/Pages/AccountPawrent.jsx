@@ -4,6 +4,9 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import { store, persistor } from "../tools/store";
+import { loginFailed, loginSuccess, logout } from "../tools/authActions";
+
 import {
   Avatar,
   Box,
@@ -46,7 +49,15 @@ const AccountForm = () => {
     console.log("Update account.");
   };
   const handleLogout = () => {
-    console.log("Logout account.");
+          console.log("initial State: ", store.getState());
+          const unsubscribe = store.subscribe(() =>
+            console.log("Updated state: ", store.getState())
+          );
+          console.log("401");
+          store.dispatch(logout());
+          unsubscribe();
+/*           setLoginAttempted(true);
+          setUserIn(false); */
   };
   return (
     <>
