@@ -65,7 +65,7 @@ const Login = () => {
         const unsubscribe = store.subscribe(() =>
           console.log("Updated state: ", store.getState())
         );
-        store.dispatch(loginSuccess(formData.loginRole, response.data.user));
+        store.dispatch(loginSuccess(response.data.role, response.data.user));
         unsubscribe();
         navigate("/Animals");
       } else if (
@@ -103,7 +103,7 @@ const Login = () => {
           const unsubscribe = store.subscribe(() =>
             console.log("Updated state: ", store.getState())
           );
-          store.dispatch(loginSuccess(formData.loginRole, response.data.user));
+          store.dispatch(loginSuccess(response.data.role, response.data.user));
           unsubscribe();
           navigate("/Animals");
         } else if (

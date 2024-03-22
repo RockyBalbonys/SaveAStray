@@ -45,10 +45,12 @@ export const AccountShelter = () => {
 };
 
 const AccountForm = () => {
+
   const handleSaveChanges = () => {
     console.log("Update account.");
   };
   const handleLogout = () => {
+
     console.log("initial State: ", store.getState());
           const unsubscribe = store.subscribe(() =>
             console.log("Updated state: ", store.getState())
