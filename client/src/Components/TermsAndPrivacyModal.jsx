@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import "/src/index.css";
 
-import {
-  Modal,
-  Box,
-  Typography,
-  Checkbox,
-  Button,
-  Paper,
-  Stack,
-  FormControlLabel,
-} from "@mui/material";
+// Mui Components
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Checkbox from "@mui/material/Checkbox";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Slide from "@mui/material/Slide";
+import Snackbar from "@mui/material/Snackbar";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+// constants static data
 import { myPolicy, myTerms } from "../constants/termsAndPolicy";
+
+// react functions
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Alert } from "@mui/material";
 
 const TermsAndPrivacyModal = ({
   open,
@@ -24,13 +30,16 @@ const TermsAndPrivacyModal = ({
   isGoogle,
 }) => {
   const navigate = useNavigate();
+
+  // state for checkbox
   const [isChecked, setIsChecked] = useState(false);
+
+  // state for snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
   };
-
-  console.log(isGoogle);
 
   const handleContinueClick = async () => {
     // Redirect the user to another page if the checkbox is checked
@@ -62,6 +71,7 @@ const TermsAndPrivacyModal = ({
               navigate("/deadend");
             } else if (res.data.status == 409) {
               console.log(res.data);
+              setOpenSnackbar(true);
             }
           })
           .catch(function (err) {
@@ -82,7 +92,8 @@ const TermsAndPrivacyModal = ({
           );
           if (response.data.status === 409) {
             setUserExists(true);
-            onClose();
+            console.log("Open snackbar: " + openSnackbar);
+            setOpenSnackbar(true);
           } else {
             console.log("Response:", response.data);
             onClose();
@@ -94,6 +105,8 @@ const TermsAndPrivacyModal = ({
       }
     }
   };
+
+  console.log(openSnackbar);
 
   const handleBackdropClick = (event) => {
     if (event.target === event.currentTarget) {
@@ -266,6 +279,13 @@ const TermsAndPrivacyModal = ({
             Continue
           </Button>
         </Stack>
+        <Snackbar
+          open={openSnackbar}
+          onClose={() => setOpenSnackbar(!openSnackbar)}
+          message="User already exists"
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        ></Snackbar>
       </Paper>
     </Modal>
   );

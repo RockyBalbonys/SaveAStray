@@ -140,6 +140,8 @@ function SignupCard({
     </FormHelperText>
   );
 
+  console.log(formData);
+
   return (
     <>
       <Paper
