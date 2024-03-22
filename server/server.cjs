@@ -92,10 +92,7 @@ app.post("/api/register", async (req, res) => {
         from: process.env.USER_EMAIL,
         to: email,
         subject: "Email Verification from SaveAStray",
-        // text: `Please click the following link to verify your email: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
         html: `
-        <body style="font-family: poppins, arial;">
-        
           <p>Dear Client,</p><br>
 
           <p>Greetings! We're thrilled to have you join our platform. To ensure you have full access and tailored experience, we kindly ask you to verify your email and select your role.</p><br>
@@ -112,7 +109,6 @@ app.post("/api/register", async (req, res) => {
 
           <p>Best regards,<br>
           SaveAStray</p>
-        </body>
         `,
       });
       console.log("Verification email sent:", info);
