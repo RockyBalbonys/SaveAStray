@@ -72,8 +72,6 @@ app.get(`/verifyRole`, async (req, res) => {
   }
 });
 
-
-
 app.post("/api/register", async (req, res) => {
   function generateVerificationToken() {
     return crypto.randomBytes(16).toString("hex");
@@ -93,8 +91,29 @@ app.post("/api/register", async (req, res) => {
       let info = await transporter.sendMail({
         from: process.env.USER_EMAIL,
         to: email,
-        subject: "Email Verification",
-        text: `Please click the following link to verify your email: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
+        subject: "Email Verification from SaveAStray",
+        // text: `Please click the following link to verify your email: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
+        html: `
+        <body style="font-family: poppins, arial;">
+        
+          <p>Dear Client,</p><br>
+
+          <p>Greetings! We're thrilled to have you join our platform. To ensure you have full access and tailored experience, we kindly ask you to verify your email and select your role.</p><br>
+
+          <p>Verifying your email ensures the security of your account and unlocks all features. Click the link below to verify:</p><br>
+
+          <p><a href="${process.env.CLIENT_URL}/verify?token=${verificationToken}" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Verify Email</strong></a></p><br>
+
+          <p>Once verified, you'll be prompted to choose your role - pawrent or rescue shelter. This selection optimizes your experience.</p><br>
+
+          <p>Should you encounter any issues or have questions, please reach out to our support team at <a href="${process.env.USER_EMAIL}" style="color: #FF8210; text-decoration: none;">[saveastray.lyfie@gmail.com]</a>. Your cooperation is invaluable in creating a secure and efficient environment for all users.</p><br>
+
+          <p>Thank you for your attention to this matter.</p><br>
+
+          <p>Best regards,<br>
+          SaveAStray</p>
+        </body>
+        `,
       });
       console.log("Verification email sent:", info);
     } catch (error) {

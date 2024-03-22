@@ -19,7 +19,6 @@ const donateBackground = {
 const Donate = () => {
   return (
     <Box sx={donateBackground} component="section">
-      <div style={filter}></div>
       <Box
         position="absolute"
         sx={{
