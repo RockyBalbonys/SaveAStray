@@ -143,7 +143,7 @@ const TermsAndPrivacyModal = ({
             mt={1} 
             fontWeight={600}
           >
-            Terms and Services
+            Terms of Services
           </Typography>
           <hr class="w-40 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
         </div>

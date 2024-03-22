@@ -27,35 +27,35 @@
   .input-container {
     @apply flex flex-col sm:flex-row sm:items-center md:flex-row md:items-start lg:flex-row lg:justify-center lg:items-start w-full;
   }
+}
+/* Ito yung error pero hindi naman masama, READ ON this link: https://stackoverflow.com/questions/70665302/getting-the-error-nested-css-was-detected-but-css-nesting-has-not-been-configu */
+.custom-scrollbar {
+  width: 50%;
+  background-color: #f0f0f0; /* Set the background color of the Paper component */
+  padding: 24px; /* Add padding to the Paper component */
 
-  .custom-scrollbar {
-    width: 50%;
-    background-color: #f0f0f0; /* Set the background color of the Paper component */
-    padding: 24px; /* Add padding to the Paper component */
-  
-    /* Hide the default scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent; /* This is for Firefox */
-  
-    /* WebKit (Chrome, Safari, etc.) scrollbar */
-    &::-webkit-scrollbar {
-      width: 8px; /* Set the width of the scrollbar */
-    }
-  
-    /* Track (the area on which the thumb rests) */
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1; /* Set the color of the track */
-    }
-  
-    /* Thumb (the draggable scrolling handle) */
-    &::-webkit-scrollbar-thumb {
-      background: #888; /* Set the color of the thumb */
-      border-radius: 4px; /* Set the border radius of the thumb */
-    }
-  
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555; /* Set the color of the thumb on hover */
-    }
-  }
+  /* Hide the default scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent; /* This is for Firefox */
+}
+
+/* WebKit (Chrome, Safari, etc.) scrollbar */
+&::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+/* Track (the area on which the thumb rests) */
+&::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Set the color of the track */
+}
+
+/* Thumb (the draggable scrolling handle) */
+&::-webkit-scrollbar-thumb {
+  background: #888; /* Set the color of the thumb */
+  border-radius: 4px; /* Set the border radius of the thumb */
+}
+
+/* Handle on hover */
+&::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Set the color of the thumb on hover */
 }

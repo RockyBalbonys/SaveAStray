@@ -47,8 +47,8 @@ const myTerms = [
     item: "6. Disclaimers and Limitations of Liability:",
     content: [
       `SaveAStray is provided "as is" and without warranty of any kind, express or implied.`,
-      `We disclaim all warranties, including, but not limited to, warranties of merchantability, fitness for a particular purpose, and non-infringement.`
-      `We will not be liable for any damages arising from your use of SaveAStray, including, but not limited to, direct, indirect, incidental, consequential, and punitive damages.`
+      "We disclaim all warranties, including, but not limited to, warranties of merchantability, fitness for a particular purpose, and non-infringement.",
+      "We will not be liable for any damages arising from your use of SaveAStray, including, but not limited to, direct, indirect incidental, consequential, and punitive damages.",
       `You agree to indemnify and hold us harmless from and against any and all claims, losses, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to your use of SaveAStray.`,
     ],
   },
