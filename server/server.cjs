@@ -374,7 +374,7 @@ app.post("/api/login", async (req, res) => {
                   message: "Log in Success",
                   checked: true,
                   user: user._id,
-                  role
+                  role: user.role
               });
           } else {
               // Passwords don't match, send failure response
