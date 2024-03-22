@@ -373,7 +373,8 @@ app.post("/api/login", async (req, res) => {
                   status: 200,
                   message: "Log in Success",
                   checked: true,
-                  user: user._id
+                  user: user._id,
+                  role
               });
           } else {
               // Passwords don't match, send failure response
@@ -474,6 +475,19 @@ app.get("/getPet", async (req, res) => {
     res.send({
       status: 200,
       allPets,
+    });
+  } catch (err) {
+    console.log("error: ", err);
+  }
+});
+
+app.get("/getShelter", async (req, res) => {
+  try {
+    const allShelter = await User.find({role: 'Rescue Shelter'});
+    res.send({
+      status: 200,
+      allShelter,
+      message: "use allShelter._id to get ID"
     });
   } catch (err) {
     console.log("error: ", err);
