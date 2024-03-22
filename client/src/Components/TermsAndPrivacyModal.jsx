@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import '/src/index.css';
+
 import {
   Modal,
   Box,
@@ -117,27 +119,48 @@ const TermsAndPrivacyModal = ({
       }}
       onClick={handleBackdropClick}
     >
-      <Paper sx={{ width: "50%", bgcolor: "background.paper", px: 6, py: 4 }}>
-        <Typography variant="h6" gutterBottom>
-          Terms of Service and Privacy Policy
+      <Paper className="custom-scrollbar " sx={{ width: "50%", bgcolor: "background.paper", px: 6, py: 6, borderRadius:"12px",}}>
+        <Typography 
+          variant="h4" 
+          gutterBottom 
+          textAlign="center"
+          fontWeight="Bold"
+          color="primary.main"
+        >
+         SaveAStray: Terms of Service and Privacy Policy
         </Typography>
+
         <Box>
-          <Typography gutterBottom textAlign="center">
+        {/* Terms of Services */}
+        <div class="inline-flex items-center justify-center w-full my-3" >
+          <hr class="w-40 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
+          <Typography 
+            className="px-3"
+            variant="h6" 
+            gutterBottom 
+            textAlign="center" 
+            color="secondary.main" 
+            mt={1} 
+            fontWeight={600}
+          >
             Terms and Services
           </Typography>
+          <hr class="w-40 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
+        </div>
+
           {myTerms.map((term, index) => (
             <React.Fragment key={index}>
               {typeof term === "string" ? (
                 <p
-                  className="mb-3"
+                  className="mb-4 text-[#2F4858]"
                   dangerouslySetInnerHTML={{ __html: term }}
                 />
               ) : (
                 <div className="mb-2">
                   <p>
-                    <strong>{term.item}</strong>
+                    <strong className="text-orange-400">{term.item}</strong>
                   </p>
-                  <ul className="list-disc pl-[1.8rem]">
+                  <ul className="list-disc pl-[1.8rem] font-normal text-[#2F4858]">
                     {term.content.map((paragraph, idx) => (
                       <li key={idx}>
                         <p>{paragraph}</p>
@@ -149,22 +172,37 @@ const TermsAndPrivacyModal = ({
             </React.Fragment>
           ))}
           <br />
-          <Typography gutterBottom textAlign="center">
+
+          {/* Privacy Policy */}
+          <div class="inline-flex items-center justify-center w-full my-3" >
+          <hr class="w-40 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
+          <Typography 
+            className="px-3"
+            variant="h6" 
+            gutterBottom 
+            textAlign="center" 
+            color="secondary.main" 
+            mt={1} 
+            fontWeight={600}
+          >
             Privacy Policy
           </Typography>
+          <hr class="w-40 h-px bg-gray-200 border-0 dark:bg-gray-700"/>
+        </div>
+
           {myPolicy.map((policy, index) => (
             <React.Fragment key={index}>
               {typeof policy === "string" ? (
                 <p
-                  className="mb-3"
+                  className="mb-4 text-[#2F4858]"
                   dangerouslySetInnerHTML={{ __html: policy }}
                 />
               ) : (
-                <div className="mb-2">
+                <div className="mb-2" >
                   <p>
-                    <strong>{policy.item}</strong>
+                    <strong className="text-orange-400">{policy.item}</strong>
                   </p>
-                  <ul className="list-disc pl-[1.8rem]">
+                  <ul className="list-disc pl-[1.8rem] text-[#2F4858]">
                     {policy.content.map((paragraph, idx) => (
                       <li key={idx}>
                         <p>{paragraph}</p>
@@ -185,20 +223,22 @@ const TermsAndPrivacyModal = ({
               sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
             />
           }
-          label={
-            <Typography variant="body2">
+          label={ 
+            
+            <Typography fontWeight={300} color="primary.main">
               I agree to the <span className="font-bold">Terms of Service</span>{" "}
               and <span className="font-bold">Privacy Policy</span>
             </Typography>
           }
           sx={{ marginBottom: "1rem" }}
         />
-        <Stack direction="row" spacing={1}>
+          <br />
+        <Stack direction="row" spacing={2}>
           <Button
             variant="contained"
             onClick={() => onClose()}
-            size="small"
-            sx={{ color: "white" }}
+            size="medium"
+            sx={{ color: "white", borderRadius:"7px" }}
           >
             Cancel
           </Button>
@@ -206,8 +246,8 @@ const TermsAndPrivacyModal = ({
             variant="contained"
             onClick={handleContinueClick}
             disabled={!isChecked}
-            size="small"
-            sx={{ color: "white" }}
+            size="medium"
+            sx={{ color: "white", borderRadius:"7px"}}
           >
             Continue
           </Button>
