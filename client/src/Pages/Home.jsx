@@ -196,7 +196,6 @@ function HeroCard() {
       >
         {cardContent.map((card, index) => (
           <Grid item md={4} key={index} width="300px">
-            <RouterLink to={`/articles/${index+5}`}>
             <Card
               sx={cardHeroStyle}
               onMouseEnter={() => handleMouseEnter(index)}
@@ -238,13 +237,12 @@ function HeroCard() {
                   endIcon={<ChevronRightIcon />}
                   sx={{ textTransform: "none" }}
                   component={RouterLink}
-                  to="/articles"
+                  to={`/articles/${index+5}`}
                 >
                   Read more
                 </CustomButton>
               </CardActions>
             </Card>
-            </RouterLink>
           </Grid>
         ))}
       </Grid>
@@ -448,6 +446,8 @@ function HelpCardItem({ card, index }) {
         <CardActions>
           <Box textAlign="center" width="100%">
             <CustomButton
+            component={RouterLink}
+            to={`/articles/${index+8}`} 
               sx={{
                 padding: 0,
                 margin: 0,

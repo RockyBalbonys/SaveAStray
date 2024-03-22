@@ -69,7 +69,7 @@ const Footer = () => {
                   width={85}
                   height={85}
                   alt="Logo"
-                  className="hidden"
+                  // className="hidden"
                 />
                 <Typography sx={{ fontSize: "36px", fontWeight: "bold" }}>
                   SaveAStray
