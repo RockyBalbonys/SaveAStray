@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import myPassive from "../assets/images/myPassiveCopy.png";
+import myPassive from "../assets/images/top.png";
 import logo from "../assets/icons/SAS_Logo4.png";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
@@ -15,7 +15,8 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Paper from "@mui/material/Paper";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
-import useFormSubmit from "../hooks/useFormSubmit";
+import useLogin from "../hooks/useLogin";
+import { Link } from "react-router-dom";
 
 export const NewLogin = () => {
   const [showPass, setShowPass] = useState(false);
@@ -30,7 +31,8 @@ export const NewLogin = () => {
     loginSubmit,
     handleCallbackResponse,
     passwordError,
-  } = useFormSubmit(selectedRole);
+    userNotFound,
+  } = useLogin(selectedRole);
 
   // useEffect hook for initializing Google Sign-In
   useEffect(() => {
@@ -59,6 +61,7 @@ export const NewLogin = () => {
           loginSubmit={loginSubmit} // Pass loginSubmit to LoginCard
           loginAttempted={loginAttempted}
           passwordError={passwordError}
+          userNotFound={userNotFound}
         />
       </div>
     </>
@@ -75,9 +78,16 @@ function LoginCard({
   loginSubmit,
   loginAttempted,
   passwordError,
+  userNotFound,
 }) {
   const showPassIcon = showPass ? <VisibilityIcon /> : <VisibilityOffIcon />;
   const showPassText = showPass ? "text" : "password";
+
+  const isEmailInvalid =
+    formData.loginEmail.length > 0 &&
+    !formData.loginEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+
+  console.log(formData);
   return (
     <>
       <Paper
@@ -127,7 +137,7 @@ function LoginCard({
                 <p className="text-xl sm:text-[3.5rem] md:text-[3.5rem] lg:text-[3.5rem] xl:text-[3.5rem] font-bold sm:mb-6 md:mb-6 lg:mb-6 xl:mb-6">
                   SaveAStray
                 </p>
-                <p className="text-xs md:text-[0.875rem] md:w-[350px]">
+                <p className="text-xs md:text-[0.875rem] md:w-[350px] leading-loose">
                   Open our heart, save a life! Adopt & welcome pawsitive change
                 </p>
               </div>
@@ -190,12 +200,28 @@ function LoginCard({
                   name="loginEmail"
                   fullWidth
                 />
-                <FormHelperText
-                  id="password-helper-text"
-                  sx={{ ml: "-.09rem" }}
-                >
-                  Enter your email
-                </FormHelperText>
+                {userNotFound ? (
+                  <FormHelperText
+                    id="password-error-text"
+                    sx={InputHelperTextErrorStyle}
+                  >
+                    No user found
+                  </FormHelperText>
+                ) : isEmailInvalid ? (
+                  <FormHelperText
+                    id="password-error-text"
+                    sx={InputHelperTextErrorStyle}
+                  >
+                    Enter valid email
+                  </FormHelperText>
+                ) : (
+                  <FormHelperText
+                    id="password-helper-text"
+                    sx={InputHelperTextStyle}
+                  >
+                    Enter your email
+                  </FormHelperText>
+                )}
               </FormControl>
 
               <FormControl
@@ -243,7 +269,7 @@ function LoginCard({
                 {passwordError && ( // Show error message if passwordError is true
                   <FormHelperText
                     id="password-error-text"
-                    sx={{ ml: "-.09rem", color: "red" }}
+                    sx={InputHelperTextErrorStyle}
                   >
                     Incorrect password
                   </FormHelperText>
@@ -251,21 +277,26 @@ function LoginCard({
                 {!passwordError && (
                   <FormHelperText
                     id="password-helper-text"
-                    sx={{ ml: "-.09rem" }}
+                    sx={InputHelperTextStyle}
                   >
                     Enter your password
                   </FormHelperText>
                 )}
               </FormControl>
               <div className="flex justify-around px-5 w-full text-[#FF7A00] mt-2 mb-9">
-                <p className="font-light cursor-pointer">Forgot Password?</p>
-                <p className="font-bold cursor-pointer">Need an account?</p>
+                <p className="font-light cursor-pointer">
+                  <Link to="/forgot">Forgot Password?</Link>
+                </p>
+                <Link to="/newSignup">
+                  <p className="font-bold cursor-pointer">Need an account?</p>
+                </Link>
               </div>
               <Button
                 onClick={loginSubmit}
                 disabled={
                   formData.loginRole === "" ||
                   formData.loginEmail === "" ||
+                  isEmailInvalid ||
                   formData.loginPass === ""
                 }
                 variant="contained"
@@ -290,7 +321,7 @@ function LoginCard({
   );
 }
 
-const UserInput = styled(InputBase)(({ theme }) => ({
+export const UserInput = styled(InputBase)(({ theme }) => ({
   "label + &": {
     marginTop: theme.spacing(5),
   },
@@ -301,7 +332,6 @@ const UserInput = styled(InputBase)(({ theme }) => ({
     border: "2px solid #FF7A00",
     fontSize: 16,
     padding: "10px 12px",
-    paddingRight: "20%",
     transition: theme.transitions.create([
       "border-color",
       "background-color",
@@ -313,8 +343,17 @@ const UserInput = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const InputLabelStyle = {
+export const InputLabelStyle = {
   color: "#FF7A00",
   ml: "-.8rem",
   fontWeight: "700",
+};
+
+export const InputHelperTextStyle = {
+  ml: "-.09rem",
+};
+
+export const InputHelperTextErrorStyle = {
+  ml: "-.09rem",
+  color: "red",
 };

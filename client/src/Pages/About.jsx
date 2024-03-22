@@ -4,36 +4,29 @@ import { Box, Container, Typography, Stack, Grid, Paper } from "@mui/material";
 import { aboutContent, team, sectionContent } from "../constants/about";
 import Footer from "../Components/PageComponent/Footer";
 import Donate from "../Components/PageComponent/Donate";
+import aboutHero from "../assets/images/aboutHero.png";
 
 const About = () => {
   return (
     <>
-      <Box
-        sx={{
-          background: `url(${about})`,
-          height: "50vh",
-          overflow: "visible",
-          position: "relative",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-        component="main"
-      >
-        <Container maxWidth="lg">
-          <Box position="absolute" mt={13.8}>
-            <Typography
-              fontSize="3.5rem"
-              color="white"
-              fontWeight="900"
-              width="570px"
-              sx={{ textAlign: { xs: "center", md: "left" } }}
-            >
-              Helping <span className="text-[#2F4858]">Hundreds Connect</span>{" "}
-              Together.
+      <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
+        <div className="absolute left-0 z-10 w-full">
+          <Container maxWidth="lg">
+            <Typography variant="h2" className="text-white">
+              Helping <br />
+              <span className="text-[#2F4858]">hundreds</span> <br />
+              <span className="text-[#2F4858]">connect</span> <br />
+              together.
             </Typography>
-          </Box>
-        </Container>
-      </Box>
+          </Container>
+        </div>
+        <div
+          style={{
+            backgroundImage: `url(${aboutHero})`,
+          }}
+          className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
+        ></div>
+      </div>
       <SecondSection contents={sectionContent} />
       <Stack>
         <Grid container width="100%">

@@ -8,35 +8,26 @@ import gcashIcon from "../assets/icons/gcash.svg";
 import paypalIcon from "../assets/icons/paypal.svg";
 import atmIcons from "../assets/images/donate/atmIcons.png";
 import { Link } from "react-router-dom";
+import donateHero from '../assets/images/donateHero.png'
 const Donate = () => {
   return (
     <>
-      <Box
-        sx={{
-          background: `url(${HeroImage})`,
-          height: "50vh",
-          // width: "100vw",
-          overflow: "visible",
-          position: "relative",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box position="absolute" mt={13.8}>
-            <Typography
-              fontSize="3.5rem"
-              color="white"
-              fontWeight="900"
-              width="334px"
-              sx={{ textAlign: { xs: "center", md: "left" } }}
-            >
-              Make A <span className="text-[#2F4858]">Big Difference</span>{" "}
+            <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
+        <div className="absolute left-0 z-10 w-full">
+          <Container maxWidth="lg">
+            <Typography variant="h2" className="text-white">
+              Make A <span className="text-[#2F4858]">Big <br />Difference</span> <br />
               Today!
             </Typography>
-          </Box>
-        </Container>
-      </Box>
+          </Container>
+        </div>
+        <div
+          style={{
+            backgroundImage: `url(${donateHero})`,
+          }}
+          className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
+        ></div>
+      </div> 
       <Container maxWidth="lg">
         <CarouselSection />
         <DonateChannelsSection />

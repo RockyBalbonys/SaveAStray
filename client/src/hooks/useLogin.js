@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginFailed, loginSuccess } from "../tools/authActions";
 
-const useFormSubmit = (selectedRole) => {
+const useLogin = (selectedRole) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,6 +17,7 @@ const useFormSubmit = (selectedRole) => {
   const [loginAttempted, setLoginAttempted] = useState(false);
   const [userIn, setUserIn] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [userNotFound, setUserNotFound] = useState(false);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -56,7 +57,14 @@ const useFormSubmit = (selectedRole) => {
         dispatch(loginFailed());
         setLoginAttempted(true);
         setUserIn(false);
+        setUserNotFound(true);
+        setPasswordError(false);
+      } else if (
+        response.data.status === 401 &&
+        response.data.checked === true
+      ) {
         setPasswordError(true);
+        setUserNotFound(false);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -80,6 +88,14 @@ const useFormSubmit = (selectedRole) => {
           dispatch(loginFailed());
           setLoginAttempted(true);
           setUserIn(false);
+        } else if (
+          response.data.status === 401 &&
+          response.data.checked === true
+        ) {
+          dispatch(loginFailed());
+          setLoginAttempted(true);
+          setUserIn(false);
+          setPasswordError(true);
         }
       })
       .catch(function (err) {
@@ -95,7 +111,8 @@ const useFormSubmit = (selectedRole) => {
     loginSubmit,
     handleCallbackResponse,
     passwordError,
+    userNotFound,
   };
 };
 
-export default useFormSubmit;
+export default useLogin;

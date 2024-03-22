@@ -32,6 +32,7 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 // Avatar Component
 import { AccountAvatar } from "../Components/Account/AccountAvatar";
 import AccountDrawer from "../Components/Account/AccountDrawer";
+import { useNavigate } from "react-router-dom";
 
 export const AccountPawrent = () => {
   return (
@@ -45,18 +46,21 @@ export const AccountPawrent = () => {
 };
 
 const AccountForm = () => {
+  const navigate = useNavigate();
   const handleSaveChanges = () => {
     console.log("Update account.");
   };
   const handleLogout = () => {
-          console.log("initial State: ", store.getState());
-          const unsubscribe = store.subscribe(() =>
-            console.log("Updated state: ", store.getState())
-          );
-          console.log("401");
-          store.dispatch(logout());
-          unsubscribe();
-/*           setLoginAttempted(true);
+    console.log("initial State: ", store.getState());
+    const unsubscribe = store.subscribe(() =>
+      console.log("Updated state: ", store.getState())
+    );
+    console.log("401");
+    store.dispatch(logout());
+    unsubscribe();
+    navigate("/newLogin");
+
+    /*           setLoginAttempted(true);
           setUserIn(false); */
   };
   return (

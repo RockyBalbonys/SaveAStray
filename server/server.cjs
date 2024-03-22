@@ -1,5 +1,5 @@
 const express = require("express");
-require('dotenv').config();
+require("dotenv").config();
 const cors = require("cors");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
@@ -10,7 +10,7 @@ const port = 3001;
 const uri = process.env.DB_URI;
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
-const { OAuth2Client } = require('google-auth-library');
+const { OAuth2Client } = require("google-auth-library");
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
 //db connection >>
@@ -27,20 +27,20 @@ app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/verify', async(req,res) => {
+app.post("/verify", async (req, res) => {
   const token = req.query.token;
   try {
     const gUser = await GoogleUser.findOne({ verificationToken: token });
     const user = await User.findOne({ verificationToken: token });
     if (user) {
-      role = req.body.role
+      role = req.body.role;
       user.verified = true;
       user.role = role;
       user.verificationToken = undefined;
       const updatedUser = await user.save();
       res.send(updatedUser);
-    } else if (gUser){
-      role = req.body.role
+    } else if (gUser) {
+      role = req.body.role;
       gUser.role = role;
       gUser.verificationToken = undefined;
       const updatedUser = await gUser.save();
@@ -51,7 +51,7 @@ app.post('/verify', async(req,res) => {
   } catch (error) {
     console.log(error);
   }
-})
+});
 
 app.get(`/verifyRole`, async (req, res) => {
   const token = req.query.token;
@@ -161,32 +161,29 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/googleAccVerify", async (req, res) => {
   try {
-    const token = req.body.cred
+    const token = req.body.cred;
     const client = new OAuth2Client(process.env.CLIENT_ID);
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.CLIENT_ID, 
-        });
-      if (ticket) {
-        res.send({
-          status: 200,
-          ticket,
-          message: "Google Verification success!"
-        })
-      } else (
-        res.send({
-          status: 400,
-          messge: "Google Verification failed!"
-        })
-      )
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.CLIENT_ID,
+    });
+    if (ticket) {
+      res.send({
+        status: 200,
+        ticket,
+        message: "Google Verification success!",
+      });
+    } else
+      res.send({
+        status: 400,
+        messge: "Google Verification failed!",
+      });
   } catch (error) {
     console.log(error);
   }
-})
-
+});
 
 app.post("/api/googleSignup", async (req, res) => {
-
   //console.log(req.body.data.ticket);
   const payload = req.body.data.ticket.payload;
   console.log(payload);
@@ -226,53 +223,60 @@ app.post("/api/googleSignup", async (req, res) => {
     }
   }
 
-    try {
+  try {
+    const existingUser = await User.findOne({ email });
+    const existingGoogleUser = await GoogleUser.findOne({ email });
 
-        const existingUser = await User.findOne({ email });
-        const existingGoogleUser = await GoogleUser.findOne({ email });
+    if (existingUser || existingGoogleUser) {
+      res.send({
+        message: "Email is taken",
+        status: 409,
+      });
+    } else {
+      const verificationToken = generateVerificationToken();
+      const newGoogleUser = new GoogleUser({
+        email,
+        verified: email_verified,
+        role: null,
+        firstName,
+        surname,
+        verificationToken,
+      });
+      const savedUser = await newGoogleUser.save();
+      console.log(savedUser);
 
-        if (existingUser || existingGoogleUser) {
-          res.send({
-            message: "Email is taken",
-            status: 409,
-          });
-        } else {
-          const verificationToken = generateVerificationToken();
-          const newGoogleUser = new GoogleUser({
-            email,
-            verified: email_verified,
-            role: null,
-            firstName,
-            surname,
-            verificationToken
-          });
-          const savedUser = await newGoogleUser.save();
-          console.log(savedUser);
+      await sendVerificationEmail(email, verificationToken);
 
-          await sendVerificationEmail(email, verificationToken);
-
-          res.send({
-            status: 200,
-            message: "User Created!",
-            user: {
-              email,
-              //role: null,
-              verificationToken,
-            },
-          });
-
-        }
-    } catch (error) {
-        console.error("Error verifying token:", error);
-        res.status(401).json({ message: "Invalid Google Sign-In token" });
+      res.send({
+        status: 200,
+        message: "User Created!",
+        user: {
+          email,
+          //role: null,
+          verificationToken,
+        },
+      });
     }
-})
-
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    res.status(401).json({ message: "Invalid Google Sign-In token" });
+  }
+});
 
 app.post("/api/addAnimal", async (req, res) => {
   console.log(req.body);
-  const { name, description, species, breed, sex, age, color, size, photos, shelter } =
-    req.body;
+  const {
+    name,
+    description,
+    species,
+    breed,
+    sex,
+    age,
+    color,
+    size,
+    photos,
+    shelter,
+  } = req.body;
 
   try {
     const newPet = new Pet({
@@ -286,7 +290,7 @@ app.post("/api/addAnimal", async (req, res) => {
       size,
       status: "Available",
       photos,
-      shelter
+      shelter,
     });
     const savedPet = await newPet.save();
     //const petId  = savedPet._id
@@ -349,95 +353,101 @@ app.post("/api/updatePet", async (req, res) => {
 app.post("/api/login", async (req, res) => {
   console.log(req.body);
   try {
-      const loginEmail = req.body.email;
-      const loginPass = req.body.password;
-      const loginRole = req.body.role;
-      
-      // Find user by email and role
-      const user = await User.findOne({ email: loginEmail, role: loginRole }).exec();
+    const loginEmail = req.body.email;
+    const loginPass = req.body.password;
+    const loginRole = req.body.role;
 
-      if (!user) {
-          console.log("User not found");
-          return res.send({ status: 400, checked: true, message: "User not found!" });
+    // Find user by email and role
+    const user = await User.findOne({
+      email: loginEmail,
+      role: loginRole,
+    }).exec();
+
+    if (!user) {
+      console.log("User not found");
+      return res.send({
+        status: 400,
+        checked: true,
+        message: "User not found!",
+      });
+    } else {
+      // Compare passwords using bcrypt.compare
+      const match = await bcrypt.compare(loginPass, user.password);
+
+      if (match) {
+        // Passwords match, send success response
+        res.send({
+          status: 200,
+          message: "Log in Success",
+          checked: true,
+          user: user._id,
+          role: user.role,
+        });
       } else {
-            // Compare passwords using bcrypt.compare
-          const match = await bcrypt.compare(loginPass, user.password);
-
-          if (match) {
-              // Passwords match, send success response
-              res.send({
-                  status: 200,
-                  message: "Log in Success",
-                  checked: true,
-                  user: user._id,
-                  role: user.role
-              });
-          } else {
-              // Passwords don't match, send failure response
-              res.send({
-                  status: 400,
-                  message: "Wrong Email/Pass",
-                  checked: true,
-              });
-          }
+        // Passwords don't match, send failure response
+        res.send({
+          status: 401,
+          message: "Wrong Email/Pass",
+          checked: true,
+        });
       }
-
+    }
   } catch (err) {
-      // Handle server errors
-      console.error(err);
-      return res.status(500).send("Internal Server Error");
+    // Handle server errors
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
   }
 });
 
 app.post("/api/googleLogin", async (req, res) => {
-  const token = req.body.cred
+  const token = req.body.cred;
   const client = new OAuth2Client(process.env.CLIENT_ID);
-    try {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: process.env.CLIENT_ID, 
-        });
-        const payload = ticket.getPayload();
-        const email = payload.email;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const email = payload.email;
 
-        console.log(payload);
-        console.log(email);
+    console.log(payload);
+    console.log(email);
 
-        const userExists = await User.findOne({ email });
-        const existingGoogleUser = await GoogleUser.findOne({ email });
+    const userExists = await User.findOne({ email });
+    const existingGoogleUser = await GoogleUser.findOne({ email });
 
-        if ( existingGoogleUser ) {
-          const user = existingGoogleUser._id
-          const role = existingGoogleUser.role
-          console.log("user ro;e: ", role);
-          res.send({
-            user,
-            role,
-            message: "User Logged in!",
-            status: 200
-          });
-        } else {
-          res.send({
-            message: "Not exists!",
-            status: 400,
-          });
-        }
-    } catch (error) {
-        console.error("Error verifying token:", error);
-        res.status(401).json({ message: "Invalid Google Sign-In token" });
+    if (existingGoogleUser) {
+      const user = existingGoogleUser._id;
+      const role = existingGoogleUser.role;
+      console.log("user ro;e: ", role);
+      res.send({
+        user,
+        role,
+        message: "User Logged in!",
+        status: 200,
+      });
+    } else {
+      res.send({
+        message: "Not exists!",
+        status: 400,
+      });
     }
-})
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    res.status(401).json({ message: "Invalid Google Sign-In token" });
+  }
+});
 
-app.post('/api/sendAnswers', async (req, res) => {
-  const data = req.body
-  const respondent = data.respondent
-  const section1 = data.section1
-  const section2 = data.section2 
-  const section3 = data.section3
-  const section4 = data.section4
-  const section5 = data.section5
-  const section6 = data.section6
-  
+app.post("/api/sendAnswers", async (req, res) => {
+  const data = req.body;
+  const respondent = data.respondent;
+  const section1 = data.section1;
+  const section2 = data.section2;
+  const section3 = data.section3;
+  const section4 = data.section4;
+  const section5 = data.section5;
+  const section6 = data.section6;
+
   if (data) {
     try {
       const newQuestRes = new QuestRes({
@@ -449,21 +459,18 @@ app.post('/api/sendAnswers', async (req, res) => {
           section4,
           section5,
           section6,
-        }
+        },
       });
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
-    } catch (error) {
-      
-    }
-  } else{
+    } catch (error) {}
+  } else {
     res.send({
       status: 400,
-      message: "No response!"
-    })
+      message: "No response!",
+    });
   }
-  
-})
+});
 
 app.get("/getPet", async (req, res) => {
   try {
@@ -479,11 +486,11 @@ app.get("/getPet", async (req, res) => {
 
 app.get("/getShelter", async (req, res) => {
   try {
-    const allShelter = await User.find({role: 'Rescue Shelter'});
+    const allShelter = await User.find({ role: "Rescue Shelter" });
     res.send({
       status: 200,
       allShelter,
-      message: "use allShelter._id to get ID"
+      message: "use allShelter._id to get ID",
     });
   } catch (err) {
     console.log("error: ", err);
