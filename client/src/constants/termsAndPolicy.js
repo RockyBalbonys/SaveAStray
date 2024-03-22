@@ -1,11 +1,11 @@
 const myTerms = [
-  '<strong>Welcome to SaveAStray!</strong> We are dedicated to connecting loving homes with amazing animals in need through our online adoption platform. These Terms of Service ("Terms") outline the rules and responsibilities that govern your use of our website and services.',
-  "Please read these Terms carefully before using SaveAStray. By accessing or using our website, you agree to be bound by these Terms. If you do not agree to these Terms, you may not use our website.",
+  '<strong>Welcome to SaveAStray!</strong> We are dedicated to connecting loving homes with amazing animals in need through our online adoption platform. These Terms of Service outline the rules and responsibilities that govern your use of our website and services.',
+  "Please read these Terms carefully before using SaveAStray. By accessing our website, you agree to be bound by these Terms. If you do not agree to these Terms, you may not use our website.",
   {
     item: "1. Eligibility:",
     content: [
       "You must be at least 18 years old to use SaveAStray and have the legal capacity to enter into contracts.",
-      " You must be a resident of Philippines or a permitted jurisdiction as identified on our website.",
+      "You must be a resident of Philippines or a permitted jurisdiction as identified on our website.",
     ],
   },
   {
@@ -13,7 +13,7 @@ const myTerms = [
     content: [
       "You may create an account on SaveAStray by providing the required information.",
       "You are responsible for maintaining the confidentiality of your account and password and for any activity that occurs under your account.",
-      " You agree to provide accurate and complete information when creating and updating your account.",
+      "You agree to provide accurate and complete information when creating and updating your account.",
     ],
   },
   {
@@ -21,16 +21,17 @@ const myTerms = [
     content: [
       "You are responsible for all content you submit to SaveAStray, including pet profiles, messages, and comments.",
       "You agree not to submit any content that is illegal, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, invasive of privacy, or racially or ethnically offensive. You also agree not to submit content that infringes on any intellectual property rights of any third party or contains personal information of others without their consent. Additionally, you agree not to submit false or misleading content or content that promotes animal cruelty or neglect.",
+      "You agree to provide accurate and complete information when answering the adoptiion questionnaire form.",
       "You agree to use SaveAStray in a lawful and ethical manner, complying with all applicable laws and regulations.",
     ],
   },
   {
     item: "4. Use of Service:",
     content: [
-      "You may use SaveAStray to search for adoptable animals, contact shelters and rescue organizations, and apply for adoption.",
+      "You may use SaveAStray to search for adoptable animals, contact shelters, and apply for adoption.",
       "We reserve the right to moderate all content and communication on the website.",
       "We may remove or edit content that violates these Terms or that we deem inappropriate.",
-      " We do not guarantee the accuracy or completeness of the information provided on SaveAStray.",
+      "We do not guarantee the accuracy or completeness of the information provided on SaveAStray by shelters.",
       "You are responsible for conducting your own research and due diligence before adopting an animal.",
     ],
   },
@@ -39,21 +40,23 @@ const myTerms = [
     content: [
       "The adoption process is handled by the individual shelters and rescue organizations listed on SaveAStray.",
       "We are not responsible for the decisions made by these organizations regarding adoption eligibility or placement.",
-      " You are responsible for complying with all adoption requirements set by the shelter or rescue organization.",
+      "You are responsible for complying with all adoption requirements set by the shelter or rescue organization.",
     ],
   },
   {
     item: "6. Disclaimers and Limitations of Liability:",
     content: [
       `SaveAStray is provided "as is" and without warranty of any kind, express or implied.`,
-      ` We disclaim all warranties, including, but not limited to, warranties of merchantability, fitness for a particular purpose, and non-infringement. We will not be liable for any damages arising from your use of SaveAStray, including, but not limited to, direct, indirect, incidental, consequential, and punitive damages. You agree to indemnify and hold us harmless from and against any and all claims, losses, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to your use of SaveAStray.`,
+      `We disclaim all warranties, including, but not limited to, warranties of merchantability, fitness for a particular purpose, and non-infringement.`
+      `We will not be liable for any damages arising from your use of SaveAStray, including, but not limited to, direct, indirect, incidental, consequential, and punitive damages.`
+      `You agree to indemnify and hold us harmless from and against any and all claims, losses, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to your use of SaveAStray.`,
     ],
   },
   {
     item: "7. Termination:",
     content: [
       `We may terminate your account or access to SaveAStray at any time, for any reason, or for no reason at all.`,
-      `You may terminate your account at any time by contacting us.`,
+      `You may terminate your account at any time by going to your account settings.`,
     ],
   },
   {
@@ -99,7 +102,6 @@ const myPolicy = [
       "Connect you with shelters and rescue organizations",
       "Provide you with information and updates about adoptable animals and adoption news",
       "Respond to your inquiries and requests",
-      "Personalize your experience on our website",
     ],
   },
   {
@@ -107,8 +109,7 @@ const myPolicy = [
     content: [
       "We will not share your PII with any third party except in the following limited circumstances:",
       "With your consent.",
-      "With shelters and rescue organizations you poppinsact with during the adoption process.",
-      "With service providers who help us operate our website and services (these providers are obligated to keep your information confidential).",
+      "With shelters and rescue organizations you interact with during the adoption process.",
       "To comply with legal requirements, such as a court order or subpoena.",
       "To prevent fraud or harm to others.",
     ],
@@ -128,8 +129,7 @@ const myPolicy = [
   {
     item: "6. Your Choices:",
     content: [
-      "You have the right to access, update, or delete your PII at any time. You can do this by logging into your account or contacting us.",
-      `You can also opt out of receiving promotional emails from us by clicking on the "unsubscribe" link in any email.`,
+      "You have the right to access, update, or delete your PII at any time. You can do this by logging into your account.",
     ],
   },
   {
