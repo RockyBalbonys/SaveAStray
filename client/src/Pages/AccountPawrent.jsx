@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -17,6 +18,7 @@ import {
   Icon,
   Stack,
 } from "@mui/material";
+import useAuth from "../hooks/useAuth";
 
 //Custom Components
 import { FormPaper } from "../Components/Paper/FormPaper";
@@ -45,9 +47,35 @@ export const AccountPawrent = () => {
 };
 
 const AccountForm = () => {
+
+  const {user} = useAuth();
+
+  const [formData, setFormData] = useState({
+    userId: user,
+    firstName: "",
+    lastName: "",
+    homeAddress: "",
+    cityAddress: "",
+    zipCode: "",
+    emailAddress: "",
+    phoneNumber: "",
+  });
+
   const handleSaveChanges = () => {
-    console.log("Update account.");
+    axios
+    .post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
+    .then(function (response) {
+      console.log(success);
+    })
+    .catch(function(error){
+      console.log(error);
+    })
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
   const handleLogout = () => {
           console.log("initial State: ", store.getState());
           const unsubscribe = store.subscribe(() =>
@@ -79,10 +107,18 @@ const AccountForm = () => {
           <Grid item md={8} lg={9}>
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
-                <PersonalInfoCard />
+                <PersonalInfoCard 
+                  formData={formData}
+                  onChange={handleChange}
+                  onSave={handleSaveChanges}
+                />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <ContactInfoCard />
+                <ContactInfoCard
+                  formData={formData}
+                  onChange={handleChange}
+                  onSave={handleSaveChanges}
+                />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
                 <DeleteAcc />
@@ -126,7 +162,7 @@ const AccountForm = () => {
   );
 };
 
-const PersonalInfoCard = () => {
+const PersonalInfoCard = ({ formData, onChange }) => {
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Personal Information"} />
@@ -136,43 +172,51 @@ const PersonalInfoCard = () => {
             <Grid item sm={12} md={6}>
               <TextField
                 label="First Name"
-                id="pawrent-first-name"
+                id="firstName"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.firstName}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={12} md={6}>
               <TextField
                 label="Last Name"
-                id="pawrent-last-name"
+                id="lastName"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.lastName}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={12} md={12}>
               <TextField
                 label="Home Address"
-                id="pawrent-home-address"
+                id="homeAddress"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.homeAddress}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={12} md={8}>
               <TextField
                 label="City Address"
-                id="pawrent-city-address"
+                id="cityAddress"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.cityAddress}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={12} md={4}>
               <TextField
                 label="ZIP Code"
-                id="pawrent-zip-code"
+                id="zipCode"
                 variant="outlined"
                 sx={{ width: "100%" }}
               />
@@ -188,7 +232,7 @@ const PersonalInfoCard = () => {
   );
 };
 
-const ContactInfoCard = () => {
+const ContactInfoCard = ({ formData, onChange }) => {
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Contact Information"} />
@@ -197,18 +241,22 @@ const ContactInfoCard = () => {
           <Grid container spacing={4}>
             <Grid item sm={12} md={12}>
               <TextField
-                id="email-address"
+                id="emailAddress"
                 type="email"
                 label="Email Address (View Only)"
                 inputProps={{ readOnly: true }}
                 sx={{ width: "100%" }}
+                value={formData.emailAddress}
+                onChange={onChange}
               />
             </Grid>
             <Grid item sm={12} md={12}>
               <TextField
-                id="phone-number"
+                id="phoneNumber"
                 label="Phone Number"
                 sx={{ width: "100%" }}
+                value={formData.phoneNumber}
+                onChange={onChange}
               />
             </Grid>
           </Grid>
