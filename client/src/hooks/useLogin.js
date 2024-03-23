@@ -55,8 +55,8 @@ const useLogin = (selectedRole) => {
         response.data.checked === true
       ) {
         dispatch(loginFailed());
-        setLoginAttempted(true);
-        setUserIn(false);
+        // setLoginAttempted(true);
+        // setUserIn(false);
         setUserNotFound(true);
         setPasswordError(false);
       } else if (
@@ -71,47 +71,17 @@ const useLogin = (selectedRole) => {
     }
   };
 
-  const handleCallbackResponse = (response) => {
-    const cred = response.credential;
-
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, { cred })
-      .then(function (response) {
-        if (response.data.status === 200 && response.data.checked === true) {
-          const user = response.data.user;
-          dispatch(loginSuccess(formData.loginRole, user));
-          navigate("/Animals");
-        } else if (
-          response.data.status === 400 &&
-          response.data.checked === true
-        ) {
-          dispatch(loginFailed());
-          setLoginAttempted(true);
-          setUserIn(false);
-        } else if (
-          response.data.status === 401 &&
-          response.data.checked === true
-        ) {
-          dispatch(loginFailed());
-          setLoginAttempted(true);
-          setUserIn(false);
-          setPasswordError(true);
-        }
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
-
   return {
     formData,
-    loginAttempted,
-    userIn,
+    // loginAttempted,
+    // userIn,
     handleChange,
     loginSubmit,
-    handleCallbackResponse,
+    // handleCallbackResponse,
     passwordError,
     userNotFound,
+    dispatch,
+    navigate,
   };
 };
 

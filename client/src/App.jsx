@@ -30,18 +30,16 @@ import NewSignup from "./Pages/NewSignup";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
-  console.log("Logged in: " + isLoggedIn);
-  console.log("Role: " + role);
 
   // Reroute user to manage account depending on their role
-  // const isPawrent =
-  //   isLoggedIn && role === "Adoptive Pawrent" ? (
-  //     <AccountPawrent />
-  //   ) : isLoggedIn && role === "Rescue Shelter" ? (
-  //     <AccountShelter />
-  //   ) : (
-  //     <Login />
-  //   );
+  const isPawrent =
+    isLoggedIn && role === "Adoptive Pawrent" ? (
+      <AccountPawrent />
+    ) : isLoggedIn && role === "Rescue Shelter" ? (
+      <AccountShelter />
+    ) : (
+      <Login />
+    );
 
   return (
     <>
@@ -51,15 +49,17 @@ function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/newLogin" element={<NewLogin />} />
-            <Route path="/newSignup" element={<NewSignup />} />
-            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/newlogin" element={<Login />} /> */}
+            <Route path="/login" element={<NewLogin />} />
+            <Route path="/signup" element={<NewSignup />} />
+            <Route path="/newsignup" element={<Signup />} />
             <Route path="/about" element={<About />} />
-            <Route path="/manage" element={<AccountPawrent />} />
-            <Route path="/manage" element={<AccountShelter />} />
+            <Route path="/manage" element={isPawrent} />
             <Route path="/animals" element={<AnimalsShelter />} />
-            <Route path="/questionnaire" element={<Questionnaire />} />
+            <Route
+              path="/questionnaire/:shelterId"
+              element={<Questionnaire />}
+            />
             <Route path="/articles/" element={<Articles />} />
             <Route path="/articles/:id" element={<ArticlePage />} />
             <Route path="/faq" element={<FAQ />} />

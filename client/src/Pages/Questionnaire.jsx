@@ -192,14 +192,6 @@ function QWelcome() {
 function SubmitButton() {
   const { submitAnswers } = useQuestionnaireContext();
   return (
-    // <Paper
-    //   sx={{
-    //     width: "100%",
-    //     display: "flex",
-    //     justifyContent: "center",
-    //     p: "16px 32px",
-    //   }}
-    // >
     <Button
       onClick={submitAnswers}
       sx={{

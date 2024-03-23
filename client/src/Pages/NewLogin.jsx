@@ -16,27 +16,73 @@ import Paper from "@mui/material/Paper";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
 import useLogin from "../hooks/useLogin";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import { store } from "../tools/store";
+import { loginSuccess } from "../tools/authActions";
 
 export const NewLogin = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const roleSelected = params.get("role");
+
   const [showPass, setShowPass] = useState(false);
-  const [selectedRole, setSelectedRole] = useState(null); // Initialize selectedRole state
+  const [selectedRole, setSelectedRole] = useState(null || roleSelected); // Initialize selectedRole state
 
   // Call the custom hook and destructure the returned values
   const {
     formData,
-    loginAttempted,
-    userIn,
     handleChange,
     loginSubmit,
-    handleCallbackResponse,
     passwordError,
     userNotFound,
+    dispatch,
+    navigate,
+    setPasswordError,
   } = useLogin(selectedRole);
 
-  // useEffect hook for initializing Google Sign-In
+  function handleCallbackResponse(response) {
+    const cred = response.credential;
+    console.log("Encoded JWT ID token: " + response.credential);
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, {
+        cred,
+      })
+      .then(function (response) {
+        console.log(response.data);
+        if (
+          response.data.status === 200 /*  && response.data.checked === true */
+        ) {
+          console.log(response.data);
+          console.log("initial State: ", store.getState());
+          const unsubscribe = store.subscribe(() =>
+            console.log("Updated state: ", store.getState())
+          );
+          store.dispatch(loginSuccess(response.data.role, response.data.user));
+          unsubscribe();
+          navigate("/Animals");
+        } else if (
+          response.data.status === 400 /*  &&
+          response.data.checked === true */
+        ) {
+          console.log("initial State: ", store.getState());
+          const unsubscribe = store.subscribe(() =>
+            console.log("Updated state: ", store.getState())
+          );
+          console.log("401");
+          store.dispatch(loginFailed());
+          unsubscribe();
+          setLoginAttempted(true);
+          setUserIn(false);
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
-    /* global google */
+    /*  global google */
     google.accounts.id.initialize({
       client_id: process.env.REACT_APP_google_oauth_client_id,
       callback: handleCallbackResponse,
@@ -59,7 +105,7 @@ export const NewLogin = () => {
           formData={formData} // Pass formData to LoginCard
           handleChange={handleChange} // Pass handleChange to LoginCard
           loginSubmit={loginSubmit} // Pass loginSubmit to LoginCard
-          loginAttempted={loginAttempted}
+          // loginAttempted={loginAttempted}
           passwordError={passwordError}
           userNotFound={userNotFound}
         />
@@ -76,7 +122,7 @@ function LoginCard({
   formData,
   handleChange,
   loginSubmit,
-  loginAttempted,
+  // loginAttempted,
   passwordError,
   userNotFound,
 }) {
@@ -86,8 +132,6 @@ function LoginCard({
   const isEmailInvalid =
     formData.loginEmail.length > 0 &&
     !formData.loginEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-
-  console.log(formData);
   return (
     <>
       <Paper
@@ -287,7 +331,7 @@ function LoginCard({
                 <p className="font-light cursor-pointer">
                   <Link to="/forgot">Forgot Password?</Link>
                 </p>
-                <Link to="/newSignup">
+                <Link to="/signup">
                   <p className="font-bold cursor-pointer">Need an account?</p>
                 </Link>
               </div>

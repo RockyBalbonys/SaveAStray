@@ -7,10 +7,20 @@ import {
 import { Input } from "@mui/material";
 import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const QSection1 = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { answers, updateAnswer, handleShelterId } = useQuestionnaireContext();
   const { email, bestDescribe } = answers.section1;
+
+  const { shelterId } = useParams();
+
+  const { toShelter } = answers.toShelter;
+
+  useEffect(() => {
+    handleShelterId(toShelter, shelterId);
+  }, [shelterId]);
 
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;

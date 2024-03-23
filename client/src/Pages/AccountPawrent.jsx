@@ -58,7 +58,7 @@ const AccountForm = () => {
     console.log("401");
     store.dispatch(logout());
     unsubscribe();
-    navigate("/newLogin");
+    navigate("/login");
 
     /*           setLoginAttempted(true);
           setUserIn(false); */

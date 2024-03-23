@@ -69,6 +69,7 @@ const TermsAndPrivacyModal = ({
                 });
               onClose();
               navigate("/deadend");
+              console.log("Noooooooooo!");
             } else if (res.data.status == 409) {
               console.log(res.data);
               setOpenSnackbar(true);
@@ -105,8 +106,6 @@ const TermsAndPrivacyModal = ({
       }
     }
   };
-
-  console.log(openSnackbar);
 
   const handleBackdropClick = (event) => {
     if (event.target === event.currentTarget) {

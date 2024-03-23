@@ -296,7 +296,7 @@ function SignupCard({
               </FormControl>
 
               <div className="flex justify-end px-5 w-[75%] text-[#FF7A00] mt-2 mb-9">
-                <Link to="/newLogin">
+                <Link to="/login">
                   <p className="cursor-pointer">Have an account?</p>
                 </Link>
               </div>
