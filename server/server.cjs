@@ -458,7 +458,7 @@ app.post('/api/sendAnswers', async (req, res) => {
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
     } catch (error) {
-      
+      console.log(error);
     }
   } else{
     res.send({
@@ -475,6 +475,17 @@ app.get("/getPet", async (req, res) => {
     res.send({
       status: 200,
       allPets,
+    });
+  } catch (err) {
+    console.log("error: ", err);
+  }
+});
+app.get("/api/fetchRequests", async (req, res) => {
+  try {
+    const allAnswers = await QuestRes.find();
+    res.send({
+      status: 200,
+      allAnswers,
     });
   } catch (err) {
     console.log("error: ", err);
