@@ -10,6 +10,8 @@ const port = 3001;
 const uri = process.env.DB_URI;
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
+const ShelterInfo = require("./Models/shelterInfoSchema.js");
+const PawrentInfo = require("./Models/pawrentInfoSchema.js");
 const { OAuth2Client } = require('google-auth-library');
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
@@ -92,10 +94,7 @@ app.post("/api/register", async (req, res) => {
         from: process.env.USER_EMAIL,
         to: email,
         subject: "Email Verification from SaveAStray",
-        // text: `Please click the following link to verify your email: ${process.env.CLIENT_URL}/verify?token=${verificationToken}`,
         html: `
-        <body style="font-family: poppins, arial;">
-        
           <p>Dear Client,</p><br>
 
           <p>Greetings! We're thrilled to have you join our platform. To ensure you have full access and tailored experience, we kindly ask you to verify your email and select your role.</p><br>
@@ -112,7 +111,6 @@ app.post("/api/register", async (req, res) => {
 
           <p>Best regards,<br>
           SaveAStray</p>
-        </body>
         `,
       });
       console.log("Verification email sent:", info);
@@ -521,6 +519,122 @@ app.get("/api/filteredPets", async (req, res) => {
     res.status(200).json({ filteredPets });
   } catch (error) {
     console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Shelter Info API
+app.post("/api/updateShelterInfo", async (req, res) => {
+  const userId = req.body.userId;
+  const {
+    shelterName,
+    shelterAddress,
+    cityAddress,
+    zipCode,
+    shelterEmailAddress,
+    shelterPhoneNumber,
+    animalAdoptionFeeForDogs,
+    animalAdoptionFeeForCats,
+    representativeFirstName,
+    representativeLastName,
+    representativeHomeAddress,
+    representativeCityAddress,
+    representativeZipCode,
+    representativeBirthdate,
+    representativePhoneNumber
+  } = req.body;
+
+  try {
+    let shelterInfo = await ShelterInfo.findOne({ userId });
+
+    if (!shelterInfo) {
+      shelterInfo = new ShelterInfo({
+        userId,
+        shelterName,
+        shelterAddress,
+        cityAddress,
+        zipCode,
+        shelterEmailAddress,
+        shelterPhoneNumber,
+        animalAdoptionFeeForDogs,
+        animalAdoptionFeeForCats,
+        representativeFirstName,
+        representativeLastName,
+        representativeHomeAddress,
+        representativeCityAddress,
+        representativeZipCode,
+        representativeBirthdate,
+        representativePhoneNumber
+      });
+    } else {
+      shelterInfo.shelterName = shelterName;
+      shelterInfo.shelterAddress = shelterAddress;
+      shelterInfo.cityAddress = cityAddress;
+      shelterInfo.zipCode = zipCode;
+      shelterInfo.shelterEmailAddress = shelterEmailAddress;
+      shelterInfo.shelterPhoneNumber = shelterPhoneNumber;
+      shelterInfo.animalAdoptionFeeForDogs = animalAdoptionFeeForDogs;
+      shelterInfo.animalAdoptionFeeForCats = animalAdoptionFeeForCats;
+      shelterInfo.representativeFirstName = representativeFirstName;
+      shelterInfo.representativeLastName = representativeLastName;
+      shelterInfo.representativeHomeAddress = representativeHomeAddress;
+      shelterInfo.representativeCityAddress = representativeCityAddress;
+      shelterInfo.representativeZipCode = representativeZipCode;
+      shelterInfo.representativeBirthdate = representativeBirthdate;
+      shelterInfo.representativePhoneNumber = representativePhoneNumber;
+    }
+
+    await shelterInfo.save();
+
+    res.status(200).json({ message: "Shelter information updated successfully" });
+  } catch (error) {
+    console.error("Error updating shelter info:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Pawrent Info API
+app.post("/api/updatePawrentInfo", async (req, res) => {
+  const userId = req.body.userId;
+  const {
+    firstName,
+    lastName,
+    homeAddress,
+    cityAddress,
+    zipCode,
+    emailAddress,
+    phoneNumber,
+  } = req.body;
+
+  try {
+    let pawrentInfo = await PawrentInfo.findOne({ userId });
+
+    if (!pawrentInfo) {
+      pawrentInfo = new PawrentInfo({
+        userId,
+        firstName,
+        lastName,
+        homeAddress,
+        cityAddress,
+        zipCode,
+        emailAddress,
+        phoneNumber,
+      });
+    } else {
+      pawrentInfo.firstName = firstName;
+      pawrentInfo.lastName = lastName;
+      pawrentInfo.homeAddress = homeAddress;
+      pawrentInfo.cityAddress = cityAddress;
+      pawrentInfo.zipCode = zipCode;
+      pawrentInfo.emailAddress = emailAddress;
+      pawrentInfo.phoneNumber = phoneNumber;
+    }
+
+    await pawrentInfo.save();
+
+    res.status(200).json({ message: "Pawrent information updated successfully" });
+  } catch (error) {
+    console.error("Error updating pawrent info:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
