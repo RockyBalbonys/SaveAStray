@@ -11,6 +11,7 @@ const uri = process.env.DB_URI;
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
 const ShelterInfo = require("./Models/shelterInfoSchema.js");
+const PawrentInfo = require("./Models/pawrentInfoSchema.js");
 const { OAuth2Client } = require('google-auth-library');
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
@@ -511,6 +512,7 @@ app.get("/api/filteredPets", async (req, res) => {
   }
 });
 
+// Shelter Info API
 app.post("/api/updateShelterInfo", async (req, res) => {
   const userId = req.body.userId;
   const {
@@ -576,6 +578,52 @@ app.post("/api/updateShelterInfo", async (req, res) => {
     res.status(200).json({ message: "Shelter information updated successfully" });
   } catch (error) {
     console.error("Error updating shelter info:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Pawrent Info API
+app.post("/api/updatePawrentInfo", async (req, res) => {
+  const userId = req.body.userId;
+  const {
+    firstName,
+    lastName,
+    homeAddress,
+    cityAddress,
+    zipCode,
+    emailAddress,
+    phoneNumber,
+  } = req.body;
+
+  try {
+    let pawrentInfo = await PawrentInfo.findOne({ userId });
+
+    if (!pawrentInfo) {
+      pawrentInfo = new PawrentInfo({
+        userId,
+        firstName,
+        lastName,
+        homeAddress,
+        cityAddress,
+        zipCode,
+        emailAddress,
+        phoneNumber,
+      });
+    } else {
+      pawrentInfo.firstName = firstName;
+      pawrentInfo.lastName = lastName;
+      pawrentInfo.homeAddress = homeAddress;
+      pawrentInfo.cityAddress = cityAddress;
+      pawrentInfo.zipCode = zipCode;
+      pawrentInfo.emailAddress = emailAddress;
+      pawrentInfo.phoneNumber = phoneNumber;
+    }
+
+    await pawrentInfo.save();
+
+    res.status(200).json({ message: "Pawrent information updated successfully" });
+  } catch (error) {
+    console.error("Error updating pawrent info:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
