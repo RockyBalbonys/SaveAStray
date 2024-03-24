@@ -6,6 +6,9 @@ const questResSchema = new mongoose.Schema(
             type: String,
             unique: true
         },
+        toShelter: {
+            type: String
+        },
         answers: {
             section1: {
                 bestDescribe: String,

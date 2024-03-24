@@ -21,6 +21,8 @@ import ramboImage from "../assets/images/animals/rambo.jpg";
 import Frame200Send from "../assets/images/Frame 200Send.svg";
 import Footer from "../Components/PageComponent/Footer";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import axios from "axios"
+import { useState, useEffect } from 'react';
 
 const headerStyles = {
   display: "flex",
@@ -47,14 +49,33 @@ const buttonStyle = {
   height: "100%",
   backgroundColor: "#EE7200",
 };
+/* const [adoptionRequests, setAdoptionRequests] = useState([]);
 
-const AdoptionRequests = [
+axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`)
+.then(function(response){
+  const { allAnswers } = response.data
+const transformedRequests = allAnswers.map(function(answer) {
+  return {
+    name: answer.respondent, // Replace with the appropriate property name from allAnswers
+    //time: answer.time,  // Replace with the appropriate property name from allAnswers
+    //imageUrl: jembotImage, // Assuming jembotImage is defined elsewhere
+    //redirectTo: `/questionnaire/${answer.identifier}`, // Replace with the appropriate identifier property
+  };
+});
+setAdoptionRequests(transformedRequests);
+console.log(adoptionRequests);
+})
+.catch(function(err){
+  console.log(err);
+})
+ */
+/* const AdoptionRequests = [
   {
-    name: "Joemen",
+    name: "test",
     time: "a few seconds ago",
     imageUrl: jembotImage,
     redirectTo: "/questionnaire/joemen",
-  },
+  } ,
   {
     name: "Redeeet",
     time: "1 minute ago",
@@ -84,8 +105,8 @@ const AdoptionRequests = [
     time: "2 days ago",
     imageUrl: ramboImage,
     redirectTo: "/questionnaire/lancer",
-  },
-];
+  }, 
+]; */
 
 const actions = [
   { icon: <GetAppIcon />, name: "Print" },
@@ -95,6 +116,27 @@ const actions = [
 
 function RequestShelter() {
   const navigate = useNavigate();
+
+  const [adoptionRequests, setAdoptionRequests] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`)
+      .then(function (response) {
+        const { allAnswers } = response.data;
+        const transformedRequests = allAnswers.map(function (answer) {
+          return {
+            name: answer.respondent, 
+          };
+        });
+        setAdoptionRequests(transformedRequests); // Update state with transformed data
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []); 
+ 
+
+
 
   const handleClick = (redirectTo) => {
     navigate(redirectTo);
@@ -126,7 +168,7 @@ function RequestShelter() {
       </div>
       <div className="bg-[#FAFAFB] h-full">
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
-          {AdoptionRequests.map((request, index) => (
+          {adoptionRequests.map((request, index) => (
             <div
               key={index}
               onClick={() => handleClick(request.redirectTo)}

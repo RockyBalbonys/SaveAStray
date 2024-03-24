@@ -47,7 +47,7 @@ export const AccountShelter = () => {
 const AccountForm = () => {
 
   const handleSaveChanges = () => {
-    console.log("Update account.");
+    //update 
   };
   const handleLogout = () => {
 
@@ -58,7 +58,7 @@ const AccountForm = () => {
           console.log("401");
           store.dispatch(logout());
           unsubscribe();
-/*           setLoginAttempted(true);
+/*       setLoginAttempted(true);
           setUserIn(false); */
   };
   return (
