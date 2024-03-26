@@ -65,7 +65,7 @@ const AccountForm = () => {
     axios
     .post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
     .then(function (response) {
-      console.log(success);
+      console.log(response);
     })
     .catch(function(error){
       console.log(error);

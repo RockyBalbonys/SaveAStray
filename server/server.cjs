@@ -439,7 +439,7 @@ app.post('/api/sendAnswers', async (req, res) => {
   const section4 = data.section4
   const section5 = data.section5
   const section6 = data.section6
-  
+  //const toShelter 
   if (data) {
     try {
       const newQuestRes = new QuestRes({
@@ -451,7 +451,8 @@ app.post('/api/sendAnswers', async (req, res) => {
           section4,
           section5,
           section6,
-        }
+        },
+        toShelter
       });
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
@@ -478,15 +479,23 @@ app.get("/getPet", async (req, res) => {
     console.log("error: ", err);
   }
 });
-app.get("/api/fetchRequests", async (req, res) => {
+app.post("/api/fetchRequests", async (req, res) => {
   try {
     const allAnswers = await QuestRes.find();
-    res.send({
-      status: 200,
-      allAnswers,
-    });
+      if (allAnswers) {
+        const mappedAnswers = allAnswers.map(async (answer) => {
+          const { respondent } = answer;
+          const pawrentInfo = await PawrentInfo.find({ userId: respondent });
+    /// new plan: kukunin ang toShelter na id para yon na lang ifefetch
+        });
+
+      } else {
+        console.log("No answers");
+      }
+ 
   } catch (err) {
     console.log("error: ", err);
+    res.status(500).send({ message: "Internal Server Error" }); // Handle errors appropriately
   }
 });
 

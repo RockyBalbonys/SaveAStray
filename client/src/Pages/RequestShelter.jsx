@@ -23,6 +23,7 @@ import Footer from "../Components/PageComponent/Footer";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import axios from "axios"
 import { useState, useEffect } from 'react';
+import useAuth from '../hooks/useAuth'
 
 const headerStyles = {
   display: "flex",
@@ -116,19 +117,22 @@ const actions = [
 
 function RequestShelter() {
   const navigate = useNavigate();
-
+  const { user } = useAuth()
   const [adoptionRequests, setAdoptionRequests] = useState([]);
-
+  
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`)
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
+      user
+    })
       .then(function (response) {
         const { allAnswers } = response.data;
         const transformedRequests = allAnswers.map(function (answer) {
           return {
-            name: answer.respondent, 
+            name: answer.pawrentName, 
           };
         });
         setAdoptionRequests(transformedRequests); // Update state with transformed data
+        console.log(transformedRequests);
       })
       .catch(function (err) {
         console.log(err);
