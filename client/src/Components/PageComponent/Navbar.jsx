@@ -44,9 +44,6 @@ export default function Navbar() {
   const open = Boolean(anchorEl);
   const { isLoggedIn, user } = useAuth();
 
-  console.log(isLoggedIn);
-  console.log(user);
-
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
   };

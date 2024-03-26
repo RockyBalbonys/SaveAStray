@@ -4,7 +4,6 @@ import { useLocation, useParams } from "react-router-dom";
 
 export const renderNavbar = () => {
   const { id } = useParams(); // Extract the id parameter from the URL
-  console.log(id);
   const location = useLocation();
   const { pathname } = location;
   const validPaths = [

@@ -66,7 +66,14 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
           <Grid container spacing={3} mb={4} justifyContent="center">
             {/* xs = flip phone, sm = mobile, md = tablet, lg = desktop, xl = widescreen */}
             <Grid item xs={12} md={6} order={{ xs: 2, md: 1 }}>
-              <Box sx={{ color: "#2F4858" }}>
+              <Box
+                sx={{
+                  color: "#2F4858",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
                 <Typography variant="h6" fontWeight={600} component="p">
                   {animal.name.slice(0, 1).toUpperCase() + animal.name.slice(1)}
                 </Typography>
@@ -74,35 +81,45 @@ const ModalInfoPet = ({ open, onClose, animal }) => {
                   {animal.description}
                 </Typography>
                 {/* Adoption Fee */}
-                <Paper
+                <Box
                   sx={{
-                    marginTop: "16px",
-                    textAlign: "center",
-                    padding: "16px",
-                    borderRadius: "7px",
-                    boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-                    transition: "box-shadow 0.3s ease",
-                    "&:hover": {
-                      boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
-                    },
+                    flexGrow: 1,
+                    display: "flex",
+                    width: "100%",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
                   }}
                 >
-                  <Typography
-                    variant="body2"
-                    fontWeight={300}
-                    sx={{ color: "#2F4858" }}
+                  <Paper
+                    sx={{
+                      marginTop: "16px",
+                      textAlign: "center",
+                      padding: "16px",
+                      borderRadius: "7px",
+                      boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+                      transition: "box-shadow 0.3s ease",
+                      "&:hover": {
+                        boxShadow: "0px 0px 8px rgba(0,0,0,0.2)",
+                      },
+                    }}
                   >
-                    Adoption Fee
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    fontWeight={600}
-                    component="p"
-                    sx={{ color: "#2F4858" }}
-                  >
-                    PHP {animal.price}.00
-                  </Typography>
-                </Paper>
+                    <Typography
+                      variant="body2"
+                      fontWeight={300}
+                      sx={{ color: "#2F4858" }}
+                    >
+                      Adoption Fee
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      fontWeight={600}
+                      component="p"
+                      sx={{ color: "#2F4858" }}
+                    >
+                      PHP {animal.price}.00
+                    </Typography>
+                  </Paper>
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={12} md={6} order={{ xs: 1, md: 2 }}>

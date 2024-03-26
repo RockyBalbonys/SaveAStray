@@ -6,8 +6,6 @@ const QSection2 = () => {
   const { answers, updateAnswer } = useQuestionnaireContext();
   const { awareAdoptionFee } = answers.section2;
 
-  console.log(answers);
-
   const handleRadioChange = (e) => {
     updateAnswer("section2", "awareAdoptionFee", !awareAdoptionFee);
   };

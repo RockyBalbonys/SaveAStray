@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginFailed, loginSuccess } from "../tools/authActions";
 
-const useFormSubmit = (selectedRole) => {
+const useLogin = (selectedRole) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,6 +17,7 @@ const useFormSubmit = (selectedRole) => {
   const [loginAttempted, setLoginAttempted] = useState(false);
   const [userIn, setUserIn] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [userNotFound, setUserNotFound] = useState(false);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -54,48 +55,34 @@ const useFormSubmit = (selectedRole) => {
         response.data.checked === true
       ) {
         dispatch(loginFailed());
-        setLoginAttempted(true);
-        setUserIn(false);
+        // setLoginAttempted(true);
+        // setUserIn(false);
+        setUserNotFound(true);
+        setPasswordError(false);
+      } else if (
+        response.data.status === 401 &&
+        response.data.checked === true
+      ) {
         setPasswordError(true);
+        setUserNotFound(false);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const handleCallbackResponse = (response) => {
-    const cred = response.credential;
-
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/api/googleLogin`, { cred })
-      .then(function (response) {
-        if (response.data.status === 200 && response.data.checked === true) {
-          const user = response.data.user;
-          dispatch(loginSuccess(formData.loginRole, user));
-          navigate("/Animals");
-        } else if (
-          response.data.status === 400 &&
-          response.data.checked === true
-        ) {
-          dispatch(loginFailed());
-          setLoginAttempted(true);
-          setUserIn(false);
-        }
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  };
-
   return {
     formData,
-    loginAttempted,
-    userIn,
+    // loginAttempted,
+    // userIn,
     handleChange,
     loginSubmit,
-    handleCallbackResponse,
+    // handleCallbackResponse,
     passwordError,
+    userNotFound,
+    dispatch,
+    navigate,
   };
 };
 
-export default useFormSubmit;
+export default useLogin;
