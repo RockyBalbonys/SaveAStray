@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -16,6 +17,7 @@ import {
   Icon,
   Stack,
 } from "@mui/material";
+import useAuth from "../hooks/useAuth";
 
 //Custom Components
 import { FormPaper } from "../Components/Paper/FormPaper";
@@ -46,11 +48,45 @@ export const AccountShelter = () => {
 };
 
 const AccountForm = () => {
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [formData, setFormData] = useState({
+    userId: user,
+    shelterName: "",
+    shelterAddress: "",
+    cityAddress: "",
+    zipCode: "",
+    shelterEmailAddress: "",
+    shelterPhoneNumber: "",
+    animalAdoptionFeeForDogs: "",
+    animalAdoptionFeeForCats: "",
+    representativeFirstName: "",
+    representativeLastName: "",
+    representativeHomeAddress: "",
+    representativeCityAddress: "",
+    representativeZipCode: "",
+    //representativeBirthdate: null,
+    representativePhoneNumber: "",
+  });
 
   const handleSaveChanges = () => {
-    console.log("Update account.");
+    //console.log("Update account.");
+    axios
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
+        formData
+      )
+      .then(function (response) {
+        console.log(success);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
   const handleLogout = () => {
     console.log("initial State: ", store.getState());
     const unsubscribe = store.subscribe(() =>
@@ -83,16 +119,32 @@ const AccountForm = () => {
           <Grid item md={8} lg={9}>
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
-                <ShelterInfo />
+                <ShelterInfo
+                  formData={formData}
+                  onChange={handleChange}
+                  onSave={handleSaveChanges}
+                />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <ShelterContactInfo />
+                <ShelterContactInfo
+                  formData={formData}
+                  onChange={handleChange}
+                  onSave={handleSaveChanges}
+                />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <ShelterAdoptionFee />
+                <ShelterAdoptionFee
+                  formData={formData}
+                  onChange={handleChange}
+                  onSave={handleSaveChanges}
+                />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <ShelterRepInfo />
+                <ShelterRepInfo
+                  formData={formData}
+                  onChange={handleChange}
+                  onSave={handleSaveChanges}
+                />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
                 <ResetPass />
@@ -139,7 +191,7 @@ const AccountForm = () => {
   );
 };
 
-const ShelterInfo = () => {
+const ShelterInfo = ({ formData, onChange }) => {
   return (
     <FormPaper>
       <FormHeader header={"Rescue Shelter Information"} />
@@ -149,26 +201,38 @@ const ShelterInfo = () => {
             <Grid item sm={12}>
               <TextField
                 label="Rescue Shelter Name"
-                id="shelter-name"
+                id="shelterName"
                 fullWidth
+                value={formData.shelterName}
+                onChange={onChange}
               />
             </Grid>
             <Grid item sm={12}>
               <TextField
                 label="Rescue Shelter Address"
-                id="shelter-address"
+                id="shelterAddress"
                 fullWidth
+                value={formData.shelterAddress}
+                onChange={onChange}
               />{" "}
             </Grid>
             <Grid item sm={8}>
               <TextField
                 label="City Address"
-                id="shelter-city-address"
+                id="cityAddress"
                 fullWidth
+                value={formData.cityAddress}
+                onChange={onChange}
               />
             </Grid>
             <Grid item sm={4}>
-              <TextField label="Zip Code" id="shelter-zip-code" fullWidth />
+              <TextField
+                label="Zip Code"
+                id="zipCode"
+                fullWidth
+                value={formData.zipCode}
+                onChange={onChange}
+              />
             </Grid>
           </Grid>
         </FormControl>
@@ -177,7 +241,7 @@ const ShelterInfo = () => {
   );
 };
 
-const ShelterContactInfo = () => {
+const ShelterContactInfo = ({ formData, onChange }) => {
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader
@@ -189,18 +253,22 @@ const ShelterContactInfo = () => {
           <Grid container spacing={4}>
             <Grid item sm={12} md={12}>
               <TextField
-                id="shelter-email-address"
+                id="shelterEmailAddress"
                 type="email"
                 label="Email Address (View Only)"
                 inputProps={{ readOnly: true }}
                 sx={{ width: "100%" }}
+                value={formData.shelterEmailAddress}
+                onChange={onChange}
               />
             </Grid>
             <Grid item sm={12} md={12}>
               <TextField
-                id="shelter-phone-number"
+                id="shelterPhoneNumber"
                 label="Phone Number"
                 sx={{ width: "100%" }}
+                value={formData.shelterPhoneNumber}
+                onChange={onChange}
               />
             </Grid>
           </Grid>
@@ -210,7 +278,7 @@ const ShelterContactInfo = () => {
   );
 };
 
-const ShelterAdoptionFee = () => {
+const ShelterAdoptionFee = ({ formData, onChange }) => {
   return (
     <FormPaper>
       <FormHeader color={"#EE7200"} header={"Rescue Shelter Adoption Fee"} />
@@ -229,7 +297,13 @@ const ShelterAdoptionFee = () => {
                     columnGap={"4px"}
                   >
                     <Typography fontWeight={700}>PHP</Typography>
-                    <TextField placeholder="00.00" fullWidth />
+                    <TextField
+                      id="animalAdoptionFeeForDogs"
+                      placeholder="00.00"
+                      fullWidth
+                      value={formData.animalAdoptionFeeForDogs}
+                      onChange={onChange}
+                    />
                   </Stack>
                 </Grid>
               </Grid>
@@ -246,7 +320,13 @@ const ShelterAdoptionFee = () => {
                     columnGap={"4px"}
                   >
                     <Typography fontWeight={700}>PHP</Typography>
-                    <TextField placeholder="00.00" fullWidth />
+                    <TextField
+                      id="animalAdoptionFeeForCats"
+                      placeholder="00.00"
+                      fullWidth
+                      value={formData.animalAdoptionFeeForCats}
+                      onChange={onChange}
+                    />
                   </Stack>
                 </Grid>
               </Grid>
@@ -258,7 +338,7 @@ const ShelterAdoptionFee = () => {
   );
 };
 
-const ShelterRepInfo = () => {
+const ShelterRepInfo = ({ formData, onChange }) => {
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader
@@ -271,61 +351,75 @@ const ShelterRepInfo = () => {
             <Grid item sm={6} md={6}>
               <TextField
                 label="First Name"
-                id="rep-first-name"
+                id="representativeFirstName"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.representativeFirstName}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={6} md={6}>
               <TextField
                 label="Last Name"
-                id="rep-last-name"
+                id="representativeLastName"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.representativeLastName}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={12} md={12}>
               <TextField
                 label="Home Address"
-                id="rep-home-address"
+                id="representativeHomeAddress"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.representativeHomeAddress}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={8} md={8}>
               <TextField
                 label="City Address"
-                id="rep-city-address"
+                id="representativeCityAddress"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.representativeCityAddress}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={4} md={4}>
               <TextField
                 label="ZIP Code"
-                id="rep-zip-code"
+                id="representativeZipCode"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.representativeZipCode}
+                onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={6}>
               <DatePicker
                 label="Birthdate"
-                id="rep-birthdate"
+                //id="representativeBirthdate"
                 sx={{ width: "100%" }}
+                //value={formData.representativeBirthdate}
+                //onChange={onChange}
               />
             </Grid>
 
             <Grid item sm={6}>
               <TextField
                 label="Phone Number"
-                id="rep-birthdate"
+                id="representativePhoneNumber"
                 sx={{ width: "100%" }}
+                value={formData.representativePhoneNumber}
+                onChange={onChange}
               />
             </Grid>
           </Grid>
