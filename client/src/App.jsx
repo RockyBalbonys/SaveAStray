@@ -26,9 +26,11 @@ import { NewLogin } from "./Pages/NewLogin";
 import RequestShelter from "./Pages/RequestShelter";
 import RequestPawrent from "./Pages/RequestPawrent";
 import ScrollToTop from "./tools/scrollToTop";
+import NewSignup from "./Pages/NewSignup";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
+
   // Reroute user to manage account depending on their role
   const isPawrent =
     isLoggedIn && role === "Adoptive Pawrent" ? (
@@ -47,13 +49,17 @@ function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/newLogin" element={<NewLogin />} />
-            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/newlogin" element={<Login />} /> */}
+            <Route path="/login" element={<NewLogin />} />
+            <Route path="/signup" element={<NewSignup />} />
+            <Route path="/newsignup" element={<Signup />} />
             <Route path="/about" element={<About />} />
             <Route path="/manage" element={isPawrent} />
             <Route path="/animals" element={<AnimalsShelter />} />
-            <Route path="/questionnaire" element={<Questionnaire />} />
+            <Route
+              path="/questionnaire/:shelterId"
+              element={<Questionnaire />}
+            />
             <Route path="/articles/" element={<Articles />} />
             <Route path="/articles/:id" element={<ArticlePage />} />
             <Route path="/faq" element={<FAQ />} />

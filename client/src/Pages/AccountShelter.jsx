@@ -34,6 +34,7 @@ import avatar_placeholder from "../assets/images/avatar_placeholder.png";
 import { AccountHeader } from "../Components/Account/AccountHeader";
 import { AccountAvatar } from "../Components/Account/AccountAvatar";
 import AccountDrawer from "../Components/Account/AccountDrawer";
+import { useNavigate } from "react-router-dom";
 
 export const AccountShelter = () => {
   return (
@@ -47,8 +48,7 @@ export const AccountShelter = () => {
 };
 
 const AccountForm = () => {
-  
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     userId: user,
     shelterName: "",
@@ -67,17 +67,20 @@ const AccountForm = () => {
     //representativeBirthdate: null,
     representativePhoneNumber: "",
   });
-  
+
   const handleSaveChanges = () => {
     //console.log("Update account.");
     axios
-    .post(`${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`, formData)
-    .then(function (response) {
-      console.log(success);
-    })
-    .catch(function(error){
-      console.log(error);
-    })
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
+        formData
+      )
+      .then(function (response) {
+        console.log(success);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handleChange = (e) => {
@@ -85,8 +88,8 @@ const AccountForm = () => {
   };
 
   const handleLogout = () => {
-
     console.log("initial State: ", store.getState());
+<<<<<<< HEAD
           const unsubscribe = store.subscribe(() =>
             console.log("Updated state: ", store.getState())
           );
@@ -94,6 +97,16 @@ const AccountForm = () => {
           store.dispatch(logout());
           unsubscribe();
 /*       setLoginAttempted(true);
+=======
+    const unsubscribe = store.subscribe(() =>
+      console.log("Updated state: ", store.getState())
+    );
+    console.log("401");
+    store.dispatch(logout());
+    unsubscribe();
+    navigate("/login");
+    /*           setLoginAttempted(true);
+>>>>>>> 3539d4a7e5eeb95e5f81054db00aa02f39b614db
           setUserIn(false); */
   };
   return (

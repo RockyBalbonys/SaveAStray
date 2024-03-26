@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { store, persistor } from "../tools/store";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import useAuth from "./useAuth";
 import axios from "axios";
 
@@ -56,6 +56,7 @@ const useQuestionnaire = () => {
       preferTime: [],
       validID: "",
     },
+    toShelter: "",
   });
 
   // Function to update user answers
@@ -69,34 +70,43 @@ const useQuestionnaire = () => {
     }));
   };
 
+  const handleShelterId = (toShelter, shelterId) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      toShelter: shelterId,
+    }));
+  };
+
   //TODO: Function to submit answers to the database
   const submitAnswers = () => {
     console.log("current state: ", store.getState());
     console.log("Current User: ", user);
 
-    const respondent = user
-    const section1 = answers.section1
-    const section2 = answers.section2
-    const section3 = answers.section3
-    const section4 = answers.section4
-    const section5 = answers.section5
-    const section6 = answers.section6 
+    const respondent = user;
+    const section1 = answers.section1;
+    const section2 = answers.section2;
+    const section3 = answers.section3;
+    const section4 = answers.section4;
+    const section5 = answers.section5;
+    const section6 = answers.section6;
+    const toShelter = answers.toShelter;
 
-  axios.post(`${process.env.REACT_APP_SERVER_URL}/api/sendAnswers`, {
-      respondent,
-      section1,
-      section2,
-      section3,
-      section4,
-      section5,
-      section6,
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function(error){
-      console.log(error);
-    })
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/sendAnswers`, {
+        respondent,
+        section1,
+        section2,
+        section3,
+        section4,
+        section5,
+        section6,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   // Return the state, update function, and submit function for external use
@@ -104,6 +114,7 @@ const useQuestionnaire = () => {
     answers,
     updateAnswer,
     submitAnswers,
+    handleShelterId,
   };
 };
 

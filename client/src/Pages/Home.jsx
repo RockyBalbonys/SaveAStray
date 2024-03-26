@@ -22,8 +22,6 @@ import Donate from "../Components/PageComponent/Donate";
 import Footer from "../Components/PageComponent/Footer";
 import { cardContent, helpContent } from "../constants/landingPage";
 
-
-
 export const Home = () => {
   return (
     <>
@@ -188,12 +186,7 @@ function HeroCard() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: "-10rem", zIndex: "100" }}>
-      <Grid
-        container
-        justifyContent="center"
-        spacing={2}
-        alignContent="top"
-      >
+      <Grid container justifyContent="center" spacing={2} alignContent="top">
         {cardContent.map((card, index) => (
           <Grid item md={4} key={index} width="300px">
             <Card
@@ -237,7 +230,7 @@ function HeroCard() {
                   endIcon={<ChevronRightIcon />}
                   sx={{ textTransform: "none" }}
                   component={RouterLink}
-                  to={`/articles/${index+5}`}
+                  to={`/articles/${index + 5}`}
                 >
                   Read more
                 </CustomButton>
@@ -283,7 +276,11 @@ function AboutContent() {
               </Typography>
             </Box>
             <Stack direction="row" spacing={1}>
-              <CustomButton variant="contained" endIcon={<ChevronRightIcon />} href="/About">
+              <CustomButton
+                variant="contained"
+                endIcon={<ChevronRightIcon />}
+                href="/About"
+              >
                 Read more
               </CustomButton>
               <CustomButton variant="outlined">Donate</CustomButton>
@@ -309,7 +306,11 @@ function AboutContent() {
               paddingLeft: 10,
             }}
           >
-            <img src={aboutImage} style={{borderRadius: "7px" }} alt="about image" />
+            <img
+              src={aboutImage}
+              style={{ borderRadius: "7px" }}
+              alt="about image"
+            />
           </Box>
         </Grid>
       </Grid>
@@ -333,7 +334,7 @@ function HelpContent() {
         <Typography mb={2} variant="h4" component="div" fontWeight="bold">
           How You Can Help
         </Typography>
-        <Typography maxWidth="600px" >
+        <Typography maxWidth="600px">
           A little help with caring hearts can become a wave of compassion,
           protecting a multitude of our animal companions
         </Typography>
@@ -354,7 +355,7 @@ function HelpCard() {
         columnSpacing={3}
       >
         {helpContent.map((card, index) => (
-           <HelpCardItem card={card} index={index} />
+          <HelpCardItem key={index} card={card} index={index} />
         ))}
       </Grid>
     </Container>
@@ -446,8 +447,8 @@ function HelpCardItem({ card, index }) {
         <CardActions>
           <Box textAlign="center" width="100%">
             <CustomButton
-            component={RouterLink}
-            to={`/articles/${index+8}`} 
+              component={RouterLink}
+              to={`/articles/${index + 8}`}
               sx={{
                 padding: 0,
                 margin: 0,
@@ -472,8 +473,7 @@ function MeetTheRescues() {
         mt: { xs: "40px", sm: "50px", md: "195px", color: "#2F4858" },
       }}
     >
-
-        <Box
+      <Box
         textAlign="center"
         sx={{
           display: "flex",
@@ -487,19 +487,24 @@ function MeetTheRescues() {
           Meet The Rescues
         </Typography>
         <Typography maxWidth="600px" mb={3}>
-          In shelters everywhere, rescued animals find solace and hope. Join us in giving them a voice through rescue.
+          In shelters everywhere, rescued animals find solace and hope. Join us
+          in giving them a voice through rescue.
         </Typography>
         <Grid container textAlign="center" columnSpacing={4}>
           <Grid item xs={12} sm={12} md={6} mb={2}>
             <Box>
               <ButtonAnimals img={dogImage} />
-              <Typography color="initial" mt={1}>Dogs</Typography>
+              <Typography color="initial" mt={1}>
+                Dogs
+              </Typography>
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={6} mb={2}>
             <Box>
               <ButtonAnimals img={catImage} />
-              <Typography color="initial" mt={1}>Cats</Typography>
+              <Typography color="initial" mt={1}>
+                Cats
+              </Typography>
             </Box>
           </Grid>
         </Grid>

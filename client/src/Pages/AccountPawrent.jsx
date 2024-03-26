@@ -34,6 +34,7 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 // Avatar Component
 import { AccountAvatar } from "../Components/Account/AccountAvatar";
 import AccountDrawer from "../Components/Account/AccountDrawer";
+import { useNavigate } from "react-router-dom";
 
 export const AccountPawrent = () => {
   return (
@@ -47,8 +48,7 @@ export const AccountPawrent = () => {
 };
 
 const AccountForm = () => {
-
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     userId: user,
@@ -62,8 +62,7 @@ const AccountForm = () => {
   });
 
   const handleSaveChanges = () => {
-    axios
-    .post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
+    axio.post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
     .then(function (response) {
       console.log(response);
     })
@@ -77,14 +76,16 @@ const AccountForm = () => {
   };
 
   const handleLogout = () => {
-          console.log("initial State: ", store.getState());
-          const unsubscribe = store.subscribe(() =>
-            console.log("Updated state: ", store.getState())
-          );
-          console.log("401");
-          store.dispatch(logout());
-          unsubscribe();
-/*           setLoginAttempted(true);
+    console.log("initial State: ", store.getState());
+    const unsubscribe = store.subscribe(() =>
+      console.log("Updated state: ", store.getState())
+    );
+    console.log("401");
+    store.dispatch(logout());
+    unsubscribe();
+    navigate("/login");
+
+    /*           setLoginAttempted(true);
           setUserIn(false); */
   };
   return (
@@ -107,7 +108,7 @@ const AccountForm = () => {
           <Grid item md={8} lg={9}>
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
-                <PersonalInfoCard 
+                <PersonalInfoCard
                   formData={formData}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
