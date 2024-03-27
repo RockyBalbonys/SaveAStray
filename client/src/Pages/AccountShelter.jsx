@@ -49,6 +49,27 @@ export const AccountShelter = () => {
 
 const AccountForm = () => {
   const { user } = useAuth();
+
+  //API Fetch Shelter Info
+  const [shelterInfo, setShelterInfo] = useState(null);
+
+  useEffect(() => {
+    fetchShelterInfo(user);
+  }, [user]);
+
+  const fetchShelterInfo = async (userId) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/shelterInfo`, {
+        params: {
+          userId,
+        },
+      });
+      setShelterInfo(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   const [formData, setFormData] = useState({
     userId: user,
     shelterName: "",

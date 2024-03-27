@@ -50,6 +50,26 @@ export const AccountPawrent = () => {
 const AccountForm = () => {
   const { user } = useAuth();
 
+  //API Fetch Pawrent Info
+  const [pawrentInfo, setPawrentInfo] = useState(null);
+
+  useEffect(() => {
+    fetchPawrentInfo(user);
+  }, [user]);
+
+  const fetchPawrentInfo = async (userId) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo`, {
+        params: {
+          userId,
+        },
+      });
+      setPawrentInfo(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [formData, setFormData] = useState({
     userId: user,
     firstName: "",

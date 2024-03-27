@@ -608,6 +608,19 @@ app.post("/api/updateShelterInfo", async (req, res) => {
   }
 });
 
+//Fetch Shelter Info API
+app.get('/api/shelterInfo', async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const shelterInfo = await ShelterInfo.findOne({ userId });
+    res.json(shelterInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 // Pawrent Info API
 app.post("/api/updatePawrentInfo", async (req, res) => {
   const userId = req.body.userId;
@@ -653,6 +666,19 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
   } catch (error) {
     console.error("Error updating pawrent info:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//Fetch Pawrent Info API
+app.get('/api/pawrentInfo', async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const pawrentInfo = await PawrentInfo.findOne({ userId });
+    res.json(pawrentInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 
