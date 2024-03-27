@@ -449,11 +449,13 @@ app.post('/api/sendAnswers', async (req, res) => {
   const section4 = data.section4
   const section5 = data.section5
   const section6 = data.section6
-  //const toShelter 
+  const toShelter = data.toShelter
+  const timestamp = Date.now()
   if (data) {
     try {
       const newQuestRes = new QuestRes({
         respondent,
+        timestamp,
         answers: {
           section1,
           section2,
@@ -489,22 +491,54 @@ app.get("/getPet", async (req, res) => {
   }
 });
 app.post("/api/fetchRequests", async (req, res) => {
-  try {
-    const allAnswers = await QuestRes.find();
-      if (allAnswers) {
-        const mappedAnswers = allAnswers.map(async (answer) => {
-          const { respondent } = answer;
-          const pawrentInfo = await PawrentInfo.find({ userId: respondent });
-    /// new plan: kukunin ang toShelter na id para yon na lang ifefetch
-        });
+  const { user } = req.body;
 
-      } else {
-        console.log("No answers");
-      }
- 
+  try {
+    const allAnswers = await QuestRes.find({ toShelter: user });
+
+    if (!allAnswers) {
+      console.log("No answers found");
+      return res.status(200).send({ status: 200, respondent: null, allAnswers: [] }); // Send empty response
+    }
+
+    const mappedAnswers = await Promise.all(
+      allAnswers.map(async (answer) => {
+        const { respondent } = answer;
+        const pawrentInfo = await PawrentInfo.find({ userId: respondent });
+
+        if (!pawrentInfo || pawrentInfo.length === 0) {
+          return {
+            firstName: "A user", 
+          };
+        }
+        const mappedRespondentInfo = pawrentInfo.map((info) => ({
+          firstName: info.firstName,
+        }));
+
+        return {
+          firstName: mappedRespondentInfo[0].firstName, 
+        };
+      })
+    );
+    if (allAnswers[0] == undefined) {
+      res.send({
+        status: 200,
+        respondent: null,
+        allAnswers: null,
+      });
+    } else {
+      const { respondent } = allAnswers[0]; // Assuming respondent is consistent across allAnswers
+      console.log(mappedAnswers);
+    res.send({
+      status: 200,
+      respondent,
+      allAnswers: mappedAnswers,
+    });
+    }
+    
   } catch (err) {
-    console.log("error: ", err);
-    res.status(500).send({ message: "Internal Server Error" }); // Handle errors appropriately
+    console.error("Error:", err);
+    res.status(500).send({ message: "Internal Server Error" });
   }
 });
 

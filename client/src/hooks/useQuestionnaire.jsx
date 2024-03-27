@@ -100,6 +100,7 @@ const useQuestionnaire = () => {
         section4,
         section5,
         section6,
+        toShelter
       })
       .then(function (response) {
         console.log(response);

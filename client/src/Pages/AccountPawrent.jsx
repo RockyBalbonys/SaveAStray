@@ -62,7 +62,7 @@ const AccountForm = () => {
   });
 
   const handleSaveChanges = () => {
-    axio.post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
     .then(function (response) {
       console.log(response);
     })

@@ -118,27 +118,32 @@ const actions = [
 function RequestShelter() {
   const navigate = useNavigate();
   const { user } = useAuth()
-  const [adoptionRequests, setAdoptionRequests] = useState([]);
-  
+  const [ adoptionRequests, setAdoptionRequests ] = useState([]);
+
   useEffect(() => {
     axios.post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
       user
     })
       .then(function (response) {
-        const { allAnswers } = response.data;
-        const transformedRequests = allAnswers.map(function (answer) {
-          return {
-            name: answer.pawrentName, 
-          };
-        });
-        setAdoptionRequests(transformedRequests); // Update state with transformed data
-        console.log(transformedRequests);
+        const { allAnswers, respondent } = response.data;
+        if (!respondent) {
+          setAdoptionRequests(0); // Update state with transformed data
+          console.log(adoptionRequests);
+          console.log("No requests at the moment");
+        } else {
+          const transformedRequests = allAnswers.map(function (answer) {
+            return {
+              name: answer.firstName, 
+            };
+          });
+          setAdoptionRequests(transformedRequests); // Update state with transformed data
+          console.log(transformedRequests);
+        }
       })
       .catch(function (err) {
         console.log(err);
       });
   }, []); 
- 
 
 
 
@@ -172,7 +177,9 @@ function RequestShelter() {
       </div>
       <div className="bg-[#FAFAFB] h-full">
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
-          {adoptionRequests.map((request, index) => (
+          {
+            adoptionRequests.length > 0 ? (
+          adoptionRequests.map((request, index) => (
             <div
               key={index}
               onClick={() => handleClick(request.redirectTo)}
@@ -293,7 +300,11 @@ function RequestShelter() {
                 </Box>
               </Box>
             </div>
-          ))}
+          ))
+            ) : (
+              <p>No adoption requests found.</p>
+            )
+          }
         </Container>
       </div>
       <Footer />

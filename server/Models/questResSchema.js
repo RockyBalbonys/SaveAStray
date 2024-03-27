@@ -6,6 +6,9 @@ const questResSchema = new mongoose.Schema(
             type: String,
             unique: true
         },
+        timestamp: {
+            type: Date
+        },
         toShelter: {
             type: String
         },
