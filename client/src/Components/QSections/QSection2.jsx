@@ -1,6 +1,7 @@
 import { Paper, FormControl, FormControlLabel } from "@mui/material";
 import { CheckboxSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
+import { memo } from "react";
 
 const QSection2 = () => {
   const { answers, updateAnswer } = useQuestionnaireContext();
@@ -55,4 +56,4 @@ const Awareness = ({ value, onChange }) => {
   );
 };
 
-export default QSection2;
+export default memo(QSection2);

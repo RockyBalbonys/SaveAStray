@@ -1,6 +1,18 @@
+// react and other functions
 import React, { useEffect, useState } from "react";
-import myPassive from "../assets/images/top.png";
-import logo from "../assets/icons/SAS_Logo4.png";
+import useLogin from "../../hooks/useLogin";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import { store } from "../../tools/store";
+import { loginSuccess } from "../../tools/authActions";
+
+// icons and images
+import myPassive from "../../assets/images/top.png";
+import logo from "../../assets/icons/SAS_Logo4.png";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
+// mui components
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -10,18 +22,11 @@ import InputLabel from "@mui/material/InputLabel";
 import styled from "@emotion/styled";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputBase from "@mui/material/InputBase";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Paper from "@mui/material/Paper";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
-import useLogin from "../hooks/useLogin";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-import { store } from "../tools/store";
-import { loginSuccess } from "../tools/authActions";
 
-export const NewLogin = () => {
+function Login() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const roleSelected = params.get("role");
@@ -112,7 +117,9 @@ export const NewLogin = () => {
       </div>
     </>
   );
-};
+}
+
+export default Login;
 
 function LoginCard({
   role,
@@ -331,7 +338,7 @@ function LoginCard({
                 <p className="font-light cursor-pointer">
                   <Link to="/forgot">Forgot Password?</Link>
                 </p>
-                <Link to="/signup">
+                <Link to="/register">
                   <p className="font-bold cursor-pointer">Need an account?</p>
                 </Link>
               </div>

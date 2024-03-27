@@ -1,4 +1,6 @@
+// react and other functions
 import React, { useEffect, useState } from "react";
+
 // mui components
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -9,8 +11,8 @@ import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
 
 // images, icons
-import myPassive from "../assets/images/top.png";
-import logo from "../assets/icons/SAS_Logo4.png";
+import myPassive from "../../assets/images/top.png";
+import logo from "../../assets/icons/SAS_Logo4.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
@@ -20,14 +22,14 @@ import {
   InputHelperTextStyle,
   InputLabelStyle,
   UserInput,
-} from "./NewLogin";
-import TermsAndPrivacyModal from "../Components/TermsAndPrivacyModal";
-import UseSignup from "../hooks/useSignup";
+} from "./Login";
+import TermsAndPrivacyModal from "../../Components/TermsAndPrivacyModal";
+import UseSignup from "../../hooks/useSignup";
 
 // react functions
 import { Link } from "react-router-dom";
 
-const NewSignup = () => {
+const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -85,7 +87,7 @@ const NewSignup = () => {
   );
 };
 
-export default NewSignup;
+export default Register;
 
 function SignupCard({
   showPass,

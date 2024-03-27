@@ -7,9 +7,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Box, IconButton, Alert } from "@mui/material";
-import TermsAndPrivacyModal from "../Components/TermsAndPrivacyModal";
+import TermsAndPrivacyModal from "../../Components/TermsAndPrivacyModal";
 
-function Signup() {
+function OldSignup() {
   const [formData, setFormData] = useState({
     regEmail: "",
     regPass: "",
@@ -264,4 +264,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default OldSignup;

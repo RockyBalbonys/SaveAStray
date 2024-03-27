@@ -1,5 +1,9 @@
+// import react and other functions
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+
+// import mui components
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
@@ -16,21 +20,26 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
+
+// import icons and images
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import facebook_icon from "../../assets/icons/facebook.png";
 import email_icon from "../../assets/icons/email.png";
 import telegram_icon from "../../assets/icons/telegram.png";
-import { pages } from "../../constants/landingPage";
-import { CustomButton } from "../Button/CustomButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import IconLinks from "../IconLinks";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import CustomLink from "../CustomLink";
-import useAuth from "../../hooks/useAuth";
 import messageIcon from "../../assets/icons/Message Icon.svg";
 import bellIcon from "../../assets/icons/Bell Icon.svg";
 import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
+
+// import constant datas
+import { pages } from "../../constants/landingPage";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+
+// import custom components
+import { CustomButton } from "../Button/CustomButton";
+import CustomLink from "../CustomLink";
+import IconLinks from "../IconLinks";
 
 const icons = [
   { icon: facebook_icon, alt: "facebook icon" },
@@ -42,7 +51,7 @@ export default function Navbar() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, role } = useAuth();
 
   const handleDrawerOpen = () => {
     setOpenDrawer(true);
@@ -190,7 +199,10 @@ export default function Navbar() {
               </Menu>
 
               {isLoggedIn ? (
-                <DisplayUserComponents />
+                <DisplayUserComponents
+                  userIsLoggedIn={isLoggedIn}
+                  userRole={role}
+                />
               ) : (
                 <CustomButton
                   variant="contained"
@@ -300,7 +312,7 @@ export default function Navbar() {
   );
 }
 
-function DisplayUserComponents() {
+function DisplayUserComponents({ userIsLoggedIn, userRole }) {
   return (
     <>
       <Box display={"flex"} sx={{ alignItems: "center", columnGap: "12px" }}>
@@ -324,19 +336,33 @@ function DisplayUserComponents() {
             />
           </RouterLink>
         </Tooltip>
-        <AvatarRing />
+        <AvatarRing accountIsLoggedIn={userIsLoggedIn} accountRole={userRole} />
       </Box>
     </>
   );
 }
 
-const AvatarRing = () => {
+const AvatarRing = ({ accountIsLoggedIn, accountRole }) => {
+  let manageAccountLink = "/login"; // Default link to login page
+
+  // Determine the manage account link based on the user's role
+  if (accountIsLoggedIn) {
+    if (accountRole === "Adoptive Pawrent") {
+      manageAccountLink = "/manage/pawrent";
+    } else if (accountRole === "Rescue Shelter") {
+      manageAccountLink = "/manage/shelter";
+    }
+  }
+
+  console.log("Navbar logged in: " + accountIsLoggedIn);
+  console.log("Navbar role: " + accountRole);
+
   return (
     <>
       <Tooltip title="Manage Account">
         <Avatar
           component={RouterLink}
-          to="/manage"
+          to={manageAccountLink}
           alt="avatar placeholder"
           src={avatar_placeholder}
           sx={{
