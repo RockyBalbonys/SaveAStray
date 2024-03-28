@@ -1,4 +1,6 @@
+// react and other functions
 import React, { useEffect, useState } from "react";
+
 // mui components
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -7,12 +9,15 @@ import FormHelperText from "@mui/material/FormHelperText";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 // images, icons
-import myPassive from "../assets/images/top.png";
-import logo from "../assets/icons/SAS_Logo4.png";
+import myPassive from "../../assets/images/top.png";
+import logo from "../../assets/icons/SAS_Logo4.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 // stlyes, custom component
 import {
@@ -20,14 +25,14 @@ import {
   InputHelperTextStyle,
   InputLabelStyle,
   UserInput,
-} from "./NewLogin";
-import TermsAndPrivacyModal from "../Components/TermsAndPrivacyModal";
-import UseSignup from "../hooks/useSignup";
+} from "./Login";
+import TermsAndPrivacyModal from "../../Components/TermsAndPrivacyModal";
+import UseSignup from "../../hooks/useSignup";
 
 // react functions
 import { Link } from "react-router-dom";
 
-const NewSignup = () => {
+const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -85,7 +90,7 @@ const NewSignup = () => {
   );
 };
 
-export default NewSignup;
+export default Register;
 
 function SignupCard({
   showPass,
@@ -164,6 +169,13 @@ function SignupCard({
         <Grid container sx={{ width: "100%", height: "100%" }}>
           <Grid item xs={12} sm={12} md={6}>
             <div className="md:p-8 lg:p-8 p-6 sm:p-8 py-20 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
+              <Tooltip title="Back to Home">
+                <IconButton sx={{ alignSelf: "flex-start" }}>
+                  <Link to={"/"}>
+                    <ArrowBackRoundedIcon sx={{ color: "#FF7A00" }} />
+                  </Link>
+                </IconButton>
+              </Tooltip>
               <p className="text-[24px] text-[#FF7A00] mb-9">
                 Create an Account
               </p>

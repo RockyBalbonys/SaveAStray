@@ -1,26 +1,30 @@
+// react and other components
 import { useState, useEffect } from "react";
 import * as React from "react";
 import axios from "axios";
-import Background from "../Components/Background";
-import {
-  Container,
-  Box,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Slide,
-} from "@mui/material";
-import topImage from "../assets/images/top.png";
-import logo from "../assets/icons/SAS_Logo4.png";
-import { VerifyButton } from "../Components/Button/CustomButton";
-import { StyledPaper } from "../Components/Paper/StyledPaper";
-import { PawrentIcon } from "../assets/icons/RoleIcons/PawrentIcon";
-import ShelterIcon from "../assets/icons/RoleIcons/ShelterIcon";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+
+// custom components
+import { VerifyButton } from "../../Components/Button/CustomButton";
+import { StyledPaper } from "../../Components/Paper/StyledPaper";
+
+// mui components
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Slide from "@mui/material/Slide";
+
+// icons and images
+import topImage from "../../assets/images/top.png";
+import logo from "../../assets/icons/SAS_Logo4.png";
+import { PawrentIcon } from "../../assets/icons/RoleIcons/PawrentIcon";
+import ShelterIcon from "../../assets/icons/RoleIcons/ShelterIcon";
 
 export default function Verify() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -64,7 +68,7 @@ export default function Verify() {
       })
       .then((response) => {
         console.log("Response from POST request:", response.data);
-        navigate('/manage')
+        navigate("/manage");
       })
       .catch((error) => {
         console.error("Error in POST request:", error);

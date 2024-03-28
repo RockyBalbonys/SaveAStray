@@ -1,11 +1,20 @@
-import React from "react";
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
-import Background from "../Components/Background";
-import passive from "../assets/images/top.png";
-import logo from "../assets/icons/SAS_Logo4.png";
-import dogCover from "../assets/images/dogCoverSmall.png";
+// mui components
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
-export const DeadEnd = () => {
+// custom components
+import Background from "../../Components/Background";
+
+// icons and images
+import passive from "../../assets/images/top.png";
+import logo from "../../assets/icons/SAS_Logo4.png";
+import dogCover from "../../assets/images/dogCoverSmall.png";
+
+function DeadEnd() {
   return (
     <>
       <Background display={"flex"} align={"center"}>
@@ -99,4 +108,6 @@ export const DeadEnd = () => {
       </Background>
     </>
   );
-};
+}
+
+export default DeadEnd;

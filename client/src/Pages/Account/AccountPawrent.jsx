@@ -1,42 +1,40 @@
-import React, { useEffect, useState } from "react";
+// react and other functions
+import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { store, persistor } from "../../tools/store";
+import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
+import useAuth from "../../hooks/useAuth";
+
+// mui components
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import Icon from "@mui/material/Icon";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import { store, persistor } from "../tools/store";
-import { loginFailed, loginSuccess, logout } from "../tools/authActions";
 
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  Grid,
-  Icon,
-  Stack,
-} from "@mui/material";
-import useAuth from "../hooks/useAuth";
-
-//Custom Components
-import { FormPaper } from "../Components/Paper/FormPaper";
-import { AccountHeader } from "../Components/Account/AccountHeader";
-
-//Footer
-import Footer from "../Components/PageComponent/Footer";
+// Custom Components
+import { FormPaper } from "../../Components/Paper/FormPaper";
+import { AccountHeader } from "../../Components/Account/AccountHeader";
+import Footer from "../../Components/PageComponent/Footer";
 
 // Icons
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 // Avatar Component
-import { AccountAvatar } from "../Components/Account/AccountAvatar";
-import AccountDrawer from "../Components/Account/AccountDrawer";
-import { useNavigate } from "react-router-dom";
+import { AccountAvatar } from "../../Components/Account/AccountAvatar";
+import AccountDrawer from "../../Components/Account/AccountDrawer";
 
-export const AccountPawrent = () => {
+function AccountPawrent() {
   return (
     <>
       <AccountHeader />
@@ -45,9 +43,12 @@ export const AccountPawrent = () => {
       <AccountDrawer />
     </>
   );
-};
+}
+
+export default AccountPawrent;
 
 const AccountForm = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({

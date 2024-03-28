@@ -3,6 +3,7 @@ import RadioGroupWithLabels from "./RadioGroupWithLabels";
 import InputField from "./InputField";
 import { paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
+import { memo } from "react";
 
 const QSection5 = () => {
   const { answers, updateAnswer } = useQuestionnaireContext();
@@ -111,15 +112,15 @@ const QSection5 = () => {
   );
 };
 
-const RadioGroupQuestion = ({ label, options }) => {
+const RadioGroupQuestion = ({ label, options, onChange }) => {
   return (
     <div className="input-container w-full sm:flex-col sm:items-start">
       <label htmlFor={label} className="font-bold">
         {label}
       </label>
-      <RadioGroupWithLabels id={label} options={options} />
+      <RadioGroupWithLabels id={label} options={options} onChange={onChange} />
     </div>
   );
 };
 
-export default QSection5;
+export default memo(QSection5);
