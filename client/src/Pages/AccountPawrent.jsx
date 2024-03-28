@@ -244,6 +244,8 @@ const PersonalInfoCard = ({ formData, onChange }) => {
                 id="zipCode"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.zipCode}
+                onChange={onChange}
               />
             </Grid>
 
