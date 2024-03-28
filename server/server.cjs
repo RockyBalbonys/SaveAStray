@@ -521,7 +521,7 @@ app.get("/api/filteredPets", async (req, res) => {
     const { species, sex, age, size, status } = req.query;
     let filter = {};
 
-    if (species) filter.type = species;
+    if (species) filter.species = species;
     if (sex) filter.sex = sex;
     if (age) filter.age = age;
     if (size) filter.size = size;

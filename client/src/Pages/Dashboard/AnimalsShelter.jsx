@@ -1,18 +1,45 @@
-import { Container, Grid, Typography } from "@mui/material";
-import animalHero from "../assets/images/animals/animalHero.png";
+// react and other functions
 import React, { useEffect, useState } from "react";
-import Footer from "../Components/PageComponent/Footer";
-import { SortByButton } from "../Components/SortByButton";
-import { SearchInput } from "../Components/SearchInput";
+import useAuth from "../../hooks/useAuth";
 import axios from "axios";
-import { FilterOptions } from "../Components/FilterOptions";
-import { SelectShelter } from "../Components/SelectShelter";
-import { ascendingPets, descendingPets } from "../constants/sortLogic";
-import PawrentCard from "../Components/Card/PawrentCard";
-import { filteredOptions } from "../constants/animals";
 
-const AnimalsPawrent = () => {
+// custom components
+import AnimalCard from "../../Components/Card/AnimalCard";
+import Footer from "../../Components/PageComponent/Footer";
+import { SortByButton } from "../../Components/SortByButton";
+import { FilterOptions } from "../../Components/FilterOptions";
+import ModalAddPet from "../../Components/Modal/ModalAddPet";
+import { SearchInput } from "../../Components/SearchInput";
+import PawrentCard from "../../Components/Card/PawrentCard";
+import { SelectShelter } from "../../Components/SelectShelter";
+
+// mui components
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Pagination from "@mui/material/Pagination";
+
+// constant datas
+import {
+  defaultUploadedImages,
+  filteredOptions,
+  defaultAnimalData,
+} from "../../constants/animals";
+
+// sorting logic
+import { ascendingPets, descendingPets } from "../../constants/sortLogic";
+
+// icons and images
+import animalHero from "../../assets/images/animals/animalHero.png";
+import AddIcon from "@mui/icons-material/Add";
+
+const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
+  const { isLoggedIn, user, role } = useAuth();
+
+  const isShelter = role === "Rescue Shelter";
 
   console.table(animals);
 
@@ -29,6 +56,7 @@ const AnimalsPawrent = () => {
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
+        console.log(allPets);
       })
       .catch(function (error) {
         console.log(error);
@@ -46,17 +74,12 @@ const AnimalsPawrent = () => {
 
       let filteredPets = response.data.filteredPets;
 
-      // Apply sorting logic to the filtered subset of animals
       if (sortBy === "Ascending") {
         filteredPets = filteredPets.sort((a, b) => {
-          // Sorting logic for ascending order
-          // For example, compare the name property of animals
           return a.name.localeCompare(b.name);
         });
       } else if (sortBy === "Descending") {
         filteredPets = filteredPets.sort((a, b) => {
-          // Sorting logic for descending order
-          // For example, compare the name property of animals
           return b.name.localeCompare(a.name);
         });
       }
@@ -68,6 +91,9 @@ const AnimalsPawrent = () => {
   };
 
   const handleFilterChange = (filterType, value) => {
+    if (filterType === "pet type") {
+      filterType = "species";
+    }
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterType]: value,
@@ -85,9 +111,9 @@ const AnimalsPawrent = () => {
     const selectedSortBy = e.target.value;
     setSortBy((prevSortBy) => {
       if (selectedSortBy === "Ascending") {
-        setAnimals(ascendingPets);
+        setAnimals(ascendingPets(animals));
       } else if (selectedSortBy === "Descending") {
-        setAnimals(descendingPets);
+        setAnimals(descendingPets(animals));
       }
       return selectedSortBy;
     });
@@ -106,16 +132,6 @@ const AnimalsPawrent = () => {
     setSearchValue(event.target.value);
   };
 
-  // Select shelter
-  const [shelter, setShelter] = useState("");
-
-  const handleChangeShelter = (e) => {
-    const selectedShelter = e.target.value;
-
-    // TODO: Shelter change logic
-    setShelter(selectedShelter);
-  };
-
   // Pagination
   const itemsPerPage = 20;
   const [currentPage, setCurrentPage] = useState(1);
@@ -127,6 +143,17 @@ const AnimalsPawrent = () => {
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
+
+  // Select shelter
+  const [shelter, setShelter] = useState("");
+
+  const handleChangeShelter = (e) => {
+    const selectedShelter = e.target.value;
+
+    // TODO: Shelter change logic
+    setShelter(selectedShelter);
+  };
+
   return (
     <>
       <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
@@ -146,8 +173,31 @@ const AnimalsPawrent = () => {
         ></div>
       </div>
       <Container maxWidth="lg" sx={{ my: "64px", position: "relative" }}>
-        <Content />
+        <Container
+          maxWidth="md"
+          sx={{
+            textAlign: "center",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            marginBottom: "32px",
+          }}
+        >
+          <Typography variant="h6" fontWeight={600} gutterBottom>
+            It’s My Pawssion!
+          </Typography>
+          <Typography variant="body2" fontWeight={300}>
+            Here is the list of animals in your shelter. You can add another
+            rescue, update some of their information, or remove adopted pets
+          </Typography>
+        </Container>
+
+        {/* Sort by, search, add / shelter component */}
         <OptionSection
+          isShelter={isShelter}
+          isLoggedIn={isLoggedIn}
+          setAnimals={setAnimals}
           sortBy={sortBy}
           handleChangeSortBy={handleChangeSortBy}
           searchValue={searchValue}
@@ -155,49 +205,71 @@ const AnimalsPawrent = () => {
           shelter={shelter}
           handleChangeShelter={handleChangeShelter}
         />
+
+        {/* Filter Component */}
         <FilterOptions
           filters={filteredOptions}
           handleFilterChange={handleFilterChange}
           handleApplyFilters={handleApplyFilters}
         />
+
+        {/* Display animal cards */}
         <DisplayAnimalCards
+          isShelter={isShelter}
+          isLoggedIn={isLoggedIn}
           currentAnimals={currentAnimals}
           setAnimals={setAnimals}
         />
+
+        {/* Page Component */}
+        <PageComponent
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+        />
       </Container>
+
+      {/* Footer */}
       <Footer />
     </>
   );
 };
 
-export default AnimalsPawrent;
+export default AnimalsShelter;
 
-const Content = () => {
+function AddAnimal({ setAnimals }) {
+  const [openAddModal, setOpenAddModal] = useState(false);
+
+  const handleModalClose = () => {
+    setOpenAddModal(false);
+  };
   return (
-    <Container
-      maxWidth="md"
-      sx={{
-        textAlign: "center",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        alignItems: "center",
-        marginBottom: "32px",
-      }}
-    >
-      <Typography variant="h6" fontWeight={600} gutterBottom>
-        It’s My Pawssion!
-      </Typography>
-      <Typography variant="body2" fontWeight={300} width="600px">
-        Here is the list of animals in your shelter. You can add another rescue,
-        update some of their information, or remove adopted pets
-      </Typography>
-    </Container>
+    <>
+      <Button
+        variant="outlined"
+        endIcon={<AddIcon />}
+        onClick={() => {
+          setOpenAddModal(true);
+        }}
+        sx={{ textTransform: "none", padding: "6px 34px", width: "215px" }}
+      >
+        Add New Pet
+      </Button>
+      <ModalAddPet
+        open={openAddModal}
+        onClose={handleModalClose}
+        defaultAnimal={defaultAnimalData}
+        defaultImage={defaultUploadedImages}
+        setAnimals={setAnimals}
+      />
+    </>
   );
-};
+}
 
-// TODO: Select shelter
 const OptionSection = ({
+  isShelter,
+  isLoggedIn,
+  setAnimals,
   sortBy,
   handleChangeSortBy,
   searchValue,
@@ -230,13 +302,22 @@ const OptionSection = ({
         <SearchInput value={searchValue} onChange={handleSearchInputChange} />
       </Grid>
       <Grid item order={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
-        <SelectShelter value={shelter} onChange={handleChangeShelter} />
+        {isShelter && isLoggedIn ? (
+          <AddAnimal setAnimals={setAnimals} />
+        ) : (
+          <SelectShelter value={shelter} onChange={handleChangeShelter} />
+        )}
       </Grid>
     </Grid>
   );
 };
 
-const DisplayAnimalCards = ({ currentAnimals, setAnimals }) => {
+const DisplayAnimalCards = ({
+  isShelter,
+  isLoggedIn,
+  currentAnimals,
+  setAnimals,
+}) => {
   return (
     <Grid container columnSpacing={3} rowSpacing={4} mt={4} alignItems="center">
       {currentAnimals.length === 0 ? (
@@ -260,15 +341,50 @@ const DisplayAnimalCards = ({ currentAnimals, setAnimals }) => {
             display="flex"
             justifyContent="center"
           >
-            <PawrentCard
-              animals={animal}
-              height="auto"
-              width="257px"
-              setAnimals={setAnimals}
-            />
+            {isShelter && isLoggedIn ? (
+              <AnimalCard
+                animals={animal}
+                height="auto"
+                width="257px"
+                setAnimals={setAnimals}
+              />
+            ) : (
+              <PawrentCard
+                animals={animal}
+                height="auto"
+                width="257px"
+                setAnimals={setAnimals}
+              />
+            )}
           </Grid>
         ))
       )}
     </Grid>
+  );
+};
+
+const PageComponent = ({ count, page, onChange }) => {
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        justifyContent: "center",
+        display: "flex",
+        mt: 2,
+      }}
+    >
+      <Pagination
+        variant="rounded"
+        count={count}
+        page={page}
+        onChange={onChange}
+        size="large"
+        siblingCount={1}
+        boundaryCount={1}
+        showFirstButton
+        showLastButton
+        sx={{ mt: 2, justifyContent: "center" }}
+      />
+    </Box>
   );
 };

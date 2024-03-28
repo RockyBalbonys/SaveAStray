@@ -3,12 +3,14 @@ import { store, persistor } from "../tools/store";
 import { connect } from "react-redux";
 import useAuth from "./useAuth";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const QuestionnaireContext = createContext();
 
 const useQuestionnaire = () => {
   const { isLoggedIn, role, user } = useAuth();
   // State to store user answers
+  const navigate = useNavigate();
   const [answers, setAnswers] = useState({
     // Initial value of answers
     section1: {
@@ -77,10 +79,10 @@ const useQuestionnaire = () => {
     }));
   };
 
-  //TODO: Function to submit answers to the database
+  //TODO: Redirect user to adoptionSubmitted
   const submitAnswers = () => {
-    console.log("current state: ", store.getState());
-    console.log("Current User: ", user);
+    // console.log("current state: ", store.getState());
+    // console.log("Current User: ", user);
 
     const respondent = user;
     const section1 = answers.section1;
@@ -103,6 +105,10 @@ const useQuestionnaire = () => {
       })
       .then(function (response) {
         console.log(response);
+        console.log(
+          "Success adoption request, redirect user to adoption submitted page"
+        );
+        navigate("/adoptionSubmitted");
       })
       .catch(function (error) {
         console.log(error);

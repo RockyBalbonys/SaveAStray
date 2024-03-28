@@ -4,6 +4,7 @@ import RadioGroupWithLabels from "./RadioGroupWithLabels";
 import { paperStyle } from "../../Pages/Questionnaire";
 import InputField from "./InputField";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
+import { memo } from "react";
 
 const QSection4 = () => {
   const { answers, updateAnswer } = useQuestionnaireContext();
@@ -208,4 +209,4 @@ const SupportiveQuestion = ({ id, value, onChange }) => {
   );
 };
 
-export default QSection4;
+export default memo(QSection4);

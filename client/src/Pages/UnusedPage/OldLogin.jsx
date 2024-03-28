@@ -7,12 +7,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import { Alert, Box, IconButton } from "@mui/material";
-import { store, persistor } from "../tools/store";
-import { loginFailed, loginSuccess } from "../tools/authActions";
+import { store, persistor } from "../../tools/store";
+import { loginFailed, loginSuccess } from "../../tools/authActions";
 import { useSelector } from "react-redux";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
-const Login = () => {
+const OldLogin = () => {
   // get the role from verify page
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -97,7 +97,9 @@ const Login = () => {
       })
       .then(function (response) {
         console.log(response.data);
-        if (response.data.status === 200/*  && response.data.checked === true */) {
+        if (
+          response.data.status === 200 /*  && response.data.checked === true */
+        ) {
           console.log(response.data);
           console.log("initial State: ", store.getState());
           const unsubscribe = store.subscribe(() =>
@@ -107,7 +109,7 @@ const Login = () => {
           unsubscribe();
           navigate("/Animals");
         } else if (
-          response.data.status === 400/*  &&
+          response.data.status === 400 /*  &&
           response.data.checked === true */
         ) {
           console.log("initial State: ", store.getState());
@@ -275,4 +277,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default OldLogin;

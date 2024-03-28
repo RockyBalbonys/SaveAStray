@@ -22,7 +22,7 @@ import Donate from "../Components/PageComponent/Donate";
 import Footer from "../Components/PageComponent/Footer";
 import { cardContent, helpContent } from "../constants/landingPage";
 
-export const Home = () => {
+function Home() {
   return (
     <>
       <Stack sx={{ mt: "-4rem" }}>
@@ -49,7 +49,9 @@ export const Home = () => {
       </Stack>
     </>
   );
-};
+}
+
+export default Home;
 
 const H1Style = {
   textAlign: "center",
