@@ -457,20 +457,22 @@ app.post("/api/googleLogin", async (req, res) => {
   }
 });
 
-app.post("/api/sendAnswers", async (req, res) => {
-  const data = req.body;
-  const respondent = data.respondent;
-  const section1 = data.section1;
-  const section2 = data.section2;
-  const section3 = data.section3;
-  const section4 = data.section4;
-  const section5 = data.section5;
-  const section6 = data.section6;
-
+app.post('/api/sendAnswers', async (req, res) => {
+  const data = req.body
+  const respondent = data.respondent
+  const section1 = data.section1
+  const section2 = data.section2 
+  const section3 = data.section3
+  const section4 = data.section4
+  const section5 = data.section5
+  const section6 = data.section6
+  const toShelter = data.toShelter
+  const timestamp = Date.now()
   if (data) {
     try {
       const newQuestRes = new QuestRes({
         respondent,
+        timestamp,
         answers: {
           section1,
           section2,
@@ -479,11 +481,15 @@ app.post("/api/sendAnswers", async (req, res) => {
           section5,
           section6,
         },
+        toShelter,
+        approvalStatus: 'pending'
       });
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
-    } catch (error) {}
-  } else {
+    } catch (error) {
+      console.log(error);
+    }
+  } else{
     res.send({
       status: 400,
       message: "No response!",
@@ -500,6 +506,65 @@ app.get("/getPet", async (req, res) => {
     });
   } catch (err) {
     console.log("error: ", err);
+  }
+});
+app.post("/api/fetchRequests", async (req, res) => {
+  const { user } = req.body;
+
+  try {
+    const allAnswers = await QuestRes.find({ toShelter: user });
+
+    if (!allAnswers) {
+      console.log("No answers found");
+      return res.status(200).send({ status: 200, respondent: null, allAnswers: [] }); // Send empty response
+    }
+
+    const mappedAnswers = await Promise.all(
+      allAnswers.map(async (answer) => {
+        const { respondent, timestamp, _id, approvalStatus } = answer;
+        const pawrentInfo = await PawrentInfo.find({ userId: respondent });
+
+        if (!pawrentInfo || pawrentInfo.length === 0) {
+          return {
+            firstName: "A user", 
+          };
+        }
+        const mappedRespondentInfo = pawrentInfo.map((info) => ({
+          firstName: info.firstName,
+          timestamp: timestamp,
+          id: _id,
+          approvalStatus: approvalStatus
+        }));
+        return {
+          firstName: mappedRespondentInfo[0].firstName, 
+          timestamp: mappedRespondentInfo[0].timestamp,
+          id: mappedRespondentInfo[0].id,
+          approvalStatus: mappedRespondentInfo[0].approvalStatus
+        };
+      })
+    );
+    if (allAnswers[0] == undefined) {
+      res.send({
+        status: 200,
+        respondent: null,
+        allAnswers: null,
+      });
+    } else {
+      const { respondent} = allAnswers[0]; // Assuming respondent is consistent across allAnswers
+      console.log(mappedAnswers);
+    res.send({
+      status: 200,
+      respondent,
+/*       timestamp,
+      id,
+      approvalStatus, */
+      allAnswers: mappedAnswers,
+    });
+    }
+    
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send({ message: "Internal Server Error" });
   }
 });
 
@@ -607,6 +672,29 @@ app.post("/api/updateShelterInfo", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.post("/api/updateApproval", async (req, res) => {
+  const { requestId, approvalStatus } = req.body
+  const request = await QuestRes.findOne({_id: requestId})
+  console.log("request: ",request);
+  if (request) {
+    console.log(requestId, approvalStatus);
+    console.log("request Approval in request : ", request.approvalStatus);
+    try {
+      request.approvalStatus = approvalStatus
+      const updatedRequest = await request.save();
+      res.send({
+        status: 200,
+        updatedRequest
+      })
+    } catch (error) {
+      console.log(error);
+    }
+    
+  } else {
+    console.log("Approval failed!");
+  }
+})
 
 // Pawrent Info API
 app.post("/api/updatePawrentInfo", async (req, res) => {

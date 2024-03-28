@@ -63,17 +63,13 @@ const AccountForm = () => {
   });
 
   const handleSaveChanges = () => {
-    axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`,
-        formData
-      )
-      .then(function (response) {
-        console.log(success);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function(error){
+      console.log(error);
+    })
   };
 
   const handleChange = (e) => {

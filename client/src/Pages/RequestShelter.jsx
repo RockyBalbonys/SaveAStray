@@ -21,6 +21,9 @@ import ramboImage from "../assets/images/animals/rambo.jpg";
 import Frame200Send from "../assets/images/Frame 200Send.svg";
 import Footer from "../Components/PageComponent/Footer";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import axios from "axios"
+import { useState, useEffect } from 'react';
+import useAuth from '../hooks/useAuth'
 
 const headerStyles = {
   display: "flex",
@@ -47,14 +50,33 @@ const buttonStyle = {
   height: "100%",
   backgroundColor: "#EE7200",
 };
+/* const [adoptionRequests, setAdoptionRequests] = useState([]);
 
-const AdoptionRequests = [
+axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`)
+.then(function(response){
+  const { allAnswers } = response.data
+const transformedRequests = allAnswers.map(function(answer) {
+  return {
+    name: answer.respondent, // Replace with the appropriate property name from allAnswers
+    //time: answer.time,  // Replace with the appropriate property name from allAnswers
+    //imageUrl: jembotImage, // Assuming jembotImage is defined elsewhere
+    //redirectTo: `/questionnaire/${answer.identifier}`, // Replace with the appropriate identifier property
+  };
+});
+setAdoptionRequests(transformedRequests);
+console.log(adoptionRequests);
+})
+.catch(function(err){
+  console.log(err);
+})
+ */
+/* const AdoptionRequests = [
   {
-    name: "Joemen",
+    name: "test",
     time: "a few seconds ago",
     imageUrl: jembotImage,
     redirectTo: "/questionnaire/joemen",
-  },
+  } ,
   {
     name: "Redeeet",
     time: "1 minute ago",
@@ -84,8 +106,8 @@ const AdoptionRequests = [
     time: "2 days ago",
     imageUrl: ramboImage,
     redirectTo: "/questionnaire/lancer",
-  },
-];
+  }, 
+]; */
 
 const actions = [
   { icon: <GetAppIcon />, name: "Print" },
@@ -95,11 +117,72 @@ const actions = [
 
 function RequestShelter() {
   const navigate = useNavigate();
+  const { user } = useAuth()
+  const [ adoptionRequests, setAdoptionRequests ] = useState([]);
+
+  useEffect(() => {
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
+      user
+    })
+      .then(function (response) {
+        const { allAnswers, respondent } = response.data;
+        if (!respondent) {
+          setAdoptionRequests(0); // Update state with transformed data
+          console.log(adoptionRequests);
+          console.log("No requests at the moment");
+        } else {
+          const transformedRequests = allAnswers.map(function (answer) {
+            return {
+              name: answer.firstName, 
+              timestamp: answer.timestamp,
+              requestId: answer.id,
+              approvalStatus: answer.approvalStatus
+            };
+          });
+          setAdoptionRequests(transformedRequests); // Update state with transformed data
+          console.log(transformedRequests);
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []); 
+
+
 
   const handleClick = (redirectTo) => {
     navigate(redirectTo);
   };
 
+  const handleAcceptButton = (request) => {
+    const { requestId, approvalStatus } = request
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
+      requestId,
+      approvalStatus: 'approved'
+    })
+    .then(function(response){
+      console.log(response);
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+    console.log("Approval Accepted: ", request);
+  }
+
+  const handleRejectButton = (request) => {
+    const { requestId, approvalStatus } = request
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
+      requestId,
+      approvalStatus: 'rejected'
+    })
+    .then(function(response){
+      console.log(response);
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+    console.log("Approval Denied: ", request);
+  }
   return (
     <div style={{ width: "100%", overflowY: "auto" }}>
       <style>
@@ -126,10 +209,16 @@ function RequestShelter() {
       </div>
       <div className="bg-[#FAFAFB] h-full">
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
-          {AdoptionRequests.map((request, index) => (
-            <div
+          {
+            adoptionRequests.length > 0 ? (
+          adoptionRequests.map((request, index) => (
+       /*      request.approvalStatus == 'pending' ? ( */
+              <div
               key={index}
-              onClick={() => handleClick(request.redirectTo)}
+              onClick={(event) => {
+                event.preventDefault();
+                handleClick(request.redirectTo);
+              }}
               style={{
                 cursor: "pointer",
                 display: "flex",
@@ -184,13 +273,13 @@ function RequestShelter() {
                   }}
                 >
                   <Tooltip title="Accept">
-                    <Button variant="contained" style={buttonStyle}>
+                    <Button variant="contained" style={buttonStyle} onClick={() => handleAcceptButton(request)}>
                       <CheckIcon style={{ color: "#FFFFFF" }} />
                     </Button>
                   </Tooltip>
 
                   <Tooltip title="Reject">
-                    <Button variant="contained" style={buttonStyle}>
+                    <Button variant="contained" style={buttonStyle} onClick={() => handleRejectButton(request)}>
                       <ClearIcon style={{ color: "#FFFFFF" }} />
                     </Button>
                   </Tooltip>
@@ -247,7 +336,12 @@ function RequestShelter() {
                 </Box>
               </Box>
             </div>
-          ))}
+/*             ) : null */
+          ))
+            ) : (
+              <p>No adoption requests found.</p>
+            )
+          }
         </Container>
       </div>
       <Footer />

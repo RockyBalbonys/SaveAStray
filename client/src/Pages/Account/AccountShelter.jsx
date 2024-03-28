@@ -73,13 +73,12 @@ const AccountForm = () => {
 
   const handleSaveChanges = () => {
     //console.log("Update account.");
-    axios
-      .post(
+    axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
         formData
       )
       .then(function (response) {
-        console.log(success);
+        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -92,14 +91,13 @@ const AccountForm = () => {
 
   const handleLogout = () => {
     console.log("initial State: ", store.getState());
-    const unsubscribe = store.subscribe(() =>
-      console.log("Updated state: ", store.getState())
-    );
-    console.log("401");
-    store.dispatch(logout());
-    unsubscribe();
-    navigate("/login");
-    /*           setLoginAttempted(true);
+          const unsubscribe = store.subscribe(() =>
+            console.log("Updated state: ", store.getState())
+          );
+          console.log("401");
+          store.dispatch(logout());
+          unsubscribe();
+/*       setLoginAttempted(true);
           setUserIn(false); */
   };
   return (
