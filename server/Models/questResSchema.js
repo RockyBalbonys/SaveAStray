@@ -9,6 +9,10 @@ const questResSchema = new mongoose.Schema(
         timestamp: {
             type: Date
         },
+        approvalStatus: {
+            type: String,
+            enum: ['pending', 'approved', 'rejected'],
+        },
         toShelter: {
             type: String
         },

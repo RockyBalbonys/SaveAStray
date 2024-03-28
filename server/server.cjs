@@ -481,7 +481,8 @@ app.post('/api/sendAnswers', async (req, res) => {
           section5,
           section6,
         },
-        toShelter
+        toShelter,
+        approvalStatus: 'pending'
       });
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
@@ -520,7 +521,7 @@ app.post("/api/fetchRequests", async (req, res) => {
 
     const mappedAnswers = await Promise.all(
       allAnswers.map(async (answer) => {
-        const { respondent } = answer;
+        const { respondent, timestamp, _id, approvalStatus } = answer;
         const pawrentInfo = await PawrentInfo.find({ userId: respondent });
 
         if (!pawrentInfo || pawrentInfo.length === 0) {
@@ -530,10 +531,15 @@ app.post("/api/fetchRequests", async (req, res) => {
         }
         const mappedRespondentInfo = pawrentInfo.map((info) => ({
           firstName: info.firstName,
+          timestamp: timestamp,
+          id: _id,
+          approvalStatus: approvalStatus
         }));
-
         return {
           firstName: mappedRespondentInfo[0].firstName, 
+          timestamp: mappedRespondentInfo[0].timestamp,
+          id: mappedRespondentInfo[0].id,
+          approvalStatus: mappedRespondentInfo[0].approvalStatus
         };
       })
     );
@@ -544,11 +550,14 @@ app.post("/api/fetchRequests", async (req, res) => {
         allAnswers: null,
       });
     } else {
-      const { respondent } = allAnswers[0]; // Assuming respondent is consistent across allAnswers
+      const { respondent} = allAnswers[0]; // Assuming respondent is consistent across allAnswers
       console.log(mappedAnswers);
     res.send({
       status: 200,
       respondent,
+/*       timestamp,
+      id,
+      approvalStatus, */
       allAnswers: mappedAnswers,
     });
     }
@@ -663,6 +672,29 @@ app.post("/api/updateShelterInfo", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+app.post("/api/updateApproval", async (req, res) => {
+  const { requestId, approvalStatus } = req.body
+  const request = await QuestRes.findOne({_id: requestId})
+  console.log("request: ",request);
+  if (request) {
+    console.log(requestId, approvalStatus);
+    console.log("request Approval in request : ", request.approvalStatus);
+    try {
+      request.approvalStatus = approvalStatus
+      const updatedRequest = await request.save();
+      res.send({
+        status: 200,
+        updatedRequest
+      })
+    } catch (error) {
+      console.log(error);
+    }
+    
+  } else {
+    console.log("Approval failed!");
+  }
+})
 
 // Pawrent Info API
 app.post("/api/updatePawrentInfo", async (req, res) => {

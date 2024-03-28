@@ -134,6 +134,9 @@ function RequestShelter() {
           const transformedRequests = allAnswers.map(function (answer) {
             return {
               name: answer.firstName, 
+              timestamp: answer.timestamp,
+              requestId: answer.id,
+              approvalStatus: answer.approvalStatus
             };
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
@@ -151,6 +154,35 @@ function RequestShelter() {
     navigate(redirectTo);
   };
 
+  const handleAcceptButton = (request) => {
+    const { requestId, approvalStatus } = request
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
+      requestId,
+      approvalStatus: 'approved'
+    })
+    .then(function(response){
+      console.log(response);
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+    console.log("Approval Accepted: ", request);
+  }
+
+  const handleRejectButton = (request) => {
+    const { requestId, approvalStatus } = request
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
+      requestId,
+      approvalStatus: 'rejected'
+    })
+    .then(function(response){
+      console.log(response);
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+    console.log("Approval Denied: ", request);
+  }
   return (
     <div style={{ width: "100%", overflowY: "auto" }}>
       <style>
@@ -180,9 +212,13 @@ function RequestShelter() {
           {
             adoptionRequests.length > 0 ? (
           adoptionRequests.map((request, index) => (
-            <div
+       /*      request.approvalStatus == 'pending' ? ( */
+              <div
               key={index}
-              onClick={() => handleClick(request.redirectTo)}
+              onClick={(event) => {
+                event.preventDefault();
+                handleClick(request.redirectTo);
+              }}
               style={{
                 cursor: "pointer",
                 display: "flex",
@@ -237,13 +273,13 @@ function RequestShelter() {
                   }}
                 >
                   <Tooltip title="Accept">
-                    <Button variant="contained" style={buttonStyle}>
+                    <Button variant="contained" style={buttonStyle} onClick={() => handleAcceptButton(request)}>
                       <CheckIcon style={{ color: "#FFFFFF" }} />
                     </Button>
                   </Tooltip>
 
                   <Tooltip title="Reject">
-                    <Button variant="contained" style={buttonStyle}>
+                    <Button variant="contained" style={buttonStyle} onClick={() => handleRejectButton(request)}>
                       <ClearIcon style={{ color: "#FFFFFF" }} />
                     </Button>
                   </Tooltip>
@@ -300,6 +336,7 @@ function RequestShelter() {
                 </Box>
               </Box>
             </div>
+/*             ) : null */
           ))
             ) : (
               <p>No adoption requests found.</p>
