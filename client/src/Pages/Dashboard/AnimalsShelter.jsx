@@ -39,10 +39,6 @@ const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
 
-  console.log("Logged in: " + isLoggedIn);
-  console.log(user);
-  console.log(role);
-
   const isShelter = role === "Rescue Shelter";
 
   console.table(animals);
@@ -95,6 +91,9 @@ const AnimalsShelter = () => {
   };
 
   const handleFilterChange = (filterType, value) => {
+    if (filterType === "pet type") {
+      filterType = "species";
+    }
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterType]: value,

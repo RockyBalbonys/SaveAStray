@@ -20,6 +20,8 @@ export function FilterOptions({
     filters.map(() => null)
   );
 
+  console.log(filters);
+
   const [filtersApplied, setFiltersApplied] = useState(false);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export function FilterOptions({
       return newSelectedOptions;
     });
     handleFilterChange(filters[filterIndex].propType.toLowerCase(), option);
+    console.log(filters[filterIndex].propType.toLowerCase(), option);
   };
 
   const handleClearFilters = () => {

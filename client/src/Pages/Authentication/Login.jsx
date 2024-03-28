@@ -11,6 +11,7 @@ import myPassive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 // mui components
 import FormControl from "@mui/material/FormControl";
@@ -25,6 +26,8 @@ import InputBase from "@mui/material/InputBase";
 import Paper from "@mui/material/Paper";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 function Login() {
   const location = useLocation();
@@ -197,6 +200,13 @@ function LoginCard({
 
           <Grid item xs={12} sm={12} md={6} order={{ xs: 1, sm: 1, md: 2 }}>
             <div className="md:p-8 lg:p-8 p-6 sm:p-8 py-20 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
+              <Tooltip title="Back to Home">
+                <IconButton sx={{ alignSelf: "flex-start" }}>
+                  <Link to={"/"}>
+                    <ArrowBackRoundedIcon sx={{ color: "#FF7A00" }} />
+                  </Link>
+                </IconButton>
+              </Tooltip>
               <p className="text-[24px] text-[#FF7A00] mb-9">Login Account</p>
               <div className="text-[#FF7A00] text-[12px] flex flex-col items-center justify-center w-full">
                 <FormControl>

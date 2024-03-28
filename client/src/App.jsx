@@ -33,40 +33,10 @@ import { renderNavbar } from "./renderNavbar";
 // import tools
 import useAuth from "./hooks/useAuth";
 import ScrollToTop from "./tools/scrollToTop";
+import DeadEnd2 from "./Pages/Redirect/DeadEnd2";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
-
-  // Reroute user to manage account depending on their role
-  // const isPawrent =
-  //   isLoggedIn && role === "Adoptive Pawrent" ? (
-  //     <AccountPawrent />
-  //   ) : isLoggedIn && role === "Rescue Shelter" ? (
-  //     <AccountShelter />
-  //   ) : (
-  //     <Login />
-  //   );
-
-  const PrivateRoute = ({ path, element }) => {
-    return (
-      <Route
-        path={path}
-        element={
-          isLoggedIn ? (
-            role === "Adoptive Pawrent" ? (
-              element
-            ) : role === "Rescue Shelter" ? (
-              <AccountShelter />
-            ) : (
-              <Navigate to="/login" />
-            )
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
-      />
-    );
-  };
 
   return (
     <>
@@ -121,6 +91,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/deadend" element={<DeadEnd />} />
+            <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

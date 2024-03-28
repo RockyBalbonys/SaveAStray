@@ -354,9 +354,6 @@ const AvatarRing = ({ accountIsLoggedIn, accountRole }) => {
     }
   }
 
-  console.log("Navbar logged in: " + accountIsLoggedIn);
-  console.log("Navbar role: " + accountRole);
-
   return (
     <>
       <Tooltip title="Manage Account">

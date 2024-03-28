@@ -112,13 +112,13 @@ const QSection5 = () => {
   );
 };
 
-const RadioGroupQuestion = ({ label, options }) => {
+const RadioGroupQuestion = ({ label, options, onChange }) => {
   return (
     <div className="input-container w-full sm:flex-col sm:items-start">
       <label htmlFor={label} className="font-bold">
         {label}
       </label>
-      <RadioGroupWithLabels id={label} options={options} />
+      <RadioGroupWithLabels id={label} options={options} onChange={onChange} />
     </div>
   );
 };
