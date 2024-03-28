@@ -1,7 +1,17 @@
-import { Avatar, Box, Button, Paper, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Paper,
+  Stack,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 import LanguageRoundedIcon from "@mui/icons-material/LanguageRounded";
 import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
+import editProfile from "../../assets/icons/editImage.svg";
+import styled from "@emotion/styled";
 
 export const AccountAvatar = ({ onClick, onLogout }) => {
   return (
@@ -72,6 +82,24 @@ const AvatarRing = () => {
           border: "5px solid #EE7200",
         }}
       />
+      <Button
+        variant="contained"
+        component="label"
+        sx={{
+          mt: "-2.5rem",
+          minWidth: "auto",
+          padding: "7px 8px",
+          borderRadius: "50%",
+        }}
+      >
+        <img
+          src={editProfile}
+          alt="edit profile image"
+          width={"16px"}
+          height={"17px"}
+        />
+        <input type="file" hidden />
+      </Button>
     </>
   );
 };
