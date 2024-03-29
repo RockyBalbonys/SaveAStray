@@ -24,6 +24,7 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import axios from "axios"
 import { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth'
+import { formatDistanceToNow } from 'date-fns';
 
 const headerStyles = {
   display: "flex",
@@ -77,37 +78,7 @@ console.log(adoptionRequests);
     imageUrl: jembotImage,
     redirectTo: "/questionnaire/joemen",
   } ,
-  {
-    name: "Redeeet",
-    time: "1 minute ago",
-    imageUrl: felixImage,
-    redirectTo: "/questionnaire/redeeet",
-  },
-  {
-    name: "Rokcyyyy :>",
-    time: "1 hour ago",
-    imageUrl: inibamImage,
-    redirectTo: "/questionnaire/rokcyyyy",
-  },
-  {
-    name: "Mateek",
-    time: "2 hours ago",
-    imageUrl: lansImage,
-    redirectTo: "/questionnaire/mateek",
-  },
-  {
-    name: "Iniba’am",
-    time: "1 day ago",
-    imageUrl: pugdoyImage,
-    redirectTo: "/questionnaire/inibaam",
-  },
-  {
-    name: "Lancer",
-    time: "2 days ago",
-    imageUrl: ramboImage,
-    redirectTo: "/questionnaire/lancer",
-  }, 
-]; */
+*/
 
 const actions = [
   { icon: <GetAppIcon />, name: "Print" },
@@ -132,11 +103,18 @@ function RequestShelter() {
           console.log("No requests at the moment");
         } else {
           const transformedRequests = allAnswers.map(function (answer) {
+            const notificationCreatedAt = new Date(answer.timestamp); // Replace with actual timestamp or function to get it
+            const formattedTime = formatDistanceToNow(notificationCreatedAt, {
+              addSuffix: true, // Optionally add "ago" or "from now"
+              //locale: es,        // Optional: Set locale for specific formatting
+            });
             return {
               name: answer.firstName, 
-              timestamp: answer.timestamp,
+              time: formattedTime,
               requestId: answer.id,
-              approvalStatus: answer.approvalStatus
+              approvalStatus: answer.approvalStatus,
+          /*     imageUrl,
+              redirectTo */
             };
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
