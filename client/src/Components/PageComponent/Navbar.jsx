@@ -313,11 +313,22 @@ export default function Navbar() {
 }
 
 function DisplayUserComponents({ userIsLoggedIn, userRole }) {
+  let requestLink = "/login"; // Default link to login page
+
+  // Determine the manage account link based on the user's role
+  if (userIsLoggedIn) {
+    if (userRole === "Adoptive Pawrent") {
+      requestLink = "/request/pawrent";
+    } else if (userRole === "Rescue Shelter") {
+      requestLink = "/request/shelter";
+    }
+  }
+
   return (
     <>
       <Box display={"flex"} sx={{ alignItems: "center", columnGap: "12px" }}>
         <Tooltip title="Messages">
-          <RouterLink to="/chat">
+          <RouterLink to="/messages">
             <img
               src={messageIcon}
               alt="messages"
@@ -327,7 +338,7 @@ function DisplayUserComponents({ userIsLoggedIn, userRole }) {
           </RouterLink>
         </Tooltip>
         <Tooltip title="Notifications">
-          <RouterLink to="/request">
+          <RouterLink to={requestLink}>
             <img
               src={bellIcon}
               alt="notifications"

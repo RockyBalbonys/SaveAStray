@@ -19,6 +19,8 @@ export const renderNavbar = () => {
     "/animalsPawrent",
     "/manage/pawrent",
     "/manage/shelter",
+    "/request/pawrent",
+    "/request/shelter",
     "/test",
     "/reqshelter",
     "/reqpawrent",
