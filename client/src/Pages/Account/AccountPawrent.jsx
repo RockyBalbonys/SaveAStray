@@ -52,6 +52,7 @@ const AccountForm = () => {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
+    userProfilePic: "",
     userId: user,
     firstName: "",
     lastName: "",
@@ -63,13 +64,17 @@ const AccountForm = () => {
   });
 
   const handleSaveChanges = () => {
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, formData)
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function(error){
-      console.log(error);
-    })
+    axios
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`,
+        formData
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const handleChange = (e) => {
@@ -89,6 +94,29 @@ const AccountForm = () => {
     /*           setLoginAttempted(true);
           setUserIn(false); */
   };
+
+  // profile picture
+  const [profilePic, setProfilePic] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Check if the file is an image
+      if (file.type.startsWith("image/")) {
+        // Convert the file to a data URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageBase64 = e.target.result;
+
+          setProfilePic(imageBase64);
+          setFormData({ ...formData, [e.target.id]: profilePic });
+          console.log("Success");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  };
+
   return (
     <>
       <Container sx={{ py: "64px" }}>
@@ -103,6 +131,8 @@ const AccountForm = () => {
               <AccountAvatar
                 onClick={handleSaveChanges}
                 onLogout={handleLogout}
+                profilePic={profilePic}
+                handleFileChange={handleFileChange}
               />
             </Box>
           </Grid>

@@ -53,6 +53,7 @@ const AccountForm = () => {
 
   const { user } = useAuth();
   const [formData, setFormData] = useState({
+    userProfilePic: "",
     userId: user,
     shelterName: "",
     shelterAddress: "",
@@ -73,7 +74,8 @@ const AccountForm = () => {
 
   const handleSaveChanges = () => {
     //console.log("Update account.");
-    axios.post(
+    axios
+      .post(
         `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
         formData
       )
@@ -91,15 +93,38 @@ const AccountForm = () => {
 
   const handleLogout = () => {
     console.log("initial State: ", store.getState());
-          const unsubscribe = store.subscribe(() =>
-            console.log("Updated state: ", store.getState())
-          );
-          console.log("401");
-          store.dispatch(logout());
-          unsubscribe();
-/*       setLoginAttempted(true);
-          setUserIn(false); */
+    const unsubscribe = store.subscribe(() =>
+      console.log("Updated state: ", store.getState())
+    );
+    console.log("401");
+    store.dispatch(logout());
+    unsubscribe();
+    /*       setLoginAttempted(true);
+    setUserIn(false); */
   };
+
+  // profile picture
+  const [profilePic, setProfilePic] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Check if the file is an image
+      if (file.type.startsWith("image/")) {
+        // Convert the file to a data URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageBase64 = e.target.result;
+
+          setProfilePic(imageBase64);
+          setFormData({ ...formData, [e.target.id]: profilePic });
+          console.log("Success");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  };
+
   return (
     <>
       <Container sx={{ py: "64px" }}>
@@ -114,6 +139,8 @@ const AccountForm = () => {
               <AccountAvatar
                 onClick={handleSaveChanges}
                 onLogout={handleLogout}
+                profilePic={profilePic}
+                handleFileChange={handleFileChange}
               />
             </Box>
           </Grid>

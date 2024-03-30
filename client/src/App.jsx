@@ -34,6 +34,7 @@ import { renderNavbar } from "./renderNavbar";
 import useAuth from "./hooks/useAuth";
 import ScrollToTop from "./tools/scrollToTop";
 import DeadEnd2 from "./Pages/Redirect/DeadEnd2";
+import Messages from "./Pages/Messages";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -81,8 +82,20 @@ function App() {
               path="/questionnaire/:shelterId"
               element={<Questionnaire />}
             />
-            <Route path="/reqshelter" element={<RequestShelter />} />
-            <Route path="/reqpawrent" element={<RequestPawrent />} />
+            {/* <Route path="/rescue/" element={<RequestShelter />} />
+            <Route path="/reqpawrent" element={<RequestPawrent />} /> */}
+            <Route
+              path="/request/pawrent"
+              element={
+                isLoggedIn ? <RequestPawrent /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/request/shelter"
+              element={
+                isLoggedIn ? <RequestShelter /> : <Navigate to="/login" />
+              }
+            />
             <Route path="/about" element={<About />} />
             <Route path="/articles/" element={<Articles />} />
             <Route path="/articles/:id" element={<ArticlePage />} />
@@ -92,6 +105,7 @@ function App() {
             <Route path="/verify" element={<Verify />} />
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
+            <Route path="/messages" element={<Messages />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>
