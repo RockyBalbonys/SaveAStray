@@ -12,6 +12,10 @@ import lansImage from "../assets/images/animals/lans.jpg";
 import pugdoyImage from "../assets/images/animals/pugdoy.jpg";
 import ramboImage from "../assets/images/animals/rambo.jpg";
 import Footer from "../Components/PageComponent/Footer";
+import axios from "axios";
+import useAuth from "../hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
+import { useState, useEffect } from "react";
 
 const headerStyles = {
   display: "flex",
@@ -32,17 +36,52 @@ const imageStyle = {
   border: "2px solid orange",
 };
 
-const AdoptionRequests = [
+/* const AdoptionRequests = [
   { name: "Joemen", time: "a few seconds ago", imageUrl: jembotImage },
   { name: "Redeeet", time: "1 minute ago", imageUrl: felixImage },
   { name: "Rokcyyyy :>", time: "1 hour ago", imageUrl: inibamImage },
   { name: "Mateek", time: "2 hours ago", imageUrl: lansImage },
   { name: "Iniba’am", time: "1 day ago", imageUrl: pugdoyImage },
   { name: "Lancer", time: "2 days ago", imageUrl: ramboImage },
-];
+]; */
 
 function RequestPawrent() {
+  const { user } = useAuth();
+  const [pawrentNotifs, setPawrentNotifs] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchNotifs`, {
+        user,
+      })
+      .then(function (response) {
+        console.log(response);
+        const { mappedNotifs } = response.data
+        if (!response) {
+          setPawrentNotifs(0); // Update state with transformed data
+          console.log(pawrentNotifs);
+          console.log("No requests at the moment");
+        } else {
+          const mappedPawrentNotifs = mappedNotifs.map((notif) => {
+            const notificationReceivedAt = new Date(notif.timestamp); // Replace with actual timestamp or function to get it
+            const formattedTime = formatDistanceToNow(notificationReceivedAt, {
+              addSuffix: true, 
+            });
+            return {
+              name: notif.from,
+              time: formattedTime,
+              approvalStatus: notif.approvalStatus,
+            };
+          })
+          setPawrentNotifs(mappedPawrentNotifs)
+        }
+  
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []);
 
   const handleClick = () => {
     navigate("/questionnaire");
@@ -78,7 +117,7 @@ function RequestPawrent() {
             paddingY: "5rem",
           }}
         >
-          {AdoptionRequests.map((request, index) => (
+          {pawrentNotifs.map((request, index) => (
             <div
               key={index}
               style={{
@@ -110,7 +149,7 @@ function RequestPawrent() {
                   />
                   <div>
                     <Typography>
-                      <strong>{request.name}</strong> requested an adoption
+                      <strong>{request.name}</strong> {request.approvalStatus} your request.
                     </Typography>
                     <Typography variant="caption" color="#2F4858">
                       {request.time}
