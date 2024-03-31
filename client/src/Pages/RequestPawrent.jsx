@@ -58,7 +58,7 @@ function RequestPawrent() {
       .then(function (response) {
         console.log(response);
         const { mappedNotifs } = response.data
-        if (!response) {
+        if (mappedNotifs == null) {
           setPawrentNotifs(0); // Update state with transformed data
           console.log(pawrentNotifs);
           console.log("No requests at the moment");
@@ -117,8 +117,8 @@ function RequestPawrent() {
             paddingY: "5rem",
           }}
         >
-          
-          {pawrentNotifs.map((request, index) => (
+          {pawrentNotifs.length > 0 ? (
+          pawrentNotifs.map((request, index) => (
             <div
               key={index}
               style={{
@@ -181,7 +181,10 @@ function RequestPawrent() {
                 </Tooltip>
               </div>
             </div>
-          ))}
+          ))) : (
+            <p>No adoption requests found.</p>
+          )
+          }
         </Container>
       </div>
       <Footer />
