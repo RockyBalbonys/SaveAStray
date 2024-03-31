@@ -153,12 +153,12 @@ function LoginCard({
           },
           height: {
             xs: "90%",
-            sm: "80%",
+            sm: "90%",
             md: "80%",
           },
           borderRadius: "12px",
           boxShadow: "0px 0px 16px 0px rgba(0, 0, 0, 0.25)",
-          overflow: "hidden",
+          overflow: "auto",
         }}
       >
         <Grid container sx={{ width: "100%", height: "100%" }}>
@@ -199,7 +199,7 @@ function LoginCard({
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} order={{ xs: 1, sm: 1, md: 2 }}>
-            <div className="md:p-8 lg:p-8 p-6 sm:p-8 py-20 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
+            <div className="md:p-8 lg:p-8 p-6 sm:p-8 lg:py-18 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
               <Tooltip title="Back to Home">
                 <IconButton sx={{ alignSelf: "flex-start" }}>
                   <Link to={"/"}>
@@ -393,6 +393,7 @@ export const UserInput = styled(InputBase)(({ theme }) => ({
     border: "2px solid #FF7A00",
     fontSize: 16,
     padding: "10px 12px",
+    paddingRight: "12px",
     transition: theme.transitions.create([
       "border-color",
       "background-color",
