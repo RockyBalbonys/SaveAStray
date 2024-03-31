@@ -21,7 +21,6 @@ const PawrentCard = ({ animals, height, width, setAnimals }) => {
     setOpen(false);
   };
 
-  console.log(animals);
   return (
     <>
       <Box

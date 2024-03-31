@@ -1,42 +1,41 @@
+// import react and other components
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { store, persistor } from "../../tools/store";
+import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+
+// import mui components
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import { store, persistor } from "../tools/store";
-import { loginFailed, loginSuccess, logout } from "../tools/authActions";
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  Grid,
-  Icon,
-  Stack,
-} from "@mui/material";
-import useAuth from "../hooks/useAuth";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import Icon from "@mui/material/Icon";
+import Stack from "@mui/material/Stack";
 
 //Custom Components
-import { FormPaper } from "../Components/Paper/FormPaper";
-
-//Footer
-import Footer from "../Components/PageComponent/Footer";
+import { FormPaper } from "../../Components/Paper/FormPaper";
+import Footer from "../../Components/PageComponent/Footer";
 
 // Icons
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 
 // Avatar Placeholder
-import avatar_placeholder from "../assets/images/avatar_placeholder.png";
-import { AccountHeader } from "../Components/Account/AccountHeader";
-import { AccountAvatar } from "../Components/Account/AccountAvatar";
-import AccountDrawer from "../Components/Account/AccountDrawer";
-import { useNavigate } from "react-router-dom";
+import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
+import { AccountHeader } from "../../Components/Account/AccountHeader";
+import { AccountAvatar } from "../../Components/Account/AccountAvatar";
+import AccountDrawer from "../../Components/Account/AccountDrawer";
 
-export const AccountShelter = () => {
+function AccountShelter() {
   return (
     <>
       <AccountHeader />
@@ -45,9 +44,13 @@ export const AccountShelter = () => {
       <Footer />
     </>
   );
-};
+}
+
+export default AccountShelter;
 
 const AccountForm = () => {
+  const navigate = useNavigate();
+
   const { user } = useAuth();
 
   //API Fetch Shelter Info
@@ -71,6 +74,7 @@ const AccountForm = () => {
   };
   
   const [formData, setFormData] = useState({
+    userProfilePic: "",
     userId: user,
     shelterName: "",
     shelterAddress: "",
@@ -97,7 +101,7 @@ const AccountForm = () => {
         formData
       )
       .then(function (response) {
-        console.log(success);
+        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
@@ -116,10 +120,32 @@ const AccountForm = () => {
     console.log("401");
     store.dispatch(logout());
     unsubscribe();
-    navigate("/login");
-    /*           setLoginAttempted(true);
-          setUserIn(false); */
+    /*       setLoginAttempted(true);
+    setUserIn(false); */
   };
+
+  // profile picture
+  const [profilePic, setProfilePic] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Check if the file is an image
+      if (file.type.startsWith("image/")) {
+        // Convert the file to a data URL
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageBase64 = e.target.result;
+
+          setProfilePic(imageBase64);
+          setFormData({ ...formData, [e.target.id]: profilePic });
+          console.log("Success");
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  };
+
   return (
     <>
       <Container sx={{ py: "64px" }}>
@@ -134,6 +160,8 @@ const AccountForm = () => {
               <AccountAvatar
                 onClick={handleSaveChanges}
                 onLogout={handleLogout}
+                profilePic={profilePic}
+                handleFileChange={handleFileChange}
               />
             </Box>
           </Grid>

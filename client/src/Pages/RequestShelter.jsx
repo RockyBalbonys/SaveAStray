@@ -21,6 +21,11 @@ import ramboImage from "../assets/images/animals/rambo.jpg";
 import Frame200Send from "../assets/images/Frame 200Send.svg";
 import Footer from "../Components/PageComponent/Footer";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
+import { formatDistanceToNow } from "date-fns";
+import { Link as RouterLink } from "react-router-dom";
 
 const headerStyles = {
   display: "flex",
@@ -47,45 +52,34 @@ const buttonStyle = {
   height: "100%",
   backgroundColor: "#EE7200",
 };
+/* const [adoptionRequests, setAdoptionRequests] = useState([]);
 
-const AdoptionRequests = [
+axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`)
+.then(function(response){
+  const { allAnswers } = response.data
+const transformedRequests = allAnswers.map(function(answer) {
+  return {
+    name: answer.respondent, // Replace with the appropriate property name from allAnswers
+    //time: answer.time,  // Replace with the appropriate property name from allAnswers
+    //imageUrl: jembotImage, // Assuming jembotImage is defined elsewhere
+    //redirectTo: `/questionnaire/${answer.identifier}`, // Replace with the appropriate identifier property
+  };
+});
+setAdoptionRequests(transformedRequests);
+console.log(adoptionRequests);
+})
+.catch(function(err){
+  console.log(err);
+})
+ */
+/* const AdoptionRequests = [
   {
-    name: "Joemen",
+    name: "test",
     time: "a few seconds ago",
     imageUrl: jembotImage,
     redirectTo: "/questionnaire/joemen",
-  },
-  {
-    name: "Redeeet",
-    time: "1 minute ago",
-    imageUrl: felixImage,
-    redirectTo: "/questionnaire/redeeet",
-  },
-  {
-    name: "Rokcyyyy :>",
-    time: "1 hour ago",
-    imageUrl: inibamImage,
-    redirectTo: "/questionnaire/rokcyyyy",
-  },
-  {
-    name: "Mateek",
-    time: "2 hours ago",
-    imageUrl: lansImage,
-    redirectTo: "/questionnaire/mateek",
-  },
-  {
-    name: "Iniba’am",
-    time: "1 day ago",
-    imageUrl: pugdoyImage,
-    redirectTo: "/questionnaire/inibaam",
-  },
-  {
-    name: "Lancer",
-    time: "2 days ago",
-    imageUrl: ramboImage,
-    redirectTo: "/questionnaire/lancer",
-  },
-];
+  } ,
+*/
 
 const actions = [
   { icon: <GetAppIcon />, name: "Print" },
@@ -95,11 +89,80 @@ const actions = [
 
 function RequestShelter() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [adoptionRequests, setAdoptionRequests] = useState([]);
+
+  useEffect(() => {
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
+        user,
+      })
+      .then(function (response) {
+        const { allAnswers, respondent } = response.data;
+        if (!respondent) {
+          setAdoptionRequests(0); // Update state with transformed data
+          console.log(adoptionRequests);
+          console.log("No requests at the moment");
+        } else {
+          const transformedRequests = allAnswers.map(function (answer) {
+            const notificationCreatedAt = new Date(answer.timestamp); // Replace with actual timestamp or function to get it
+            const formattedTime = formatDistanceToNow(notificationCreatedAt, {
+              addSuffix: true, // Optionally add "ago" or "from now"
+              //locale: es,        // Optional: Set locale for specific formatting
+            });
+            return {
+              name: answer.firstName,
+              time: formattedTime,
+              requestId: answer.id,
+              approvalStatus: answer.approvalStatus,
+              /*     imageUrl,
+              redirectTo */
+            };
+          });
+          setAdoptionRequests(transformedRequests); // Update state with transformed data
+          console.log(transformedRequests);
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []);
 
   const handleClick = (redirectTo) => {
     navigate(redirectTo);
   };
 
+  const handleAcceptButton = (request) => {
+    const { requestId, approvalStatus } = request;
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
+        requestId,
+        approvalStatus: "approved",
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+    console.log("Approval Accepted: ", request);
+  };
+
+  const handleRejectButton = (request) => {
+    const { requestId, approvalStatus } = request;
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
+        requestId,
+        approvalStatus: "rejected",
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+    console.log("Approval Denied: ", request);
+  };
   return (
     <div style={{ width: "100%", overflowY: "auto" }}>
       <style>
@@ -126,128 +189,150 @@ function RequestShelter() {
       </div>
       <div className="bg-[#FAFAFB] h-full">
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
-          {AdoptionRequests.map((request, index) => (
-            <div
-              key={index}
-              onClick={() => handleClick(request.redirectTo)}
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
-                padding: "16px",
-                borderBottom: "1px solid #EE7200",
-                borderRadius: "7px",
-                width: "100%",
-                marginBottom: "8px",
-              }}
-            >
+          {adoptionRequests.length > 0 ? (
+            adoptionRequests.map((request, index) => (
+              /*      request.approvalStatus == 'pending' ? ( */
               <div
+                key={index}
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleClick(request.redirectTo);
+                }}
                 style={{
+                  cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
-                  gap: "10px",
-                  flexGrow: 1,
+                  background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
+                  padding: "16px",
+                  borderBottom: "1px solid #EE7200",
+                  borderRadius: "7px",
+                  width: "100%",
+                  marginBottom: "8px",
                 }}
               >
-                <img
-                  src={request.imageUrl}
-                  alt={request.name}
-                  style={imageStyle}
-                />
-                <div>
-                  <Typography>
-                    <strong>{request.name}</strong> requested an adoption
-                  </Typography>
-                  <Typography variant="caption" color="#2F4858">
-                    {request.time}
-                  </Typography>
-                </div>
-              </div>
-              <Box
-                sx={{
-                  position: "relative",
-                  width: "350px",
-                  height: "100%",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: {
-                      xs: "none",
-                      sm: "none",
-                      md: "flex",
-                    },
+                <div
+                  style={{
+                    display: "flex",
                     alignItems: "center",
-                    justifyContent: "flex-end",
                     gap: "10px",
+                    flexGrow: 1,
                   }}
                 >
-                  <Tooltip title="Accept">
-                    <Button variant="contained" style={buttonStyle}>
-                      <CheckIcon style={{ color: "#FFFFFF" }} />
-                    </Button>
-                  </Tooltip>
-
-                  <Tooltip title="Reject">
-                    <Button variant="contained" style={buttonStyle}>
-                      <ClearIcon style={{ color: "#FFFFFF" }} />
-                    </Button>
-                  </Tooltip>
-
-                  <Tooltip title="Send Message">
-                    <Button variant="contained" style={buttonStyle}>
-                      <img
-                        src={Frame200Send}
-                        alt="Send"
-                        style={{ minWidth: "24px", minHeight: "24px" }}
-                      />
-                    </Button>
-                  </Tooltip>
-
-                  <Tooltip title="Print">
-                    <Button variant="contained" style={buttonStyle}>
-                      <GetAppIcon style={{ color: "#FFFFFF" }} />
-                    </Button>
-                  </Tooltip>
-                </Box>
-
+                  <img
+                    src={request.imageUrl}
+                    alt={request.name}
+                    style={imageStyle}
+                  />
+                  <div>
+                    <Typography>
+                      <strong>{request.name}</strong> requested an adoption
+                    </Typography>
+                    <Typography variant="caption" color="#2F4858">
+                      {request.time}
+                    </Typography>
+                  </div>
+                </div>
                 <Box
                   sx={{
                     position: "relative",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
+                    width: "350px",
+                    height: "100%",
                   }}
                 >
-                  <SpeedDial
-                    direction="left"
-                    ariaLabel="SpeedDial basic example"
+                  <Box
                     sx={{
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
                       display: {
-                        xs: "block",
-                        sm: "block",
-                        md: "none",
+                        xs: "none",
+                        sm: "none",
+                        md: "flex",
                       },
-                      width: "100%",
-                      height: "100%",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      gap: "10px",
                     }}
-                    icon={<SpeedDialIcon sx={{ color: "white" }} />}
                   >
-                    {actions.map((action, idx) => (
-                      <SpeedDialAction
-                        key={idx}
-                        icon={action.icon}
-                        tooltipTitle={action.name}
-                      />
-                    ))}
-                  </SpeedDial>
+                    <Tooltip title="Accept">
+                      <Button
+                        variant="contained"
+                        style={buttonStyle}
+                        onClick={() => handleAcceptButton(request)}
+                      >
+                        <CheckIcon style={{ color: "#FFFFFF" }} />
+                      </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Reject">
+                      <Button
+                        variant="contained"
+                        style={buttonStyle}
+                        onClick={() => handleRejectButton(request)}
+                      >
+                        <ClearIcon style={{ color: "#FFFFFF" }} />
+                      </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Send Message">
+                      <Button
+                        variant="contained"
+                        style={buttonStyle}
+                        component={RouterLink}
+                        to="/messages"
+                      >
+                        <img
+                          src={Frame200Send}
+                          alt="Send"
+                          style={{ minWidth: "24px", minHeight: "24px" }}
+                        />
+                      </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Print">
+                      <Button variant="contained" style={buttonStyle}>
+                        <GetAppIcon style={{ color: "#FFFFFF" }} />
+                      </Button>
+                    </Tooltip>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      position: "relative",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <SpeedDial
+                      direction="left"
+                      ariaLabel="SpeedDial basic example"
+                      sx={{
+                        position: "absolute",
+                        bottom: 0,
+                        right: 0,
+                        display: {
+                          xs: "block",
+                          sm: "block",
+                          md: "none",
+                        },
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      icon={<SpeedDialIcon sx={{ color: "white" }} />}
+                    >
+                      {actions.map((action, idx) => (
+                        <SpeedDialAction
+                          key={idx}
+                          icon={action.icon}
+                          tooltipTitle={action.name}
+                        />
+                      ))}
+                    </SpeedDial>
+                  </Box>
                 </Box>
-              </Box>
-            </div>
-          ))}
+              </div>
+              /*             ) : null */
+            ))
+          ) : (
+            <p>No adoption requests found.</p>
+          )}
         </Container>
       </div>
       <Footer />

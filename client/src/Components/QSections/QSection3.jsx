@@ -9,6 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { CheckboxSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { format } from "date-fns";
+import { memo } from "react";
 
 const QSection3 = () => {
   return (
@@ -188,4 +189,4 @@ const ReachMethods = () => {
   );
 };
 
-export default QSection3;
+export default memo(QSection3);

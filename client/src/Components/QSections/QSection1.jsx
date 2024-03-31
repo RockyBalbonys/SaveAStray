@@ -8,7 +8,7 @@ import { Input } from "@mui/material";
 import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 
 const QSection1 = () => {
   const { answers, updateAnswer, handleShelterId } = useQuestionnaireContext();
@@ -96,4 +96,4 @@ const options = [
   },
 ];
 
-export default QSection1;
+export default memo(QSection1);

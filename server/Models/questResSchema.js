@@ -6,6 +6,16 @@ const questResSchema = new mongoose.Schema(
             type: String,
             unique: true
         },
+        timestamp: {
+            type: Date
+        },
+        approvalStatus: {
+            type: String,
+            enum: ['pending', 'approved', 'rejected'],
+        },
+        toShelter: {
+            type: String
+        },
         answers: {
             section1: {
                 bestDescribe: String,

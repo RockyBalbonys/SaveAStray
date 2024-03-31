@@ -15,7 +15,7 @@ import InputField from "./InputField";
 import styled from "@emotion/styled";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, memo } from "react";
 
 const QSection6 = () => {
   const { answers, updateAnswer } = useQuestionnaireContext();
@@ -214,4 +214,4 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default QSection6;
+export default memo(QSection6);

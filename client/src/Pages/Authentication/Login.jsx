@@ -1,6 +1,19 @@
+// react and other functions
 import React, { useEffect, useState } from "react";
-import myPassive from "../assets/images/top.png";
-import logo from "../assets/icons/SAS_Logo4.png";
+import useLogin from "../../hooks/useLogin";
+import { Link, useLocation } from "react-router-dom";
+import axios from "axios";
+import { store } from "../../tools/store";
+import { loginSuccess } from "../../tools/authActions";
+
+// icons and images
+import myPassive from "../../assets/images/top.png";
+import logo from "../../assets/icons/SAS_Logo4.png";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
+
+// mui components
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -10,18 +23,13 @@ import InputLabel from "@mui/material/InputLabel";
 import styled from "@emotion/styled";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputBase from "@mui/material/InputBase";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Paper from "@mui/material/Paper";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
-import useLogin from "../hooks/useLogin";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
-import { store } from "../tools/store";
-import { loginSuccess } from "../tools/authActions";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
-export const NewLogin = () => {
+function Login() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const roleSelected = params.get("role");
@@ -112,7 +120,9 @@ export const NewLogin = () => {
       </div>
     </>
   );
-};
+}
+
+export default Login;
 
 function LoginCard({
   role,
@@ -143,12 +153,12 @@ function LoginCard({
           },
           height: {
             xs: "90%",
-            sm: "80%",
+            sm: "90%",
             md: "80%",
           },
           borderRadius: "12px",
           boxShadow: "0px 0px 16px 0px rgba(0, 0, 0, 0.25)",
-          overflow: "hidden",
+          overflow: "auto",
         }}
       >
         <Grid container sx={{ width: "100%", height: "100%" }}>
@@ -189,7 +199,14 @@ function LoginCard({
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} order={{ xs: 1, sm: 1, md: 2 }}>
-            <div className="md:p-8 lg:p-8 p-6 sm:p-8 py-20 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
+            <div className="md:p-8 lg:p-8 p-6 sm:p-8 lg:py-18 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
+              <Tooltip title="Back to Home">
+                <IconButton sx={{ alignSelf: "flex-start" }}>
+                  <Link to={"/"}>
+                    <ArrowBackRoundedIcon sx={{ color: "#FF7A00" }} />
+                  </Link>
+                </IconButton>
+              </Tooltip>
               <p className="text-[24px] text-[#FF7A00] mb-9">Login Account</p>
               <div className="text-[#FF7A00] text-[12px] flex flex-col items-center justify-center w-full">
                 <FormControl>
@@ -331,7 +348,7 @@ function LoginCard({
                 <p className="font-light cursor-pointer">
                   <Link to="/forgot">Forgot Password?</Link>
                 </p>
-                <Link to="/signup">
+                <Link to="/register">
                   <p className="font-bold cursor-pointer">Need an account?</p>
                 </Link>
               </div>
@@ -376,6 +393,7 @@ export const UserInput = styled(InputBase)(({ theme }) => ({
     border: "2px solid #FF7A00",
     fontSize: 16,
     padding: "10px 12px",
+    paddingRight: "12px",
     transition: theme.transitions.create([
       "border-color",
       "background-color",

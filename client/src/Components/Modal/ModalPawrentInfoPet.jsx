@@ -20,15 +20,11 @@ const ModalPawrentInfoPet = ({ open, onClose, animal }) => {
   const navigate = useNavigate();
 
   const { shelter } = animal;
-  console.log(shelter);
 
   const handleInquireAdoptionClick = () => {
-    console.log("Inquire Adoption button clicked");
     if (isLoggedIn) {
-      console.log("Pawrent is logged in, navigating to /questionnaire");
       navigate(`/questionnaire/${shelter}`);
     } else {
-      console.log("No one is logged in, navigating to /login");
       navigate("/login");
     }
   };
