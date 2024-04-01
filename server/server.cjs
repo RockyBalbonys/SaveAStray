@@ -15,6 +15,7 @@ const PawrentInfo = require("./Models/pawrentInfoSchema.js");
 const { OAuth2Client } = require("google-auth-library");
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
+const PawrentNotif = require("./Models/pawrentNotif.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -524,7 +525,7 @@ app.post("/api/fetchRequests", async (req, res) => {
 
     const mappedAnswers = await Promise.all(
       allAnswers.map(async (answer) => {
-        const { respondent, timestamp, _id, approvalStatus } = answer;
+        const { respondent, timestamp, _id, approvalStatus, toShelter } = answer;
         const pawrentInfo = await PawrentInfo.find({ userId: respondent });
 
         if (!pawrentInfo || pawrentInfo.length === 0) {
@@ -537,12 +538,16 @@ app.post("/api/fetchRequests", async (req, res) => {
           timestamp: timestamp,
           id: _id,
           approvalStatus: approvalStatus,
+          respondent: respondent,
+          toShelter: toShelter
         }));
         return {
           firstName: mappedRespondentInfo[0].firstName,
           timestamp: mappedRespondentInfo[0].timestamp,
           id: mappedRespondentInfo[0].id,
           approvalStatus: mappedRespondentInfo[0].approvalStatus,
+          respondent: mappedRespondentInfo[0].respondent,
+          toShelter: mappedRespondentInfo[0].toShelter
         };
       })
     );
@@ -569,6 +574,50 @@ app.post("/api/fetchRequests", async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+app.post("/api/fetchNotifs", async (req, res) => {
+  const { user } = req.body;
+
+  try {
+    const pawrentNotifs = await PawrentNotif.find({ to: user });
+
+    if (!pawrentNotifs.length) {
+      return res.send({
+        status: 200,
+        notifs: null,
+      });
+    }
+
+    // Fetch shelter info for each notification in parallel (optional for performance)
+    const shelterInfoPromises = pawrentNotifs.map((notif) => ShelterInfo.find({ userId: notif.from }));
+    const resolvedShelterInfo = await Promise.all(shelterInfoPromises);
+
+    const mappedNotifs = pawrentNotifs.map((notif, index) => {
+      const shelterData = resolvedShelterInfo[index]; // Get corresponding shelter info
+      console.log("notif ",shelterData);
+      return {
+        to: notif.to,
+        from: shelterData[0].shelterName,
+        approvalStatus: notif.approvalStatus,
+        timestamp: notif.timestamp,
+        //shelterInfo: shelterData ? shelterData[0] : null, // Include only the first document (assuming one shelter per user)
+      };
+    });
+
+    console.log("mapped pawrent notifs ", mappedNotifs);
+    res.send({
+      status: 200,
+      mappedNotifs,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.send({
+      status: 500,
+      error: "Internal server error",
+    });
+  }
+});
+
 
 app.get("/getShelter", async (req, res) => {
   try {
@@ -678,7 +727,6 @@ app.post("/api/updateShelterInfo", async (req, res) => {
 app.post("/api/updateApproval", async (req, res) => {
   const { requestId, approvalStatus } = req.body;
   const request = await QuestRes.findOne({ _id: requestId });
-  console.log("request: ", request);
   if (request) {
     console.log(requestId, approvalStatus);
     console.log("request Approval in request : ", request.approvalStatus);
@@ -690,6 +738,10 @@ app.post("/api/updateApproval", async (req, res) => {
         updatedRequest,
       });
     } catch (error) {
+      res.send({
+        status: 400,
+        message: "failed"
+      });
       console.log(error);
     }
   } else {
@@ -709,6 +761,26 @@ app.get('/api/shelterInfo', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+app.post("/api/notifPawrent", async (req, res) => {
+  const notif = req.body.response.data.updatedRequest
+  const { respondent, toShelter, approvalStatus, timestamp } = notif
+  console.log("req.body: ",respondent, toShelter, approvalStatus, timestamp);
+  try {
+    const newPawrentNotif = new PawrentNotif({
+      to: respondent,
+      from: toShelter,
+      approvalStatus,
+      timestamp
+    });
+    const savedPawrentNotif = await newPawrentNotif.save();
+    console.log(savedPawrentNotif);
+  } catch (error) {
+    console.log(error);
+  }
+
+  console.log("notif ",notif);
+})
 
 // Pawrent Info API
 app.post("/api/updatePawrentInfo", async (req, res) => {

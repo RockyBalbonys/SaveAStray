@@ -105,16 +105,17 @@ function RequestShelter() {
           console.log("No requests at the moment");
         } else {
           const transformedRequests = allAnswers.map(function (answer) {
-            const notificationCreatedAt = new Date(answer.timestamp); // Replace with actual timestamp or function to get it
+            const notificationCreatedAt = new Date(answer.timestamp);
             const formattedTime = formatDistanceToNow(notificationCreatedAt, {
-              addSuffix: true, // Optionally add "ago" or "from now"
-              //locale: es,        // Optional: Set locale for specific formatting
+              addSuffix: true, 
             });
             return {
               name: answer.firstName,
               time: formattedTime,
               requestId: answer.id,
               approvalStatus: answer.approvalStatus,
+              respondent: answer.respondent,
+              toShelter: answer.toShelter
               /*     imageUrl,
               redirectTo */
             };
@@ -140,7 +141,16 @@ function RequestShelter() {
         approvalStatus: "approved",
       })
       .then(function (response) {
-        console.log(response);
+        console.log("response: ",response);
+        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/notifPawrent`, {
+          response
+        })
+        .then(function(response){
+          console.log(response);
+        })
+        .catch(function(error){
+          console.log(error);
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -157,6 +167,15 @@ function RequestShelter() {
       })
       .then(function (response) {
         console.log(response);
+          axios.post(`${process.env.REACT_APP_SERVER_URL}/api/notifPawrent`, {
+            response
+          })
+          .then(function(response){
+            console.log(response);
+          })
+          .catch(function(error){
+            console.log(error);
+          })
       })
       .catch(function (err) {
         console.log(err);
