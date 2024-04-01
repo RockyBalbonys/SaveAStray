@@ -771,6 +771,54 @@ app.get('/api/pawrentInfo', async (req, res) => {
   }
 });
 
+// API Delete Google User Credentials
+app.delete('/api/deleteGoogleUserCredentials/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    await GoogleUser.findOneAndDelete({ _id: id });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error deleting user credentials:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// API Delete User Credentials
+app.delete('/api/deleteUserCredentials/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    await User.findOneAndDelete({ _id: id });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error deleting user information:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// API Delete Shelter Info
+app.delete('/api/deleteShelterInfo/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    await ShelterInfo.findOneAndDelete({ userId });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error deleting shelter info:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// API Delete Pawrent Info
+app.delete('/api/deletePawrentInfo/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    await PawrentInfo.findOneAndDelete({ userId });
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error deleting shepawrentlter info:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.listen(port, () => {
   console.log("Connected to PORT ", port);
 });
