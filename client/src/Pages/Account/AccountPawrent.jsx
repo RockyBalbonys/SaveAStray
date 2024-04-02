@@ -51,6 +51,26 @@ const AccountForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  //API Fetch Pawrent Info
+  const [pawrentInfo, setPawrentInfo] = useState(null);
+
+  useEffect(() => {
+    fetchPawrentInfo(user);
+  }, [user]);
+
+  const fetchPawrentInfo = async (userId) => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo`, {
+        params: {
+          userId,
+        },
+      });
+      setPawrentInfo(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [formData, setFormData] = useState({
     userProfilePic: "",
     userId: user,
@@ -153,7 +173,9 @@ const AccountForm = () => {
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <DeleteAcc />
+                <DeleteAcc 
+                  forcedLogout={handleLogout}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -251,6 +273,8 @@ const PersonalInfoCard = ({ formData, onChange }) => {
                 id="zipCode"
                 variant="outlined"
                 sx={{ width: "100%" }}
+                value={formData.zipCode}
+                onChange={onChange}
               />
             </Grid>
 
@@ -298,7 +322,21 @@ const ContactInfoCard = ({ formData, onChange }) => {
   );
 };
 
-const DeleteAcc = () => {
+const DeleteAcc = ({ forcedLogout }) => {
+  const { user } = useAuth();
+
+  const deleteUser = async () => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deletePawrentInfo/${user}`);
+
+      forcedLogout();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Deletion of Account"} />
@@ -319,6 +357,7 @@ const DeleteAcc = () => {
             md: "216px",
           },
         }}
+        onClick={deleteUser}
       >
         Delete Account
       </Button>
