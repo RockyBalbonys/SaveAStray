@@ -9,7 +9,7 @@ const firebaseConfig = {
     storageBucket: "save-a-stray-40e56.appspot.com",
     messagingSenderId: "767492186893",
     appId: "1:767492186893:web:e9e9ef6c165e144c9a4644"
-  };
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

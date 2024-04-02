@@ -20,6 +20,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import { initializeApp } from 'firebase/app';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 // Custom Components
 import { FormPaper } from "../../Components/Paper/FormPaper";
@@ -33,6 +35,18 @@ import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
 // Avatar Component
 import { AccountAvatar } from "../../Components/Account/AccountAvatar";
 import AccountDrawer from "../../Components/Account/AccountDrawer";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
+  authDomain: "save-a-stray-40e56.firebaseapp.com",
+  projectId: "save-a-stray-40e56",
+  storageBucket: "save-a-stray-40e56.appspot.com",
+  messagingSenderId: "767492186893",
+  appId: "1:767492186893:web:e9e9ef6c165e144c9a4644"
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 
 function AccountPawrent() {
   return (
@@ -90,10 +104,11 @@ const AccountForm = () => {
     store.dispatch(logout());
     unsubscribe();
     navigate("/login");
-
     /*           setLoginAttempted(true);
           setUserIn(false); */
   };
+
+
 
   // profile picture
   const [profilePic, setProfilePic] = useState(null);
@@ -101,13 +116,22 @@ const AccountForm = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      // Check if the file is an image
       if (file.type.startsWith("image/")) {
-        // Convert the file to a data URL
         const reader = new FileReader();
         reader.onload = (e) => {
+
           const imageBase64 = e.target.result;
 
+          //upload image == gawin to
+        const storageRef = ref(storage, `user/dp/${imageBase64.name}`);
+          try {
+            const snapshot = uploadBytes(storageRef, imageBase64);
+            console.log("Uploaded a blob or file!", snapshot);
+            const downloadURL = getDownloadURL(snapshot.ref);
+            console.log(downloadURL);
+          } catch (error) {
+            console.error("Error uploading file:", error);
+          }
           setProfilePic(imageBase64);
           setFormData({ ...formData, [e.target.id]: profilePic });
           console.log("Success");
