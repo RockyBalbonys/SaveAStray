@@ -1,10 +1,12 @@
 // react and other functions
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { store, persistor } from "../../tools/store";
 import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
 import useAuth from "../../hooks/useAuth";
+import { initializeApp } from "firebase/app";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 // mui components
 import Avatar from "@mui/material/Avatar";
@@ -20,8 +22,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
-import { initializeApp } from 'firebase/app';
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 
 // Custom Components
 import { FormPaper } from "../../Components/Paper/FormPaper";
@@ -42,11 +42,12 @@ const firebaseConfig = {
   projectId: "save-a-stray-40e56",
   storageBucket: "save-a-stray-40e56.appspot.com",
   messagingSenderId: "767492186893",
-  appId: "1:767492186893:web:e9e9ef6c165e144c9a4644"
+  appId: "1:767492186893:web:e9e9ef6c165e144c9a4644",
 };
 
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
+
 
 function AccountPawrent() {
   return (
@@ -67,6 +68,7 @@ const AccountForm = () => {
 
   //API Fetch Pawrent Info
   const [pawrentInfo, setPawrentInfo] = useState(null);
+  console.log(pawrentInfo);
 
   useEffect(() => {
     fetchPawrentInfo(user);
@@ -74,12 +76,17 @@ const AccountForm = () => {
 
   const fetchPawrentInfo = async (userId) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo`, {
+      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`, {
         params: {
           userId,
         },
+      }).then(function(response){
+        console.log(response);
+        setPawrentInfo(response.data);
+        setProfilePic(response.data.dp);
+      }).catch(function(error){
+        console.log(error);
       });
-      setPawrentInfo(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -124,37 +131,48 @@ const AccountForm = () => {
     store.dispatch(logout());
     unsubscribe();
     navigate("/login");
+
     /*           setLoginAttempted(true);
           setUserIn(false); */
   };
-
-
-
   // profile picture
-  const [profilePic, setProfilePic] = useState(null);
+  const [profilePic, setProfilePic] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       if (file.type.startsWith("image/")) {
         const reader = new FileReader();
-        reader.onload = (e) => {
-
-          const imageBase64 = e.target.result;
-
-          //upload image == gawin to
-        const storageRef = ref(storage, `user/dp/${imageBase64.name}`);
+        reader.onload = async () => {
+          const imageBase64 = event.target.result;
+          console.log("file: ", file);
+          const storageRef = ref(storage, `user/dp/${file.name}`);
           try {
-            const snapshot = uploadBytes(storageRef, imageBase64);
-            console.log("Uploaded a blob or file!", snapshot);
-            const downloadURL = getDownloadURL(snapshot.ref);
-            console.log(downloadURL);
+            const snapshot = await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            console.log("download url: ", downloadURL);
+            console.log('Uploaded a blob or file!', snapshot);
+            console.log("Success");
+
+            if (downloadURL) {
+              axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
+                user,
+                downloadURL
+              }).then(function(response){
+                console.log(response);
+                //setProfilePic(respon)
+              }).catch(function(err){
+                console.log(err);
+              })
+            } else {
+              console.log("no download URL");
+            }
+
+
+
           } catch (error) {
-            console.error("Error uploading file:", error);
+            console.error('Error uploading file:', error);
           }
-          setProfilePic(imageBase64);
-          setFormData({ ...formData, [e.target.id]: profilePic });
-          console.log("Success");
         };
         reader.readAsDataURL(file);
       }

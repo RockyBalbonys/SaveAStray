@@ -750,7 +750,7 @@ app.post("/api/updateApproval", async (req, res) => {
 });
 
 //Fetch Shelter Info API
-app.get('/api/shelterInfo', async (req, res) => {
+app.get('/api/shelterInfo/:id', async (req, res) => {
   const { userId } = req.query;
 
   try {
@@ -831,16 +831,39 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 });
 
 //Fetch Pawrent Info API
-app.get('/api/pawrentInfo', async (req, res) => {
+app.get('/api/pawrentInfo/:userId', async (req, res) => {
   const { userId } = req.query;
-
-  try {
-    const pawrentInfo = await PawrentInfo.findOne({ userId });
-    res.json(pawrentInfo);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+  if (userId) {
+    try {
+      const pawrentInfo = await PawrentInfo.findOne({ userId });
+      const user = await User.findOne({ _id: userId });
+      const gUser = await GoogleUser.findOne({ _id: userId });
+      console.log(pawrentInfo);
+      if (user) {
+        res.json({
+          status:200,
+          dp: user.dp,
+          pawrentInfo
+        });
+      } else if(gUser){
+        res.json({
+          status:200,
+          dp: gUser.dp,
+          pawrentInfo
+        });
+      } else {
+        res.json({
+          status:400,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  } else {
+    console.log("user not exists");
   }
+    
 });
 
 // API Delete Google User Credentials
@@ -888,6 +911,26 @@ app.delete('/api/deletePawrentInfo/:userId', async (req, res) => {
   } catch (error) {
     console.error("Error deleting shepawrentlter info:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post('/api/updateDp', async (req, res) => {
+  const { user, downloadURL } = req.body
+  console.log(req.body);
+  if (req.body) {
+    const userDb = await User.findOne({_id: user})
+    const gUserDb = await GoogleUser.findOne({_id: user})
+    if (userDb) {
+      userDb.dp = downloadURL
+      const newUserDb = await userDb.save()
+      console.log(newUserDb);
+    } else if(gUserDb){
+      gUserDb.dp = downloadURL
+      const gNewUserDb = await gUserDb.save()
+      console.log(gNewUserDb);
+    }
+  } else {
+    console.log("no req.body");
   }
 });
 
