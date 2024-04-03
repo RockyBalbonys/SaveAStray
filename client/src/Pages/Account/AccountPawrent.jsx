@@ -48,7 +48,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-
 function AccountPawrent() {
   return (
     <>
@@ -68,29 +67,23 @@ const AccountForm = () => {
 
   //API Fetch Pawrent Info
   const [pawrentInfo, setPawrentInfo] = useState(null);
-  console.log(pawrentInfo);
+  console.log({ pawrentInfo });
 
   useEffect(() => {
-    fetchPawrentInfo(user);
-  }, [user]);
-
-  const fetchPawrentInfo = async (userId) => {
-    try {
-      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`, {
-        params: {
-          userId,
-        },
-      }).then(function(response){
-        console.log(response);
+    const fetchPawrentInfo = async (userId) => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`
+        );
         setPawrentInfo(response.data);
         setProfilePic(response.data.dp);
-      }).catch(function(error){
-        console.log(error);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPawrentInfo(user);
+  }, [user]);
 
   const [formData, setFormData] = useState({
     userProfilePic: "",
@@ -151,27 +144,27 @@ const AccountForm = () => {
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
             console.log("download url: ", downloadURL);
-            console.log('Uploaded a blob or file!', snapshot);
+            console.log("Uploaded a blob or file!", snapshot);
             console.log("Success");
 
             if (downloadURL) {
-              axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
-                user,
-                downloadURL
-              }).then(function(response){
-                console.log(response);
-                //setProfilePic(respon)
-              }).catch(function(err){
-                console.log(err);
-              })
+              axios
+                .post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
+                  user,
+                  downloadURL,
+                })
+                .then(function (response) {
+                  console.log(response);
+                  //setProfilePic(respon)
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
             } else {
               console.log("no download URL");
             }
-
-
-
           } catch (error) {
-            console.error('Error uploading file:', error);
+            console.error("Error uploading file:", error);
           }
         };
         reader.readAsDataURL(file);
@@ -215,9 +208,7 @@ const AccountForm = () => {
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <DeleteAcc 
-                  forcedLogout={handleLogout}
-                />
+                <DeleteAcc forcedLogout={handleLogout} />
               </Grid>
             </Grid>
           </Grid>
@@ -369,9 +360,15 @@ const DeleteAcc = ({ forcedLogout }) => {
 
   const deleteUser = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`);
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`);
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deletePawrentInfo/${user}`);
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`
+      );
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`
+      );
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deletePawrentInfo/${user}`
+      );
 
       forcedLogout();
     } catch (error) {

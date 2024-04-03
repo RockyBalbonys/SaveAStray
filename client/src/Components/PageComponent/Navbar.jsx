@@ -208,7 +208,7 @@ export default function Navbar() {
                   variant="contained"
                   size="small"
                   component={RouterLink}
-                  to="signup"
+                  to="register"
                   startIcon={<AccountCircleIcon />}
                   sx={{ padding: "6px 16px" }}
                 >
