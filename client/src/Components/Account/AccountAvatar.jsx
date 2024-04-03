@@ -81,8 +81,8 @@ const AvatarRing = ({ profilePic, handleFileChange }) => {
   return (
     <>
       <Avatar
-        alt="avatar placeholder"
-        src={!profilePic ? avatar_placeholder : profilePic}
+        alt=""
+        src={profilePic}
         sx={{
           width: "100px",
           height: "100px",

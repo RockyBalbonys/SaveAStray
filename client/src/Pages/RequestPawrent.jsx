@@ -5,12 +5,6 @@ import Container from '@mui/material/Container'
 import Tooltip from '@mui/material/Tooltip'
 import { useNavigate } from "react-router-dom";
 import actionImage from "../assets/images/Frame 200Send.svg"; 
-import jembotImage from "../assets/images/animals/jembot.jpg";
-import felixImage from "../assets/images/animals/felix.jpg";
-import inibamImage from "../assets/images/animals/inibam.jpg";
-import lansImage from "../assets/images/animals/lans.jpg";
-import pugdoyImage from "../assets/images/animals/pugdoy.jpg";
-import ramboImage from "../assets/images/animals/rambo.jpg";
 import Footer from "../Components/PageComponent/Footer";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
@@ -35,15 +29,6 @@ const imageStyle = {
   objectFit: "cover",
   border: "2px solid orange",
 };
-
-/* const AdoptionRequests = [
-  { name: "Joemen", time: "a few seconds ago", imageUrl: jembotImage },
-  { name: "Redeeet", time: "1 minute ago", imageUrl: felixImage },
-  { name: "Rokcyyyy :>", time: "1 hour ago", imageUrl: inibamImage },
-  { name: "Mateek", time: "2 hours ago", imageUrl: lansImage },
-  { name: "Iniba’am", time: "1 day ago", imageUrl: pugdoyImage },
-  { name: "Lancer", time: "2 days ago", imageUrl: ramboImage },
-]; */
 
 function RequestPawrent() {
   const { user } = useAuth();
@@ -72,6 +57,7 @@ function RequestPawrent() {
               name: notif.from,
               time: formattedTime,
               approvalStatus: notif.approvalStatus,
+              imageURL: notif.imageURL
             };
           })
           setPawrentNotifs(mappedPawrentNotifs)
@@ -144,8 +130,8 @@ function RequestPawrent() {
                   style={{ display: "flex", alignItems: "center", gap: "10px" }}
                 >
                   <img
-                    src={request.imageUrl}
-                    alt={request.name}
+                    src={request.imageURL}
+                    alt=""
                     style={imageStyle}
                   />
                   <div>

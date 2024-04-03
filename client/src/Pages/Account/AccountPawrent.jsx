@@ -7,7 +7,7 @@ import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
 import useAuth from "../../hooks/useAuth";
 import { initializeApp } from "firebase/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-
+//import SAS_icon from "../../assets/icons/SAS_Logo4.png"
 // mui components
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -83,7 +83,7 @@ const AccountForm = () => {
       }).then(function(response){
         console.log(response);
         setPawrentInfo(response.data);
-        setProfilePic(response.data.dp);
+        setProfilePic(response.data.pawrentInfo.dp);
       }).catch(function(error){
         console.log(error);
       });

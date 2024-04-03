@@ -31,6 +31,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import messageIcon from "../../assets/icons/Message Icon.svg";
 import bellIcon from "../../assets/icons/Bell Icon.svg";
 import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
+import SAS_Logo from "../../assets/icons/SAS_Logo4.png"
 
 // import constant datas
 import { pages } from "../../constants/landingPage";
@@ -371,8 +372,8 @@ const AvatarRing = ({ accountIsLoggedIn, accountRole }) => {
         <Avatar
           component={RouterLink}
           to={manageAccountLink}
-          alt="avatar placeholder"
-          src={avatar_placeholder}
+          alt={SAS_Logo}
+          src={SAS_Logo}
           sx={{
             boxShadow: "0px 0px 6.548px 3.274px rgba(255, 161, 52, 0.30)",
             border: "5px solid #EE7200",

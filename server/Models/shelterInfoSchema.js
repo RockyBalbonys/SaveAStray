@@ -16,7 +16,8 @@ const shelterInfoSchema = new mongoose.Schema({
   representativeCityAddress: String,
   representativeZipCode: String,
   representativeBirthdate: Date,
-  representativePhoneNumber: String
+  representativePhoneNumber: String,
+  dp: String
 });
 
 const ShelterInfo = mongoose.model('ShelterInfo', shelterInfoSchema);

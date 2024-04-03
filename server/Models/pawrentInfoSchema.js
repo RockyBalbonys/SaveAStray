@@ -9,6 +9,7 @@ const pawrentInfoSchema = new mongoose.Schema({
   zipCode: String,
   emailAddress: String,
   phoneNumber: String,
+  dp: String
 });
 
 const PawrentInfo = mongoose.model('PawrentInfo', pawrentInfoSchema);

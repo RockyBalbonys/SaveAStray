@@ -539,7 +539,8 @@ app.post("/api/fetchRequests", async (req, res) => {
           id: _id,
           approvalStatus: approvalStatus,
           respondent: respondent,
-          toShelter: toShelter
+          toShelter: toShelter,
+          dp: info.dp
         }));
         return {
           firstName: mappedRespondentInfo[0].firstName,
@@ -547,7 +548,8 @@ app.post("/api/fetchRequests", async (req, res) => {
           id: mappedRespondentInfo[0].id,
           approvalStatus: mappedRespondentInfo[0].approvalStatus,
           respondent: mappedRespondentInfo[0].respondent,
-          toShelter: mappedRespondentInfo[0].toShelter
+          toShelter: mappedRespondentInfo[0].toShelter,
+          dp: mappedRespondentInfo[0].dp
         };
       })
     );
@@ -580,7 +582,6 @@ app.post("/api/fetchNotifs", async (req, res) => {
 
   try {
     const pawrentNotifs = await PawrentNotif.find({ to: user });
-
     if (!pawrentNotifs.length) {
       return res.send({
         status: 200,
@@ -594,12 +595,14 @@ app.post("/api/fetchNotifs", async (req, res) => {
 
     const mappedNotifs = pawrentNotifs.map((notif, index) => {
       const shelterData = resolvedShelterInfo[index]; // Get corresponding shelter info
+
       console.log("notif ",shelterData);
       return {
         to: notif.to,
         from: shelterData[0].shelterName,
         approvalStatus: notif.approvalStatus,
         timestamp: notif.timestamp,
+        imageURL: shelterData[0].dp
         //shelterInfo: shelterData ? shelterData[0] : null, // Include only the first document (assuming one shelter per user)
       };
     });
@@ -750,15 +753,28 @@ app.post("/api/updateApproval", async (req, res) => {
 });
 
 //Fetch Shelter Info API
-app.get('/api/shelterInfo/:id', async (req, res) => {
+app.get('/api/shelterInfo/:userId', async (req, res) => {
   const { userId } = req.query;
-
-  try {
-    const shelterInfo = await ShelterInfo.findOne({ userId });
-    res.json(shelterInfo);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+  if (userId) {
+    try {
+      const shelterInfo = await ShelterInfo.findOne({ userId });
+      console.log(shelterInfo);
+      if (shelterInfo) {
+        res.json({
+          status:200,
+          shelterInfo
+        });
+      } else {
+        res.json({
+          status:400,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  } else {
+    console.log("user not exists");
   }
 });
 
@@ -836,19 +852,10 @@ app.get('/api/pawrentInfo/:userId', async (req, res) => {
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
-      const user = await User.findOne({ _id: userId });
-      const gUser = await GoogleUser.findOne({ _id: userId });
       console.log(pawrentInfo);
-      if (user) {
+      if (pawrentInfo) {
         res.json({
           status:200,
-          dp: user.dp,
-          pawrentInfo
-        });
-      } else if(gUser){
-        res.json({
-          status:200,
-          dp: gUser.dp,
           pawrentInfo
         });
       } else {
@@ -918,16 +925,16 @@ app.post('/api/updateDp', async (req, res) => {
   const { user, downloadURL } = req.body
   console.log(req.body);
   if (req.body) {
-    const userDb = await User.findOne({_id: user})
-    const gUserDb = await GoogleUser.findOne({_id: user})
-    if (userDb) {
-      userDb.dp = downloadURL
-      const newUserDb = await userDb.save()
-      console.log(newUserDb);
-    } else if(gUserDb){
-      gUserDb.dp = downloadURL
-      const gNewUserDb = await gUserDb.save()
-      console.log(gNewUserDb);
+    const pawrentDb = await PawrentInfo.findOne({userId: user})
+    const shelterDb = await ShelterInfo.findOne({userId: user})
+    if (pawrentDb) {
+      pawrentDb.dp = downloadURL
+      const newPawrentDb = await pawrentDb.save()
+      console.log(newPawrentDb);
+    } else if(shelterDb){
+      shelterDb.dp = downloadURL
+      const newShelterDb = await shelterDb.save()
+      console.log(newShelterDb);
     }
   } else {
     console.log("no req.body");
