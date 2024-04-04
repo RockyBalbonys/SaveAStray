@@ -25,9 +25,6 @@ const googleUserSchema = new mongoose.Schema(
           verificationToken: {
             type: String,
           },
-          dp: {
-            type: String
-          }
     }
 )
 
