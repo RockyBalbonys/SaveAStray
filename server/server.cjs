@@ -525,7 +525,8 @@ app.post("/api/fetchRequests", async (req, res) => {
 
     const mappedAnswers = await Promise.all(
       allAnswers.map(async (answer) => {
-        const { respondent, timestamp, _id, approvalStatus, toShelter } = answer;
+        const { respondent, timestamp, _id, approvalStatus, toShelter } =
+          answer;
         const pawrentInfo = await PawrentInfo.find({ userId: respondent });
 
         if (!pawrentInfo || pawrentInfo.length === 0) {
@@ -540,7 +541,7 @@ app.post("/api/fetchRequests", async (req, res) => {
           approvalStatus: approvalStatus,
           respondent: respondent,
           toShelter: toShelter,
-          dp: info.dp
+          dp: info.dp,
         }));
         return {
           firstName: mappedRespondentInfo[0].firstName,
@@ -549,7 +550,7 @@ app.post("/api/fetchRequests", async (req, res) => {
           approvalStatus: mappedRespondentInfo[0].approvalStatus,
           respondent: mappedRespondentInfo[0].respondent,
           toShelter: mappedRespondentInfo[0].toShelter,
-          dp: mappedRespondentInfo[0].dp
+          dp: mappedRespondentInfo[0].dp,
         };
       })
     );
@@ -590,19 +591,21 @@ app.post("/api/fetchNotifs", async (req, res) => {
     }
 
     // Fetch shelter info for each notification in parallel (optional for performance)
-    const shelterInfoPromises = pawrentNotifs.map((notif) => ShelterInfo.find({ userId: notif.from }));
+    const shelterInfoPromises = pawrentNotifs.map((notif) =>
+      ShelterInfo.find({ userId: notif.from })
+    );
     const resolvedShelterInfo = await Promise.all(shelterInfoPromises);
 
     const mappedNotifs = pawrentNotifs.map((notif, index) => {
       const shelterData = resolvedShelterInfo[index]; // Get corresponding shelter info
 
-      console.log("notif ",shelterData);
+      console.log("notif ", shelterData);
       return {
         to: notif.to,
         from: shelterData[0].shelterName,
         approvalStatus: notif.approvalStatus,
         timestamp: notif.timestamp,
-        imageURL: shelterData[0].dp
+        imageURL: shelterData[0].dp,
         //shelterInfo: shelterData ? shelterData[0] : null, // Include only the first document (assuming one shelter per user)
       };
     });
@@ -620,7 +623,6 @@ app.post("/api/fetchNotifs", async (req, res) => {
     });
   }
 });
-
 
 app.get("/getShelter", async (req, res) => {
   try {
@@ -743,7 +745,7 @@ app.post("/api/updateApproval", async (req, res) => {
     } catch (error) {
       res.send({
         status: 400,
-        message: "failed"
+        message: "failed",
       });
       console.log(error);
     }
@@ -753,25 +755,29 @@ app.post("/api/updateApproval", async (req, res) => {
 });
 
 //Fetch Shelter Info API
-app.get('/api/shelterInfo/:userId', async (req, res) => {
+app.get("/api/shelterInfo/:userId", async (req, res) => {
   const { userId } = req.query;
   if (userId) {
     try {
       const shelterInfo = await ShelterInfo.findOne({ userId });
       console.log(shelterInfo);
       if (shelterInfo) {
+        const user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
         res.json({
-          status:200,
-          shelterInfo
+          status: 200,
+          shelterInfo,
+          email: user.email,
         });
       } else {
         res.json({
-          status:400,
+          status: 400,
         });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).json({ message: "Internal Server Error" });
     }
   } else {
     console.log("user not exists");
@@ -779,15 +785,15 @@ app.get('/api/shelterInfo/:userId', async (req, res) => {
 });
 
 app.post("/api/notifPawrent", async (req, res) => {
-  const notif = req.body.response.data.updatedRequest
-  const { respondent, toShelter, approvalStatus, timestamp } = notif
-  console.log("req.body: ",respondent, toShelter, approvalStatus, timestamp);
+  const notif = req.body.response.data.updatedRequest;
+  const { respondent, toShelter, approvalStatus, timestamp } = notif;
+  console.log("req.body: ", respondent, toShelter, approvalStatus, timestamp);
   try {
     const newPawrentNotif = new PawrentNotif({
       to: respondent,
       from: toShelter,
       approvalStatus,
-      timestamp
+      timestamp,
     });
     const savedPawrentNotif = await newPawrentNotif.save();
     console.log(savedPawrentNotif);
@@ -795,8 +801,8 @@ app.post("/api/notifPawrent", async (req, res) => {
     console.log(error);
   }
 
-  console.log("notif ",notif);
-})
+  console.log("notif ", notif);
+});
 
 // Pawrent Info API
 app.post("/api/updatePawrentInfo", async (req, res) => {
@@ -807,6 +813,7 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
     homeAddress,
     cityAddress,
     zipCode,
+    birthdate,
     emailAddress,
     phoneNumber,
   } = req.body;
@@ -822,6 +829,7 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
         homeAddress,
         cityAddress,
         zipCode,
+        birthdate,
         emailAddress,
         phoneNumber,
       });
@@ -831,6 +839,7 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
       pawrentInfo.homeAddress = homeAddress;
       pawrentInfo.cityAddress = cityAddress;
       pawrentInfo.zipCode = zipCode;
+      pawrentInfo.birthdate = birthdate;
       pawrentInfo.emailAddress = emailAddress;
       pawrentInfo.phoneNumber = phoneNumber;
     }
@@ -847,34 +856,37 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 });
 
 //Fetch Pawrent Info API
-app.get('/api/pawrentInfo/:userId', async (req, res) => {
+app.get("/api/pawrentInfo/:userId", async (req, res) => {
   const { userId } = req.query;
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
       console.log(pawrentInfo);
       if (pawrentInfo) {
+        const user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
         res.json({
-          status:200,
-          pawrentInfo
+          status: 200,
+          pawrentInfo,
+          email: user.email,
         });
       } else {
         res.json({
-          status:400,
+          status: 400,
         });
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+      res.status(500).json({ message: "Internal Server Error" });
     }
   } else {
     console.log("user not exists");
   }
-    
 });
 
 // API Delete Google User Credentials
-app.delete('/api/deleteGoogleUserCredentials/:id', async (req, res) => {
+app.delete("/api/deleteGoogleUserCredentials/:id", async (req, res) => {
   try {
     const id = req.params.id;
     await GoogleUser.findOneAndDelete({ _id: id });
@@ -886,7 +898,7 @@ app.delete('/api/deleteGoogleUserCredentials/:id', async (req, res) => {
 });
 
 // API Delete User Credentials
-app.delete('/api/deleteUserCredentials/:id', async (req, res) => {
+app.delete("/api/deleteUserCredentials/:id", async (req, res) => {
   try {
     const id = req.params.id;
     await User.findOneAndDelete({ _id: id });
@@ -898,7 +910,7 @@ app.delete('/api/deleteUserCredentials/:id', async (req, res) => {
 });
 
 // API Delete Shelter Info
-app.delete('/api/deleteShelterInfo/:userId', async (req, res) => {
+app.delete("/api/deleteShelterInfo/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
     await ShelterInfo.findOneAndDelete({ userId });
@@ -910,7 +922,7 @@ app.delete('/api/deleteShelterInfo/:userId', async (req, res) => {
 });
 
 // API Delete Pawrent Info
-app.delete('/api/deletePawrentInfo/:userId', async (req, res) => {
+app.delete("/api/deletePawrentInfo/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
     await PawrentInfo.findOneAndDelete({ userId });
@@ -921,19 +933,19 @@ app.delete('/api/deletePawrentInfo/:userId', async (req, res) => {
   }
 });
 
-app.post('/api/updateDp', async (req, res) => {
-  const { user, downloadURL } = req.body
+app.post("/api/updateDp", async (req, res) => {
+  const { user, downloadURL } = req.body;
   console.log(req.body);
   if (req.body) {
-    const pawrentDb = await PawrentInfo.findOne({userId: user})
-    const shelterDb = await ShelterInfo.findOne({userId: user})
+    const pawrentDb = await PawrentInfo.findOne({ userId: user });
+    const shelterDb = await ShelterInfo.findOne({ userId: user });
     if (pawrentDb) {
-      pawrentDb.dp = downloadURL
-      const newPawrentDb = await pawrentDb.save()
+      pawrentDb.dp = downloadURL;
+      const newPawrentDb = await pawrentDb.save();
       console.log(newPawrentDb);
-    } else if(shelterDb){
-      shelterDb.dp = downloadURL
-      const newShelterDb = await shelterDb.save()
+    } else if (shelterDb) {
+      shelterDb.dp = downloadURL;
+      const newShelterDb = await shelterDb.save();
       console.log(newShelterDb);
     }
   } else {

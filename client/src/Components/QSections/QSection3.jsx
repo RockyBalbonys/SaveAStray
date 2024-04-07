@@ -91,7 +91,9 @@ const PersonalInfoForm = () => {
 
 const InputField = ({ label, id, width, value, handleInputChange }) => {
   const handleDateChange = (date) => {
+    console.log(date);
     const dateString = format(date, "MM/dd/yyyy");
+    console.log(dateString);
     handleInputChange(id, dateString);
   };
   return (
