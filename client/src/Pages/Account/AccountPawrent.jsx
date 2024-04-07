@@ -87,23 +87,24 @@ const AccountForm = () => {
 
   const fetchPawrentInfo = async (userId) => {
     try {
-      axios
-        .get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`, {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`,
+        {
           params: {
             userId,
           },
-        })
-        .then(function (response) {
-          console.log(response);
-          setPawrentInfo(response.data.pawrentInfo);
-          console.log("birthdate: " + response.data.pawrentInfo.birthdate);
-          setProfilePic(response.data.pawrentInfo.dp);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }
+      );
+      console.log(response);
+      const { pawrentInfo, email } = response.data;
+      setPawrentInfo({
+        ...pawrentInfo,
+        emailAddress: email,
+      });
+      console.log("birthdate: " + pawrentInfo.birthdate);
+      setProfilePic(pawrentInfo.dp);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -207,6 +208,7 @@ const AccountForm = () => {
                 onLogout={handleLogout}
                 profilePic={profilePic}
                 handleFileChange={handleFileChange}
+                accountInfo={pawrentInfo}
               />
             </Box>
           </Grid>

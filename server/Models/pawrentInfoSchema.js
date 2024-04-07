@@ -7,7 +7,7 @@ const pawrentInfoSchema = new mongoose.Schema({
   homeAddress: String,
   cityAddress: String,
   zipCode: String,
-  birthdate: String,
+  birthdate: Date,
   emailAddress: String,
   phoneNumber: String,
   dp: {

@@ -762,9 +762,13 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
       const shelterInfo = await ShelterInfo.findOne({ userId });
       console.log(shelterInfo);
       if (shelterInfo) {
+        const user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
         res.json({
           status: 200,
           shelterInfo,
+          email: user.email,
         });
       } else {
         res.json({
@@ -859,9 +863,13 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
       console.log(pawrentInfo);
       if (pawrentInfo) {
+        const user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
         res.json({
           status: 200,
           pawrentInfo,
+          email: user.email,
         });
       } else {
         res.json({

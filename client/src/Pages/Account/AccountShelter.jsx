@@ -90,22 +90,26 @@ const AccountForm = () => {
 
   const fetchShelterInfo = async (userId) => {
     try {
-      const response = await axios
-        .get(`${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`, {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`,
+        {
           params: {
             userId,
           },
-        })
-        .then(function (response) {
-          console.log(response);
-          setShelterInfo(response.data.shelterInfo);
-          setProfilePic(response.data.shelterInfo.dp);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        }
+      );
+      console.log(response);
+      const { shelterInfo, email } = response.data;
+      setShelterInfo({
+        ...shelterInfo,
+        shelterEmailAddress: email,
+      });
+      console.log(
+        "representativeBirthdate: " + shelterInfo.representativeBirthdate
+      );
+      setProfilePic(shelterInfo.dp);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -118,7 +122,7 @@ const AccountForm = () => {
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
-        formData
+        shelterInfo
       )
       .then(function (response) {
         console.log(response);
@@ -131,7 +135,7 @@ const AccountForm = () => {
   const handleChange = (e, date) => {
     if (e.target.id === "representativeBirthdate") {
       const dateString = format(date, "MM/dd/yyyy");
-      setPawrentInfo({ ...shelterInfo, [e.target.id]: dateString });
+      setShelterInfo({ ...shelterInfo, [e.target.id]: dateString });
     }
 
     setShelterInfo({ ...shelterInfo, [e.target.id]: e.target.value });
@@ -207,6 +211,7 @@ const AccountForm = () => {
                 onLogout={handleLogout}
                 profilePic={profilePic}
                 handleFileChange={handleFileChange}
+                accountInfo={shelterInfo}
               />
             </Box>
           </Grid>

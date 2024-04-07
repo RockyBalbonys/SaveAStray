@@ -12,13 +12,34 @@ import LanguageRoundedIcon from "@mui/icons-material/LanguageRounded";
 import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
 import editProfile from "../../assets/icons/editImage.svg";
 import styled from "@emotion/styled";
+import useAuth from "../../hooks/useAuth";
 
 export const AccountAvatar = ({
   onClick,
   onLogout,
   profilePic,
   handleFileChange,
+  accountInfo,
 }) => {
+  const { role } = useAuth();
+
+  let accountName = "";
+  let accountNum = "";
+  let accountEmail = "";
+
+  if (role === "Adoptive Pawrent") {
+    accountName = accountInfo.firstName + " " + accountInfo.lastName;
+    accountNum = accountInfo.phoneNumber;
+    accountEmail = accountInfo.emailAddress;
+  }
+  if (role === "Rescue Shelter") {
+    accountName = accountInfo.shelterName;
+    accountNum = accountInfo.shelterPhoneNumber;
+    accountEmail = accountInfo.shelterEmailAddress;
+  }
+
+  console.table(accountInfo);
+
   return (
     <>
       <Paper className="p-4 sticky top-[64px] space-y-9">
@@ -36,8 +57,12 @@ export const AccountAvatar = ({
               profilePic={profilePic}
               handleFileChange={handleFileChange}
             />
-            <Typography color={"secondary"} fontWeight={600}>
-              NAME GOES HERE
+            <Typography
+              color={"secondary"}
+              textAlign={"center"}
+              fontWeight={600}
+            >
+              {accountName.length < 2 ? "No name" : accountName}
             </Typography>
           </Box>
           <Box
@@ -46,12 +71,16 @@ export const AccountAvatar = ({
             <Stack direction={"row"} sx={{ columnGap: "8px" }}>
               {/* TODO: Phone call icon */}
               <PhoneRoundedIcon />
-              <Typography>012345671234</Typography>
+              <Typography>
+                {!accountNum ? "No phone number" : accountNum}
+              </Typography>
             </Stack>
             <Stack direction={"row"} sx={{ columnGap: "8px" }}>
               {/* TODO: email icon */}
               <LanguageRoundedIcon />
-              <Typography>example@gmail.com</Typography>
+              <Typography>
+                {!accountEmail ? "No email" : accountEmail}
+              </Typography>
             </Stack>
           </Box>
         </Box>
