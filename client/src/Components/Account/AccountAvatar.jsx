@@ -13,6 +13,7 @@ import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
 import editProfile from "../../assets/icons/editImage.svg";
 import styled from "@emotion/styled";
 import useAuth from "../../hooks/useAuth";
+import { useEffect } from "react";
 
 export const AccountAvatar = ({
   onClick,
@@ -37,8 +38,6 @@ export const AccountAvatar = ({
     accountNum = accountInfo.shelterPhoneNumber;
     accountEmail = accountInfo.shelterEmailAddress;
   }
-
-  console.table(accountInfo);
 
   return (
     <>

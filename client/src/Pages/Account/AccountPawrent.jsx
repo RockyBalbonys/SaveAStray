@@ -66,8 +66,6 @@ const AccountForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  console.log(user);
-
   //API Fetch Pawrent Info
   const [pawrentInfo, setPawrentInfo] = useState({
     userProfilePic: "",
@@ -101,7 +99,6 @@ const AccountForm = () => {
         ...pawrentInfo,
         emailAddress: email,
       });
-      console.log("birthdate: " + pawrentInfo.birthdate);
       setProfilePic(pawrentInfo.dp);
     } catch (error) {
       console.log(error);
@@ -127,15 +124,19 @@ const AccountForm = () => {
       });
   };
 
-  // date format
-
   const handleChange = (e, id, date) => {
-    console.log("handleChange id: " + id);
     if (id === "birthdate") {
-      setPawrentInfo({ ...pawrentInfo, [id]: date });
+      setPawrentInfo((prevState) => ({
+        ...prevState,
+        [id]: date,
+      }));
+      console.log(pawrentInfo.birthdate);
+    } else {
+      setPawrentInfo((prevState) => ({
+        ...prevState,
+        [e.target.id]: e.target.value,
+      }));
     }
-
-    setPawrentInfo({ ...pawrentInfo, [e.target.id]: e.target.value });
   };
 
   const handleLogout = () => {
@@ -148,8 +149,6 @@ const AccountForm = () => {
     unsubscribe();
     navigate("/login");
   };
-
-  console.table(pawrentInfo);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -270,9 +269,13 @@ const AccountForm = () => {
   );
 };
 
-const PersonalInfoCard = ({ formData, onChange }) => {
+const PersonalInfoCard = ({ formData, onChange, dateValue, setDate }) => {
   const handleDateChange = (date) => {
-    onChange("birthdate", date);
+    const dateString = format(date, "MM/dd/yyyy");
+    console.log(dateString);
+    setDate(dateString);
+    console.log("date value: " + dateString);
+    onChange(dateString, "birthdate", dateString);
   };
 
   return (
@@ -343,7 +346,6 @@ const PersonalInfoCard = ({ formData, onChange }) => {
                 value={formData.birthdate}
                 sx={{ width: "100%" }}
                 onChange={handleDateChange}
-                format="MM/dd/yyyy"
               />
             </Grid>
           </Grid>

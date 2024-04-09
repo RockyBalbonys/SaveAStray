@@ -760,6 +760,7 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
   if (userId) {
     try {
       const shelterInfo = await ShelterInfo.findOne({ userId });
+
       console.log(shelterInfo);
       if (shelterInfo) {
         const user =
@@ -858,6 +859,7 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 //Fetch Pawrent Info API
 app.get("/api/pawrentInfo/:userId", async (req, res) => {
   const { userId } = req.query;
+
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
