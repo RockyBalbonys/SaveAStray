@@ -68,32 +68,7 @@ const AccountForm = () => {
   const { user } = useAuth();
 
   //API Fetch Shelter Info
-  const [shelterInfo, setShelterInfo] = useState(null);
-
-  useEffect(() => {
-    fetchShelterInfo(user);
-  }, [user]);
-
-  const fetchShelterInfo = async (userId) => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`, {
-        params: {
-          userId,
-        },
-      }).then(function(response){
-        console.log(response);
-        setShelterInfo(response.data);
-        setProfilePic(response.data.shelterInfo.dp);
-      }).catch(function(error){
-        console.log(error);
-      });
-
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  
-  const [formData, setFormData] = useState({
+  const [shelterInfo, setShelterInfo] = useState({
     userProfilePic: "",
     userId: user,
     shelterName: "",
@@ -109,16 +84,45 @@ const AccountForm = () => {
     representativeHomeAddress: "",
     representativeCityAddress: "",
     representativeZipCode: "",
-    //representativeBirthdate: null,
+    representativeBirthdate: "",
     representativePhoneNumber: "",
   });
+
+  const fetchShelterInfo = async (userId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`,
+        {
+          params: {
+            userId,
+          },
+        }
+      );
+      console.log(response);
+      const { shelterInfo, email } = response.data;
+      setShelterInfo({
+        ...shelterInfo,
+        shelterEmailAddress: email,
+      });
+      console.log(
+        "representativeBirthdate: " + shelterInfo.representativeBirthdate
+      );
+      setProfilePic(shelterInfo.dp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchShelterInfo(user);
+  }, [user]);
 
   const handleSaveChanges = () => {
     //console.log("Update account.");
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
-        formData
+        shelterInfo
       )
       .then(function (response) {
         console.log(response);
@@ -128,8 +132,13 @@ const AccountForm = () => {
       });
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+  const handleChange = (e, date) => {
+    if (e.target.id === "representativeBirthdate") {
+      const dateString = format(date, "MM/dd/yyyy");
+      setShelterInfo({ ...shelterInfo, [e.target.id]: dateString });
+    }
+
+    setShelterInfo({ ...shelterInfo, [e.target.id]: e.target.value });
   };
 
   const handleLogout = () => {
@@ -140,8 +149,6 @@ const AccountForm = () => {
     console.log("401");
     store.dispatch(logout());
     unsubscribe();
-    /*       setLoginAttempted(true);
-    setUserIn(false); */
   };
 
   // profile picture
@@ -160,27 +167,27 @@ const AccountForm = () => {
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
             console.log("download url: ", downloadURL);
-            console.log('Uploaded a blob or file!', snapshot);
+            console.log("Uploaded a blob or file!", snapshot);
             console.log("Success");
 
             if (downloadURL) {
-              axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
-                user,
-                downloadURL
-              }).then(function(response){
-                console.log(response);
-                //setProfilePic(respon)
-              }).catch(function(err){
-                console.log(err);
-              })
+              axios
+                .post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
+                  user,
+                  downloadURL,
+                })
+                .then(function (response) {
+                  console.log(response);
+                  setProfilePic(response);
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
             } else {
               console.log("no download URL");
             }
-
-
-
           } catch (error) {
-            console.error('Error uploading file:', error);
+            console.error("Error uploading file:", error);
           }
         };
         reader.readAsDataURL(file);
@@ -204,6 +211,7 @@ const AccountForm = () => {
                 onLogout={handleLogout}
                 profilePic={profilePic}
                 handleFileChange={handleFileChange}
+                accountInfo={shelterInfo}
               />
             </Box>
           </Grid>
@@ -211,28 +219,28 @@ const AccountForm = () => {
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
                 <ShelterInfo
-                  formData={formData}
+                  formData={shelterInfo}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
                 <ShelterContactInfo
-                  formData={formData}
+                  formData={shelterInfo}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
                 <ShelterAdoptionFee
-                  formData={formData}
+                  formData={shelterInfo}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
                 <ShelterRepInfo
-                  formData={formData}
+                  formData={shelterInfo}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
                 />
@@ -241,9 +249,7 @@ const AccountForm = () => {
                 <ResetPass />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <DeleteAcc 
-                  forcedLogout={handleLogout}
-                />
+                <DeleteAcc forcedLogout={handleLogout} />
               </Grid>
             </Grid>
           </Grid>
@@ -499,10 +505,10 @@ const ShelterRepInfo = ({ formData, onChange }) => {
             <Grid item sm={6}>
               <DatePicker
                 label="Birthdate"
-                //id="representativeBirthdate"
+                id="representativeBirthdate"
                 sx={{ width: "100%" }}
-                //value={formData.representativeBirthdate}
-                //onChange={onChange}
+                value={formData.representativeBirthdate}
+                onChange={onChange}
               />
             </Grid>
 
@@ -558,9 +564,15 @@ const DeleteAcc = ({ forcedLogout }) => {
 
   const deleteUser = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`);
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`);
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteShelterInfo/${user}`);
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`
+      );
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`
+      );
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteShelterInfo/${user}`
+      );
 
       forcedLogout();
     } catch (error) {

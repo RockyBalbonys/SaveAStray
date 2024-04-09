@@ -7,7 +7,8 @@ import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
 import useAuth from "../../hooks/useAuth";
 import { initializeApp } from "firebase/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-//import SAS_icon from "../../assets/icons/SAS_Logo4.png"
+import { format } from "date-fns";
+
 // mui components
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -48,7 +49,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-
 function AccountPawrent() {
   return (
     <>
@@ -66,33 +66,10 @@ const AccountForm = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
+  console.log(user);
+
   //API Fetch Pawrent Info
-  const [pawrentInfo, setPawrentInfo] = useState(null);
-  console.log(pawrentInfo);
-
-  useEffect(() => {
-    fetchPawrentInfo(user);
-  }, [user]);
-
-  const fetchPawrentInfo = async (userId) => {
-    try {
-      axios.get(`${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`, {
-        params: {
-          userId,
-        },
-      }).then(function(response){
-        console.log(response);
-        setPawrentInfo(response.data);
-        setProfilePic(response.data.pawrentInfo.dp);
-      }).catch(function(error){
-        console.log(error);
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const [formData, setFormData] = useState({
+  const [pawrentInfo, setPawrentInfo] = useState({
     userProfilePic: "",
     userId: user,
     firstName: "",
@@ -100,26 +77,65 @@ const AccountForm = () => {
     homeAddress: "",
     cityAddress: "",
     zipCode: "",
+    birthdate: "",
     emailAddress: "",
     phoneNumber: "",
   });
+
+  // profile picture
+  const [profilePic, setProfilePic] = useState("");
+
+  const fetchPawrentInfo = async (userId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`,
+        {
+          params: {
+            userId,
+          },
+        }
+      );
+      console.log(response);
+      const { pawrentInfo, email } = response.data;
+      setPawrentInfo({
+        ...pawrentInfo,
+        emailAddress: email,
+      });
+      console.log("birthdate: " + pawrentInfo.birthdate);
+      setProfilePic(pawrentInfo.dp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPawrentInfo(user);
+  }, [user]);
 
   const handleSaveChanges = () => {
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`,
-        formData
+        pawrentInfo
       )
       .then(function (response) {
         console.log(response);
+        fetchPawrentInfo(user);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+  // date format
+
+  const handleChange = (e, id, date) => {
+    console.log("handleChange id: " + id);
+    if (id === "birthdate") {
+      setPawrentInfo({ ...pawrentInfo, [id]: date });
+    }
+
+    setPawrentInfo({ ...pawrentInfo, [e.target.id]: e.target.value });
   };
 
   const handleLogout = () => {
@@ -131,12 +147,9 @@ const AccountForm = () => {
     store.dispatch(logout());
     unsubscribe();
     navigate("/login");
-
-    /*           setLoginAttempted(true);
-          setUserIn(false); */
   };
-  // profile picture
-  const [profilePic, setProfilePic] = useState("");
+
+  console.table(pawrentInfo);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -151,27 +164,27 @@ const AccountForm = () => {
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
             console.log("download url: ", downloadURL);
-            console.log('Uploaded a blob or file!', snapshot);
+            console.log("Uploaded a blob or file!", snapshot);
             console.log("Success");
 
             if (downloadURL) {
-              axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
-                user,
-                downloadURL
-              }).then(function(response){
-                console.log(response);
-                //setProfilePic(respon)
-              }).catch(function(err){
-                console.log(err);
-              })
+              axios
+                .post(`${process.env.REACT_APP_SERVER_URL}/api/updateDp`, {
+                  user,
+                  downloadURL,
+                })
+                .then(function (response) {
+                  console.log(response);
+                  setProfilePic(response);
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
             } else {
               console.log("no download URL");
             }
-
-
-
           } catch (error) {
-            console.error('Error uploading file:', error);
+            console.error("Error uploading file:", error);
           }
         };
         reader.readAsDataURL(file);
@@ -195,6 +208,7 @@ const AccountForm = () => {
                 onLogout={handleLogout}
                 profilePic={profilePic}
                 handleFileChange={handleFileChange}
+                accountInfo={pawrentInfo}
               />
             </Box>
           </Grid>
@@ -202,22 +216,20 @@ const AccountForm = () => {
             <Grid container rowSpacing={3}>
               <Grid item sx={{ width: "100%" }}>
                 <PersonalInfoCard
-                  formData={formData}
+                  formData={pawrentInfo}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
                 <ContactInfoCard
-                  formData={formData}
+                  formData={pawrentInfo}
                   onChange={handleChange}
                   onSave={handleSaveChanges}
                 />
               </Grid>
               <Grid item sx={{ width: "100%" }}>
-                <DeleteAcc 
-                  forcedLogout={handleLogout}
-                />
+                <DeleteAcc forcedLogout={handleLogout} />
               </Grid>
             </Grid>
           </Grid>
@@ -259,6 +271,10 @@ const AccountForm = () => {
 };
 
 const PersonalInfoCard = ({ formData, onChange }) => {
+  const handleDateChange = (date) => {
+    onChange("birthdate", date);
+  };
+
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Personal Information"} />
@@ -321,7 +337,14 @@ const PersonalInfoCard = ({ formData, onChange }) => {
             </Grid>
 
             <Grid item sm={12}>
-              <DatePicker label="Birthdate" sx={{ width: "100%" }} />
+              <DatePicker
+                label="Birthdate"
+                id="birthdate"
+                value={formData.birthdate}
+                sx={{ width: "100%" }}
+                onChange={handleDateChange}
+                format="MM/dd/yyyy"
+              />
             </Grid>
           </Grid>
         </FormControl>
@@ -369,9 +392,15 @@ const DeleteAcc = ({ forcedLogout }) => {
 
   const deleteUser = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`);
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`);
-      await axios.delete(`${process.env.REACT_APP_SERVER_URL}/api/deletePawrentInfo/${user}`);
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteGoogleUserCredentials/${user}`
+      );
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deleteUserCredentials/${user}`
+      );
+      await axios.delete(
+        `${process.env.REACT_APP_SERVER_URL}/api/deletePawrentInfo/${user}`
+      );
 
       forcedLogout();
     } catch (error) {
@@ -390,6 +419,7 @@ const DeleteAcc = ({ forcedLogout }) => {
       </Typography>
       <Button
         variant="contained"
+        color="error"
         sx={{
           color: "white",
           textTransform: "none",
