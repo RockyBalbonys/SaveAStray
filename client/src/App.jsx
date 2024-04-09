@@ -20,6 +20,7 @@ import Register from "./Pages/Authentication/Register";
 import Home from "./Pages/Home";
 import Verify from "./Pages/Redirect/Verify";
 import DeadEnd from "./Pages/Redirect/DeadEnd";
+import SocketPractice from "./Pages/UnusedPage/SocketPractice"
 
 // import mui components, theme, functions
 import { ThemeProvider } from "@emotion/react";
@@ -106,6 +107,7 @@ function App() {
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
             <Route path="/messages" element={<Messages />} />
+            <Route path="/socketPractice" element={<SocketPractice />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

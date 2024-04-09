@@ -7,7 +7,14 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 3001;
-const uri = process.env.DB_URI;
+const http = require('http').createServer(app); // Create HTTP server
+const io = require('socket.io')(http, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
 const ShelterInfo = require("./Models/shelterInfoSchema.js");
@@ -16,6 +23,7 @@ const { OAuth2Client } = require("google-auth-library");
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
 const PawrentNotif = require("./Models/pawrentNotif.js");
+const ChatMessage = require("./Models/chatMessageSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -29,6 +37,7 @@ mongoose
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
+
 
 app.post("/verify", async (req, res) => {
   const token = req.query.token;
@@ -941,6 +950,20 @@ app.post('/api/updateDp', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log("Connected to PORT ", port);
+//socket 
+io.on('connection', (socket) => {
+  const userId = socket.handshake.query.user;
+  console.log('Socket connected:', userId); 
+
+  socket.on('send-message', (message) => {
+    console.log(`Client (ID: ${userId}) sent: ${message}`);
+
+    socket.broadcast.emit('broadcast-message', `${userId} sent: ${message}`)
+  });
+
+});
+
+// Start the server
+http.listen(3001, () => {
+  console.log('Server listening on port 3001');
 });
