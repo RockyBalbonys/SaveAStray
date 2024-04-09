@@ -99,7 +99,11 @@ const ModalAddPet = ({
       );
 
       // After successfully adding the new pet, fetch the updated list of pets
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet`);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,{
+        params: {
+          user: user
+        }
+      });
       const allPets = response.data.allPets;
       setAnimals(allPets);
 
