@@ -105,7 +105,7 @@ function App() {
             <Route path="/verify" element={<Verify />} />
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
-            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/t/:roomId" element={<Messages />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

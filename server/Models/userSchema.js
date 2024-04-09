@@ -26,9 +26,6 @@ const userSchema = new mongoose.Schema(
           inquireTokens: {
             type: Number
           },
-          dp: {
-            type: String
-          }
     }
 )
 

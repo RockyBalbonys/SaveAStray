@@ -12,12 +12,6 @@ import { useNavigate } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import GetAppIcon from "@mui/icons-material/GetApp";
-import jembotImage from "../assets/images/animals/jembot.jpg";
-import felixImage from "../assets/images/animals/felix.jpg";
-import inibamImage from "../assets/images/animals/inibam.jpg";
-import lansImage from "../assets/images/animals/lans.jpg";
-import pugdoyImage from "../assets/images/animals/pugdoy.jpg";
-import ramboImage from "../assets/images/animals/rambo.jpg";
 import Frame200Send from "../assets/images/Frame 200Send.svg";
 import Footer from "../Components/PageComponent/Footer";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
@@ -52,34 +46,6 @@ const buttonStyle = {
   height: "100%",
   backgroundColor: "#EE7200",
 };
-/* const [adoptionRequests, setAdoptionRequests] = useState([]);
-
-axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`)
-.then(function(response){
-  const { allAnswers } = response.data
-const transformedRequests = allAnswers.map(function(answer) {
-  return {
-    name: answer.respondent, // Replace with the appropriate property name from allAnswers
-    //time: answer.time,  // Replace with the appropriate property name from allAnswers
-    //imageUrl: jembotImage, // Assuming jembotImage is defined elsewhere
-    //redirectTo: `/questionnaire/${answer.identifier}`, // Replace with the appropriate identifier property
-  };
-});
-setAdoptionRequests(transformedRequests);
-console.log(adoptionRequests);
-})
-.catch(function(err){
-  console.log(err);
-})
- */
-/* const AdoptionRequests = [
-  {
-    name: "test",
-    time: "a few seconds ago",
-    imageUrl: jembotImage,
-    redirectTo: "/questionnaire/joemen",
-  } ,
-*/
 
 const actions = [
   { icon: <GetAppIcon />, name: "Print" },
@@ -115,9 +81,8 @@ function RequestShelter() {
               requestId: answer.id,
               approvalStatus: answer.approvalStatus,
               respondent: answer.respondent,
-              toShelter: answer.toShelter
-              /*     imageUrl,
-              redirectTo */
+              toShelter: answer.toShelter, 
+              imageURL: answer.dp
             };
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
@@ -238,8 +203,8 @@ function RequestShelter() {
                   }}
                 >
                   <img
-                    src={request.imageUrl}
-                    alt={request.name}
+                    src={request.imageURL}
+                    alt=""
                     style={imageStyle}
                   />
                   <div>
