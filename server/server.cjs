@@ -7,7 +7,14 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 3001;
-const uri = process.env.DB_URI;
+const http = require('http').createServer(app); // Create HTTP server
+const io = require('socket.io')(http, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
 const ShelterInfo = require("./Models/shelterInfoSchema.js");
@@ -16,6 +23,7 @@ const { OAuth2Client } = require("google-auth-library");
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
 const PawrentNotif = require("./Models/pawrentNotif.js");
+const ChatMessage = require("./Models/chatMessageSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -29,6 +37,7 @@ mongoose
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
+
 
 app.post("/verify", async (req, res) => {
   const token = req.query.token;
@@ -499,7 +508,54 @@ app.post("/api/sendAnswers", async (req, res) => {
   }
 });
 
-app.get("/getPet", async (req, res) => {
+app.get("/getPet/:user", async (req, res) => {
+  console.log(req.params);
+
+  try {
+    const userId = req.params.user;
+
+    // Look for user in User collection
+    let user = await User.findOne({ _id: userId });
+
+    // If user not found in User collection, try GoogleUser collection
+    if (!user) {
+      user = await GoogleUser.findOne({ _id: userId });
+    }
+
+    let userRole;
+    if (user) {
+      userRole = user.role; // Access role only if user is found
+    }
+
+    let gUserRole;
+    if (gUserRole) { // Check for existence before accessing role
+      gUserRole = await GoogleUser.findOne({ _id: userId });
+      gUserRole = gUserRole.role; // Access role only if gUserRole is found
+    }
+
+    if (userRole === "Adoptive Pawrent" || gUserRole === "Adoptive Pawrent") {
+      const allPets = await Pet.find();
+      res.send({
+        status: 200,
+        allPets,
+      });
+    } else if (userRole === "Rescue Shelter" || gUserRole === "Rescue Shelter") {
+      const allPets = await Pet.find({ shelter: userId }); // Assuming 'shelter' field in Pet model
+      res.send({
+        status: 200,
+        allPets,
+      });
+    } else {
+      res.status(403).send({ error: "Unauthorized user role" }); // Handle unauthorized roles
+    }
+  } catch (err) {
+    console.log("error: ", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+
+/* app.get("/getPet", async (req, res) => {
   try {
     const allPets = await Pet.find();
     res.send({
@@ -509,7 +565,8 @@ app.get("/getPet", async (req, res) => {
   } catch (err) {
     console.log("error: ", err);
   }
-});
+}); */
+
 app.post("/api/fetchRequests", async (req, res) => {
   const { user } = req.body;
 
@@ -760,6 +817,7 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
   if (userId) {
     try {
       const shelterInfo = await ShelterInfo.findOne({ userId });
+
       console.log(shelterInfo);
       if (shelterInfo) {
         const user =
@@ -858,6 +916,7 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 //Fetch Pawrent Info API
 app.get("/api/pawrentInfo/:userId", async (req, res) => {
   const { userId } = req.query;
+
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
@@ -953,6 +1012,20 @@ app.post("/api/updateDp", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log("Connected to PORT ", port);
+//socket 
+io.on('connection', (socket) => {
+  const userId = socket.handshake.query.user;
+  console.log('Socket connected:', userId); 
+
+  socket.on('send-message', (message) => {
+    console.log(`Client (ID: ${userId}) sent: ${message}`);
+
+    socket.broadcast.emit('broadcast-message', `${userId} sent: ${message}`)
+  });
+
+});
+
+// Start the server
+http.listen(3001, () => {
+  console.log('Server listening on port 3001');
 });

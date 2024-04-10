@@ -20,6 +20,7 @@ import Register from "./Pages/Authentication/Register";
 import Home from "./Pages/Home";
 import Verify from "./Pages/Redirect/Verify";
 import DeadEnd from "./Pages/Redirect/DeadEnd";
+import SocketPractice from "./Pages/UnusedPage/SocketPractice";
 
 // import mui components, theme, functions
 import { ThemeProvider } from "@emotion/react";
@@ -34,7 +35,7 @@ import { renderNavbar } from "./renderNavbar";
 import useAuth from "./hooks/useAuth";
 import ScrollToTop from "./tools/scrollToTop";
 import DeadEnd2 from "./Pages/Redirect/DeadEnd2";
-import Messages from "./Pages/Messages";
+import Chat from "./Pages/Chat";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -49,6 +50,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+
+            {/* Route for manage account page */}
             <Route
               path="/manage"
               element={
@@ -65,6 +68,7 @@ function App() {
                 )
               }
             />
+
             <Route
               path="/manage/pawrent"
               element={
@@ -82,8 +86,9 @@ function App() {
               path="/questionnaire/:shelterId"
               element={<Questionnaire />}
             />
-            {/* <Route path="/rescue/" element={<RequestShelter />} />
-            <Route path="/reqpawrent" element={<RequestPawrent />} /> */}
+            {/* End - Route for manage account page */}
+
+            {/* Route for request page */}
             <Route
               path="/request/pawrent"
               element={
@@ -96,6 +101,8 @@ function App() {
                 isLoggedIn ? <RequestShelter /> : <Navigate to="/login" />
               }
             />
+            {/* End - Route for request page */}
+
             <Route path="/about" element={<About />} />
             <Route path="/articles/" element={<Articles />} />
             <Route path="/articles/:id" element={<ArticlePage />} />
@@ -105,7 +112,9 @@ function App() {
             <Route path="/verify" element={<Verify />} />
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
-            <Route path="/messages/t/:roomId" element={<Messages />} />
+            <Route path="/socketPractice" element={<SocketPractice />} />
+            <Route path="/messages/t/" element={<Chat />} />
+            <Route path="/messages/t/:roomId" element={<Chat />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>

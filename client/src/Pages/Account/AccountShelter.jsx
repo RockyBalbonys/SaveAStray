@@ -36,6 +36,7 @@ import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
 import { AccountHeader } from "../../Components/Account/AccountHeader";
 import { AccountAvatar } from "../../Components/Account/AccountAvatar";
 import AccountDrawer from "../../Components/Account/AccountDrawer";
+import { format } from "date-fns";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
@@ -104,9 +105,7 @@ const AccountForm = () => {
         ...shelterInfo,
         shelterEmailAddress: email,
       });
-      console.log(
-        "representativeBirthdate: " + shelterInfo.representativeBirthdate
-      );
+
       setProfilePic(shelterInfo.dp);
     } catch (error) {
       console.log(error);
@@ -118,7 +117,6 @@ const AccountForm = () => {
   }, [user]);
 
   const handleSaveChanges = () => {
-    //console.log("Update account.");
     axios
       .post(
         `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
@@ -132,13 +130,19 @@ const AccountForm = () => {
       });
   };
 
-  const handleChange = (e, date) => {
-    if (e.target.id === "representativeBirthdate") {
-      const dateString = format(date, "MM/dd/yyyy");
-      setShelterInfo({ ...shelterInfo, [e.target.id]: dateString });
+  const handleChange = (e, id, date) => {
+    if (id === "representativeBirthdate") {
+      setShelterInfo((prevState) => ({
+        ...prevState,
+        [id]: date,
+      }));
+      console.table("handle change " + shelterInfo);
+    } else {
+      setShelterInfo((prevState) => ({
+        ...prevState,
+        [e.target.id]: e.target.value,
+      }));
     }
-
-    setShelterInfo({ ...shelterInfo, [e.target.id]: e.target.value });
   };
 
   const handleLogout = () => {
@@ -194,6 +198,7 @@ const AccountForm = () => {
       }
     }
   };
+  console.table(shelterInfo);
 
   return (
     <>
@@ -438,6 +443,13 @@ const ShelterAdoptionFee = ({ formData, onChange }) => {
 };
 
 const ShelterRepInfo = ({ formData, onChange }) => {
+  const handleDateChange = (date) => {
+    const dateString = format(date, "MM/dd/yyyy");
+    console.log(dateString);
+    console.log("date value: " + dateString);
+    onChange(dateString, "representativeBirthdate", dateString);
+  };
+
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader
@@ -508,7 +520,7 @@ const ShelterRepInfo = ({ formData, onChange }) => {
                 id="representativeBirthdate"
                 sx={{ width: "100%" }}
                 value={formData.representativeBirthdate}
-                onChange={onChange}
+                onChange={handleDateChange}
               />
             </Grid>
 
