@@ -7,12 +7,12 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 3001;
-const http = require('http').createServer(app); // Create HTTP server
-const io = require('socket.io')(http, {
+const http = require("http").createServer(app); // Create HTTP server
+const io = require("socket.io")(http, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
 
 const User = require("./Models/userSchema.js");
@@ -37,7 +37,6 @@ mongoose
 app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
-
 
 app.post("/verify", async (req, res) => {
   const token = req.query.token;
@@ -528,7 +527,8 @@ app.get("/getPet/:user", async (req, res) => {
     }
 
     let gUserRole;
-    if (gUserRole) { // Check for existence before accessing role
+    if (gUserRole) {
+      // Check for existence before accessing role
       gUserRole = await GoogleUser.findOne({ _id: userId });
       gUserRole = gUserRole.role; // Access role only if gUserRole is found
     }
@@ -539,7 +539,10 @@ app.get("/getPet/:user", async (req, res) => {
         status: 200,
         allPets,
       });
-    } else if (userRole === "Rescue Shelter" || gUserRole === "Rescue Shelter") {
+    } else if (
+      userRole === "Rescue Shelter" ||
+      gUserRole === "Rescue Shelter"
+    ) {
       const allPets = await Pet.find({ shelter: userId }); // Assuming 'shelter' field in Pet model
       res.send({
         status: 200,
@@ -553,7 +556,6 @@ app.get("/getPet/:user", async (req, res) => {
     res.status(500).send({ error: "Internal server error" });
   }
 });
-
 
 /* app.get("/getPet", async (req, res) => {
   try {
@@ -1012,20 +1014,19 @@ app.post("/api/updateDp", async (req, res) => {
   }
 });
 
-//socket 
-io.on('connection', (socket) => {
+//socket
+io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
-  console.log('Socket connected:', userId); 
+  console.log("Socket connected:", userId);
 
-  socket.on('send-message', (message) => {
+  socket.on("send-message", (message) => {
     console.log(`Client (ID: ${userId}) sent: ${message}`);
 
-    socket.broadcast.emit('broadcast-message', `${userId} sent: ${message}`)
+    socket.broadcast.emit("broadcast-message", `${userId} sent: ${message}`);
   });
-
 });
 
 // Start the server
 http.listen(3001, () => {
-  console.log('Server listening on port 3001');
+  console.log("Server listening on port 3001");
 });
