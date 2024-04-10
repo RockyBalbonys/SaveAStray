@@ -25,6 +25,7 @@ import { SearchInput } from "../../Components/SearchInput";
 import animalHero from "../assets/images/animals/animalHero.png";
 
 const AnimalsPawrent = () => {
+  const { isLoggedIn, user, role } = useAuth();
   const [animals, setAnimals] = useState([]);
 
   console.table(animals);
@@ -38,7 +39,10 @@ const AnimalsPawrent = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet`)
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,{
+        params: {
+          user: user
+        }})
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
