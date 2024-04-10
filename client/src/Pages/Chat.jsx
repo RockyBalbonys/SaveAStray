@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 
 // mui components
@@ -19,6 +19,7 @@ import Badge from "@mui/material/Badge";
 import AnnouncementRoundedIcon from "@mui/icons-material/AnnouncementRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import avatar_placeholder from "../assets/images/avatar_placeholder.png";
+import Navbar from "../Components/PageComponent/Navbar";
 
 // hard coded contacts
 const contacts = [
@@ -28,6 +29,28 @@ const contacts = [
     timestamp: "Today 05:30 PM",
     userId: "12345678",
     online: true,
+    conversation: [
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+    ],
   },
   {
     name: "Lawrence",
@@ -35,6 +58,28 @@ const contacts = [
     timestamp: "Today 05:30 PM",
     userId: "24681012",
     online: false,
+    conversation: [
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+    ],
   },
   {
     name: "Jhude",
@@ -42,6 +87,28 @@ const contacts = [
     timestamp: "Today 05:30 PM",
     userId: "36912151",
     online: true,
+    conversation: [
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+    ],
   },
   {
     name: "An-ghelo",
@@ -49,6 +116,29 @@ const contacts = [
     timestamp: "Today 05:30 PM",
     userId: "48121620",
     online: true,
+    conversation: [
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hello An",
+      },
+      {
+        contactMessage: "Hello rin",
+      },
+    ],
   },
   {
     name: "Joshua",
@@ -73,10 +163,13 @@ const contacts = [
   },
 ];
 
+console.table(contacts);
+
 const Chat = () => {
   return (
     <>
-      <div className="bgLogin h-screen w-screen">
+      <Navbar />
+      <div className="bgLogin h-screen w-screen mt-[-64px]">
         <Container sx={{ height: "70%" }}>
           <Grid
             container
@@ -90,7 +183,7 @@ const Chat = () => {
 
             {/* Chatbox */}
             <Grid item xs={8} sx={{ height: "100%" }}>
-              <Chatbox />
+              <Chatbox contacts={contacts} />
             </Grid>
           </Grid>
         </Container>
@@ -187,8 +280,11 @@ function ContactListContainer({ contacts }) {
 }
 
 // Create component for chat based system
-function Chatbox() {
+function Chatbox({ contacts }) {
   const { roomId } = useParams();
+
+  const contactInfo = contacts.find((contact) => contact.userId === roomId);
+
   return (
     <>
       <Box sx={{ height: "100%" }}>
@@ -201,14 +297,22 @@ function Chatbox() {
             height: "100%",
           }}
         >
-          {!roomId ? "No chat selected" : <Messages roomId={roomId} />}
+          {!roomId ? (
+            "No chat selected"
+          ) : (
+            <Messages contactInfo={contactInfo} />
+          )}
         </Box>
       </Box>
     </>
   );
 }
 
-function Messages({ roomId }) {
+function Messages({ roomId, contactInfo }) {
+  console.log({ contactInfo });
+  const { name, online, conversation } = contactInfo;
+  console.log(name, online, conversation);
+
   return (
     <>
       <Box
@@ -221,7 +325,7 @@ function Messages({ roomId }) {
         }}
       >
         {/* Chatbox messages content container */}
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, height: "90%" }}>
           {/* Chatbox header */}
           <Box
             sx={{ display: "flex", alignItems: "center", columnGap: "16px" }}
@@ -230,13 +334,31 @@ function Messages({ roomId }) {
               <Avatar src={avatar_placeholder} />
             </Badge>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <p className="text-2xl font-bold text-[#FF8210]">Lance</p>
-              <p className="text-sm mb-2">Active Right Now</p>
+              <p className="text-2xl font-bold text-[#FF8210]">{name}</p>
+              <p className="text-sm mb-2">
+                {online ? "Active Right Now" : "Active Before"}
+              </p>
             </Box>
           </Box>
           <Divider />
 
           {/* Chatbox messages content */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              height: "90%",
+              overflow: "auto",
+            }}
+          >
+            {conversation?.map((message, idx) => (
+              <React.Fragment key={idx}>
+                <Box sx={{ textAlign: "end" }}>{message.yourMessage}</Box>
+                <Box sx={{ textAlign: "start" }}>{message.contactMessage}</Box>
+              </React.Fragment>
+            ))}
+          </Box>
         </Box>
 
         <Box sx={{ width: "100%", display: "flex" }}>

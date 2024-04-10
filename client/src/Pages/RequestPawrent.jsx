@@ -1,10 +1,10 @@
 import React from "react";
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
-import Tooltip from '@mui/material/Tooltip'
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import Tooltip from "@mui/material/Tooltip";
 import { useNavigate } from "react-router-dom";
-import actionImage from "../assets/images/Frame 200Send.svg"; 
+import actionImage from "../assets/images/Frame 200Send.svg";
 import Footer from "../Components/PageComponent/Footer";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
@@ -42,7 +42,7 @@ function RequestPawrent() {
       })
       .then(function (response) {
         console.log(response);
-        const { mappedNotifs } = response.data
+        const { mappedNotifs } = response.data;
         if (mappedNotifs == null) {
           setPawrentNotifs(0); // Update state with transformed data
           console.log(pawrentNotifs);
@@ -51,18 +51,17 @@ function RequestPawrent() {
           const mappedPawrentNotifs = mappedNotifs.map((notif) => {
             const notificationReceivedAt = new Date(notif.timestamp); // Replace with actual timestamp or function to get it
             const formattedTime = formatDistanceToNow(notificationReceivedAt, {
-              addSuffix: true, 
+              addSuffix: true,
             });
             return {
               name: notif.from,
               time: formattedTime,
               approvalStatus: notif.approvalStatus,
-              imageURL: notif.imageURL
+              imageURL: notif.imageURL,
             };
-          })
-          setPawrentNotifs(mappedPawrentNotifs)
+          });
+          setPawrentNotifs(mappedPawrentNotifs);
         }
-  
       })
       .catch(function (err) {
         console.log(err);
@@ -74,7 +73,15 @@ function RequestPawrent() {
   };
 
   return (
-    <div style={{ width: "100%", overflowY: "auto" }}>
+    <div
+      style={{
+        overflowY: "auto",
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <style>
         {`
           body {
@@ -97,80 +104,81 @@ function RequestPawrent() {
           furry companion!
         </Typography>
       </div>
-      <div className="bg-[#FAFAFB]">
+      <div className="bg-[#FAFAFB] flex-grow">
         <Container
           sx={{
             paddingY: "5rem",
           }}
         >
           {pawrentNotifs.length > 0 ? (
-          pawrentNotifs.map((request, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-                background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
-                padding: "16px",
-                borderBottom: "2px solid orange",
-                borderRadius: "10px",
-                width: "100%",
-                marginBottom: "8px",
-              }}
-            >
+            pawrentNotifs.map((request, index) => (
               <div
+                key={index}
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  gap: "10px",
+                  background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
+                  padding: "16px",
+                  borderBottom: "2px solid orange",
+                  borderRadius: "10px",
+                  width: "100%",
+                  marginBottom: "8px",
                 }}
               >
                 <div
-                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  <img
-                    src={request.imageURL}
-                    alt=""
-                    style={imageStyle}
-                  />
-                  <div>
-                    <Typography>
-                      <strong>{request.name}</strong> {request.approvalStatus} your request.
-                    </Typography>
-                    <Typography variant="caption" color="#2F4858">
-                      {request.time}
-                    </Typography>
-                  </div>
-                </div>
-                <Tooltip title="Send Message">
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "#EE7200",
-                      minWidth: "50px",
-                      minHeight: "50px",
-                      padding: "10px",
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
                     }}
-                    onClick={handleClick}
                   >
-                    <img
-                      src={actionImage}
-                      alt="Action"
-                      style={{
-                        minWidth: "24px",
-                        minHeight: "24px",
-                        color: "#FFFFFF",
+                    <img src={request.imageURL} alt="" style={imageStyle} />
+                    <div>
+                      <Typography>
+                        <strong>{request.name}</strong> {request.approvalStatus}{" "}
+                        your request.
+                      </Typography>
+                      <Typography variant="caption" color="#2F4858">
+                        {request.time}
+                      </Typography>
+                    </div>
+                  </div>
+                  <Tooltip title="Send Message">
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "#EE7200",
+                        minWidth: "50px",
+                        minHeight: "50px",
+                        padding: "10px",
                       }}
-                    />
-                  </Button>
-                </Tooltip>
+                      onClick={handleClick}
+                    >
+                      <img
+                        src={actionImage}
+                        alt="Action"
+                        style={{
+                          minWidth: "24px",
+                          minHeight: "24px",
+                          color: "#FFFFFF",
+                        }}
+                      />
+                    </Button>
+                  </Tooltip>
+                </div>
               </div>
-            </div>
-          ))) : (
+            ))
+          ) : (
             <p>No adoption requests found.</p>
-          )
-          }
+          )}
         </Container>
       </div>
       <Footer />

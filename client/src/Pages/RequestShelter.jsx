@@ -73,7 +73,7 @@ function RequestShelter() {
           const transformedRequests = allAnswers.map(function (answer) {
             const notificationCreatedAt = new Date(answer.timestamp);
             const formattedTime = formatDistanceToNow(notificationCreatedAt, {
-              addSuffix: true, 
+              addSuffix: true,
             });
             return {
               name: answer.firstName,
@@ -81,8 +81,8 @@ function RequestShelter() {
               requestId: answer.id,
               approvalStatus: answer.approvalStatus,
               respondent: answer.respondent,
-              toShelter: answer.toShelter, 
-              imageURL: answer.dp
+              toShelter: answer.toShelter,
+              imageURL: answer.dp,
             };
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
@@ -106,16 +106,17 @@ function RequestShelter() {
         approvalStatus: "approved",
       })
       .then(function (response) {
-        console.log("response: ",response);
-        axios.post(`${process.env.REACT_APP_SERVER_URL}/api/notifPawrent`, {
-          response
-        })
-        .then(function(response){
-          console.log(response);
-        })
-        .catch(function(error){
-          console.log(error);
-        })
+        console.log("response: ", response);
+        axios
+          .post(`${process.env.REACT_APP_SERVER_URL}/api/notifPawrent`, {
+            response,
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       })
       .catch(function (err) {
         console.log(err);
@@ -132,15 +133,16 @@ function RequestShelter() {
       })
       .then(function (response) {
         console.log(response);
-          axios.post(`${process.env.REACT_APP_SERVER_URL}/api/notifPawrent`, {
-            response
+        axios
+          .post(`${process.env.REACT_APP_SERVER_URL}/api/notifPawrent`, {
+            response,
           })
-          .then(function(response){
+          .then(function (response) {
             console.log(response);
           })
-          .catch(function(error){
+          .catch(function (error) {
             console.log(error);
-          })
+          });
       })
       .catch(function (err) {
         console.log(err);
@@ -148,7 +150,15 @@ function RequestShelter() {
     console.log("Approval Denied: ", request);
   };
   return (
-    <div style={{ width: "100%", overflowY: "auto" }}>
+    <div
+      style={{
+        overflowY: "auto",
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <style>
         {`
                     body {
@@ -171,7 +181,7 @@ function RequestShelter() {
           furry companion!
         </Typography>
       </div>
-      <div className="bg-[#FAFAFB] h-full">
+      <div className="bg-[#FAFAFB] h-full flex-grow">
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
           {adoptionRequests.length > 0 ? (
             adoptionRequests.map((request, index) => (
@@ -202,11 +212,7 @@ function RequestShelter() {
                     flexGrow: 1,
                   }}
                 >
-                  <img
-                    src={request.imageURL}
-                    alt=""
-                    style={imageStyle}
-                  />
+                  <img src={request.imageURL} alt="" style={imageStyle} />
                   <div>
                     <Typography>
                       <strong>{request.name}</strong> requested an adoption

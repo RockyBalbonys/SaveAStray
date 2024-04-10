@@ -31,7 +31,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import messageIcon from "../../assets/icons/Message Icon.svg";
 import bellIcon from "../../assets/icons/Bell Icon.svg";
 import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
-import SAS_Logo from "../../assets/icons/SAS_Logo4.png"
+import SAS_Logo from "../../assets/icons/SAS_Logo4.png";
 
 // import constant datas
 import { pages } from "../../constants/landingPage";
@@ -154,7 +154,7 @@ export default function Navbar() {
                       justifyContent: "center",
                       alignItems: "center",
                     }}
-                    to={isLearn ? "articles" : page}
+                    to={isLearn ? "/articles" : `/${page}`}
                     component={RouterLink}
                     aria-label={page}
                     fontSize={16}
@@ -329,7 +329,7 @@ function DisplayUserComponents({ userIsLoggedIn, userRole }) {
     <>
       <Box display={"flex"} sx={{ alignItems: "center", columnGap: "12px" }}>
         <Tooltip title="Messages">
-          <RouterLink to="/messages">
+          <RouterLink to="/messages/t">
             <img
               src={messageIcon}
               alt="messages"
