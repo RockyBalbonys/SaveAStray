@@ -20,11 +20,12 @@ import { AnimalProp } from "../AnimalProp";
 import { UploadImage } from "../UploadImage";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 
 const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
   const [animalInfo, setAnimalInfo] = useState(animal);
   const [uploadedImages, setUploadedImages] = useState([]);
-
+  const { isLoggedIn, user, role } = useAuth();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
 
@@ -80,7 +81,11 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
       console.log(res);
 
       // After successfully updating the pet, fetch the updated list of pets
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet`);
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
+        params: {
+          user: user
+        }
+      });
       const allPets = response.data.allPets;
       setAnimals(allPets);
 

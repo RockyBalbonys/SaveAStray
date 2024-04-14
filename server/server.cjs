@@ -10,7 +10,7 @@ const port = 3001;
 const http = require("http").createServer(app); // Create HTTP server
 const io = require("socket.io")(http, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `${process.env.CLIENT_URL}`,
     methods: ["GET", "POST"],
   },
 });
@@ -23,7 +23,7 @@ const { OAuth2Client } = require("google-auth-library");
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
 const PawrentNotif = require("./Models/pawrentNotif.js");
-const ChatMessage = require("./Models/chatMessageSchema.js");
+const Contact = require("./Models/contactSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -1014,15 +1014,34 @@ app.post("/api/updateDp", async (req, res) => {
   }
 });
 
+app.get("/api/fetchContacts/:userId", async (req, res) => {
+  const { userId } = req.params;
+  let messages; // Define contact outside the if block
+
+  if (userId) {
+    messages = await Contact.find({ shelter: userId }); // Update the outer contact variable
+    if (!messages || messages.length ===0) {
+      messages = await Contact.find({ pawrent: userId }); 
+    }
+  }
+  res.json({
+    status:200,
+    messages
+  })
+  
+});
+
+
+
 //socket
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
-  console.log("Socket connected:", userId);
+  //console.log("Socket connected:", userId);
 
-  socket.on("send-message", (message) => {
-    console.log(`Client (ID: ${userId}) sent: ${message}`);
-
-    socket.broadcast.emit("broadcast-message", `${userId} sent: ${message}`);
+  socket.on("send-message", (messageInfo) => {
+    const { timestamp, messageSender, content } = messageInfo
+    console.log(messageInfo)
+    socket.broadcast.emit("broadcast-message", `${messageSender} sent: ${content}`);
   });
 });
 

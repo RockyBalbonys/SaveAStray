@@ -114,7 +114,7 @@ function App() {
             <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
             <Route path="/socketPractice" element={<SocketPractice />} />
             <Route path="/messages/t/" element={<Chat />} />
-            <Route path="/messages/t/:roomId" element={<Chat />} />
+            <Route path="/messages/t/:chatId" element={<Chat />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>
