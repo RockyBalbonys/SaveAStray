@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 
 // mui components
@@ -197,22 +197,44 @@ const [userMessage, setUserMessage] = useState({
     timestamp: Date.now(),
     chatId,
     messageSender: user,
-    content: inputMessage,
+    content: "",
 })
 //console.log(userMessage);
+const socketRef = useRef(null); // Create a mutable ref for the socket object
 
-const socket = io(process.env.REACT_APP_SERVER_URL, { query: { user } }); // Connect to the server
-// socket events
+  useEffect(() => {
+    setUserMessage((prevUserMessage) => ({
+      ...prevUserMessage,
+      chatId: contactInfo.chatId, // Update chatId when contactInfo changes
+    }));
+  }, [contactInfo]);
 
-socket.on('connect', () => {
-  console.log('Socket connected!'); // Log here after successful connection
-}); 
+  useEffect(() => {
+    try {
+      socketRef.current = io(process.env.REACT_APP_SERVER_URL, { transports: ['websocket'], query: { user } });
+  
+      // Socket event handlers
+      socketRef.current.on('connect', () => {
+        console.log('Socket connected!');
+      });
 
-socket.on('broadcast-message', (broadcastedMessage) => {
-  console.log('Broadcasted message:', broadcastedMessage);
-});
-
-
+      socketRef.current.on('broadcast-message', (broadcastedMessage) => {
+        console.log('Broadcasted message:', broadcastedMessage);
+      });
+  
+      socketRef.current.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+      });
+  
+      return () => {
+        // Clean up socket connection when component unmounts
+        socketRef.current.disconnect();
+      };
+    } catch (error) {
+      console.error('Error initializing socket:', error);
+    }
+  }, []);
+  
 
 // functions
 
@@ -221,7 +243,9 @@ const changeHandler = (e) => {
 };
 
 function sendMessage() {
-    socket.emit('send-message', userMessage); // Send the updated message to the server
+  // Send the updated message to the server using the socketRef.current object
+  socketRef.current.emit('send-message', userMessage);
+  setUserMessage({...userMessage, content: ""})
 }
 
 function generateChatId(senderId, receiverId) {
@@ -286,7 +310,7 @@ function generateChatId(senderId, receiverId) {
           <input
             className="w-full rounded-lg border-gray-100 focus:border-orange-300 focus:ring-orange-300 border-2 mr-4 p-2.5"
             type="text"
-            value={inputMessage}
+            value={userMessage.content}
             placeholder="Type your message..."
             onChange={changeHandler}
           />

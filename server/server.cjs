@@ -1038,11 +1038,11 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
   //console.log("Socket connected:", userId);
 
-  socket.on("send-message", (messageInfo) => {
-    const { timestamp, messageSender, content } = messageInfo
-    console.log(messageInfo)
-    socket.broadcast.emit("broadcast-message", `${messageSender} sent: ${content}`);
-  });
+    socket.on("send-message", (messageInfo) => {
+      const { timestamp, messageSender, content, chatId } = messageInfo
+      console.log(messageInfo)
+      io.emit("broadcast-message", `${messageSender} sent: ${content}`);
+    });
 });
 
 // Start the server
