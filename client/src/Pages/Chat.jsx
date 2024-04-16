@@ -27,9 +27,9 @@ import axios from "axios"
 
 
 const Chat = () => {
-  // hard coded contacts
   const [contacts, setContacts] = useState([])
   const { isLoggedIn, user, role } = useAuth();
+  const [loading, setLoading] = useState(true);
   axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, 
             {
               params: {
@@ -45,8 +45,10 @@ const Chat = () => {
                 }
               ))
               setContacts(mappedMessages)
+              setLoading(false)
             }).catch(function(error){
               console.log(error);
+              setLoading(false)
             })
 
 
@@ -54,6 +56,9 @@ const Chat = () => {
     <>
       <Navbar />
       <div className="bgLogin h-screen w-screen mt-[-64px]">
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
         <Container sx={{ height: "70%" }}>
           <Grid
             container
@@ -67,10 +72,11 @@ const Chat = () => {
 
             {/* Chatbox */}
             <Grid item xs={8} sx={{ height: "100%" }}>
-              <Chatbox contacts={contacts} />
+              <Chatbox contacts={contacts} loading={loading} />
             </Grid>
           </Grid>
         </Container>
+          )}
       </div>
     </>
   );
@@ -164,7 +170,7 @@ function ContactListContainer({ contacts }) {
 }
 
 // Create component for chat based system
-function Chatbox({ contacts }) {
+function Chatbox({ contacts/* , loading */ }) {
   const { chatId } = useParams();
   const contactInfo = contacts.find((contact) => contact.chatId === chatId);
   return (
@@ -182,7 +188,7 @@ function Chatbox({ contacts }) {
           {!chatId ? (
             "No chat selected"
           ) : (
-            <Messages contactInfo={contactInfo} />
+            <Messages contactInfo={contactInfo}/*  loading={loading} *//>
           )}
         </Box>
       </Box>
@@ -190,29 +196,34 @@ function Chatbox({ contacts }) {
   );
 }
 
-function Messages({ contactInfo, inputMessage }) {
-  const { isLoggedIn, user, role } = useAuth();
-const { name, online, conversation, chatId } = contactInfo;
-const [userMessage, setUserMessage] = useState({   
+function Messages({ contactInfo, inputMessage/* , loading */ }) {
+  const { user } = useAuth(); // Assuming useAuth provides user info
+  const { name, online, chatId, conversation } = contactInfo;
+/*   console.log(loading); */
+  // Ensure convo state updates when conversation changes
+  const [convo, setConvo] = useState(conversation);
+  const [userMessage, setUserMessage] = useState({
     timestamp: Date.now(),
     chatId,
     messageSender: user,
     content: "",
-})
-//console.log(userMessage);
-const socketRef = useRef(null); // Create a mutable ref for the socket object
+  });
+
+  const socketRef = useRef(null); // Create a mutable ref for the socket object
 
   useEffect(() => {
     setUserMessage((prevUserMessage) => ({
       ...prevUserMessage,
       chatId: contactInfo.chatId, // Update chatId when contactInfo changes
     }));
-  }, [contactInfo]);
+    // Update convo state when conversation changes
+    setConvo(conversation);
+  }, [chatId]);
 
   useEffect(() => {
     try {
       socketRef.current = io(process.env.REACT_APP_SERVER_URL, { transports: ['websocket'], query: { user } });
-  
+
       // Socket event handlers
       socketRef.current.on('connect', () => {
         console.log('Socket connected!');
@@ -220,21 +231,21 @@ const socketRef = useRef(null); // Create a mutable ref for the socket object
 
       socketRef.current.on('broadcast-message', (broadcastedMessage) => {
         console.log('Broadcasted message:', broadcastedMessage);
+        // Update convo state with new message
+        setConvo(prevConvo => [...prevConvo, broadcastedMessage]);
       });
-  
+
       socketRef.current.on('connect_error', (error) => {
         console.error('Socket connection error:', error);
       });
-  
+
       return () => {
-        // Clean up socket connection when component unmounts
         socketRef.current.disconnect();
       };
     } catch (error) {
       console.error('Error initializing socket:', error);
     }
-  }, []);
-  
+  }, [user, chatId]); // Include user and chatId in the dependency array
 
 // functions
 
@@ -297,12 +308,15 @@ function generateChatId(senderId, receiverId) {
               overflow: "auto",
             }}
           >
-            {conversation.map((message, idx) => (
+            {convo.map((message, idx) => (
               <React.Fragment key={idx}>
-                <Box sx={{ textAlign: "end" }}>{message.content}</Box>
-                <Box sx={{ textAlign: "start" }}>{message.content}</Box>
+                {message.messageSender === user ? (
+                  <Box sx={{ textAlign: "end" }}>{message.content}</Box>
+                ) : (
+                  <Box sx={{ textAlign: "start" }}>{message.content}</Box>
+                )}
               </React.Fragment>
-            ))}
+            ))} 
           </Box>
         </Box>
 

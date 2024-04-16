@@ -1041,7 +1041,9 @@ io.on("connection", (socket) => {
     socket.on("send-message", (messageInfo) => {
       const { timestamp, messageSender, content, chatId } = messageInfo
       console.log(messageInfo)
-      io.emit("broadcast-message", `${messageSender} sent: ${content}`);
+      // mga gagawin: isave sa database
+      // local storage(optional)
+      io.emit("broadcast-message", messageInfo);
     });
 });
 
