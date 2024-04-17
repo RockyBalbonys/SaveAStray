@@ -1019,15 +1019,15 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
   let messages;
   if (userId) {
     messages = await Contact.find({ shelter: userId });
-    for (let message of messages) {
-      const receiver = await PawrentInfo.findOne({ userId: message.pawrent });
-      message.receiverName = receiver ? `${receiver.firstName} ${receiver.lastName}` : ''; // Add receiverName if receiver is found
-    }
-    if (!messages || messages.length === 0) {
+      for (let message of messages) {
+        const receiver = await PawrentInfo.findOne({ userId: message.pawrent });
+        message.receiverName = receiver ? `${receiver.firstName} ${receiver.lastName}` : ''; // Add receiverName if receiver is found
+      }
+        if (!messages || messages.length === 0) {
       messages = await Contact.find({ pawrent: userId });
       for (let message of messages) {
         const receiver = await ShelterInfo.findOne({ userId: message.shelter });
-        message.receiverName = receiver ? `${receiver.firstName} ${receiver.lastName}` : ''; // Add receiverName if receiver is found
+        message.receiverName = receiver ? `${receiver.shelterName}` : ''; // Add receiverName if receiver is found
       }
     }
   }
