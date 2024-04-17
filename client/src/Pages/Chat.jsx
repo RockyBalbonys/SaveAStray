@@ -39,8 +39,9 @@ const Chat = () => {
               const { messages } = response.data
               const mappedMessages = messages.map(message => (
                 {
-                  name: "sample name",
+                  name: message.receiverName,
                   chatId: message.chatId,
+                  timestamp: message.timestamp,
                   conversation: message.conversation
                 }
               ))
@@ -188,7 +189,7 @@ function Chatbox({ contacts/* , loading */ }) {
           {!chatId ? (
             "No chat selected"
           ) : (
-            <Messages contactInfo={contactInfo}/*  loading={loading} *//>
+            <Messages contactInfo={contactInfo}/>
           )}
         </Box>
       </Box>
@@ -199,7 +200,6 @@ function Chatbox({ contacts/* , loading */ }) {
 function Messages({ contactInfo, inputMessage/* , loading */ }) {
   const { user } = useAuth(); // Assuming useAuth provides user info
   const { name, online, chatId, conversation } = contactInfo;
-/*   console.log(loading); */
   // Ensure convo state updates when conversation changes
   const [convo, setConvo] = useState(conversation);
   const [userMessage, setUserMessage] = useState({

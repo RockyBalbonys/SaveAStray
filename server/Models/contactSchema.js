@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
         chatId: String,
         online: Boolean,
         seen: Boolean,
+        receiverName: String,
         conversation: [
             {   
                 timestamp: Date,

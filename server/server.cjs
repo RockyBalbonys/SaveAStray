@@ -1016,20 +1016,28 @@ app.post("/api/updateDp", async (req, res) => {
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
-  let messages; // Define contact outside the if block
-
+  let messages;
   if (userId) {
-    messages = await Contact.find({ shelter: userId }); // Update the outer contact variable
-    if (!messages || messages.length ===0) {
-      messages = await Contact.find({ pawrent: userId }); 
+    messages = await Contact.find({ shelter: userId });
+    for (let message of messages) {
+      const receiver = await PawrentInfo.findOne({ userId: message.pawrent });
+      message.receiverName = receiver ? `${receiver.firstName} ${receiver.lastName}` : ''; // Add receiverName if receiver is found
+    }
+    if (!messages || messages.length === 0) {
+      messages = await Contact.find({ pawrent: userId });
+      for (let message of messages) {
+        const receiver = await ShelterInfo.findOne({ userId: message.shelter });
+        message.receiverName = receiver ? `${receiver.firstName} ${receiver.lastName}` : ''; // Add receiverName if receiver is found
+      }
     }
   }
   res.json({
-    status:200,
-    messages
-  })
-  
+    status: 200,
+    messages,
+  });
 });
+
+
 
 
 
@@ -1038,11 +1046,19 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
   //console.log("Socket connected:", userId);
 
-    socket.on("send-message", (messageInfo) => {
+    socket.on("send-message", async (messageInfo) => {
       const { timestamp, messageSender, content, chatId } = messageInfo
-      console.log(messageInfo)
+      
+      const contact = await Contact.findOne({ chatId: chatId })
+      if (!contact) {
+        console.log("no contact")
+        //gumawa
+        return;
+      }
+      contact.conversation.push(messageInfo)
+      await contact.save();
+      console.log(contact)
       // mga gagawin: isave sa database
-      // local storage(optional)
       io.emit("broadcast-message", messageInfo);
     });
 });
