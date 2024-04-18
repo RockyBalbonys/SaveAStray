@@ -4,12 +4,13 @@ import {
   FormGroup,
   FormControlLabel,
   Input,
+  FormHelperText,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { CheckboxSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { format } from "date-fns";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 const QSection3 = () => {
   return (
@@ -37,14 +38,18 @@ const Introduction = () => {
 };
 
 const PersonalInfoForm = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { section3, updateSection3 } = useQuestionnaireContext();
 
   const { fullName, birthdate, phoneNum, fullAddress, fbProfLink, occupation } =
-    answers.section3;
+    section3;
 
   const handleInputChange = (id, value) => {
-    updateAnswer("section3", id, value);
+    updateSection3({ [id]: value });
   };
+
+  useEffect(() => {
+    console.table(section3);
+  }, [section3]);
 
   return (
     <div className="input-container font-bold space-y-6 sm:flex-col">
@@ -116,18 +121,21 @@ const InputField = ({ label, id, width, value, handleInputChange }) => {
           fullWidth
         />
       )}
+      <FormHelperText sx={{ color: "red" }}>Required*</FormHelperText>
     </div>
   );
 };
 
 const ReachMethods = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
-  const { shelterReach } = answers.section3;
+  const { section3, updateSection3 } = useQuestionnaireContext();
+  const { shelterReach } = section3;
 
   const handleChangeShelterReach = (e) => {
     const { id, checked } = e.target;
-    const updatedShelterReach = { ...shelterReach, [id]: checked };
-    updateAnswer("section3", "shelterReach", updatedShelterReach);
+    const updatedShelterReach = checked
+      ? { ...shelterReach, [id]: true } // Update the specific reach method to true if checked
+      : { ...shelterReach, [id]: false }; // Update the specific reach method to false if unchecked
+    updateSection3({ shelterReach: updatedShelterReach });
   };
 
   return (
@@ -186,6 +194,9 @@ const ReachMethods = () => {
             }
           />
         </FormGroup>
+        <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
+          Required*
+        </FormHelperText>
       </FormControl>
     </div>
   );

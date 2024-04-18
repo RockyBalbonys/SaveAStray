@@ -3,6 +3,7 @@ import {
   FormControl,
   FormControlLabel,
   RadioGroup,
+  FormHelperText,
 } from "@mui/material";
 import { Input } from "@mui/material";
 import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
@@ -11,25 +12,25 @@ import { useParams } from "react-router-dom";
 import { useEffect, memo } from "react";
 
 const QSection1 = () => {
-  const { answers, updateAnswer, handleShelterId } = useQuestionnaireContext();
-  const { email, bestDescribe } = answers.section1;
+  const { section1, updateSection1, toShelter, handleShelterId } =
+    useQuestionnaireContext();
+  const { email, bestDescribe } = section1;
 
   const { shelterId } = useParams();
 
-  const { toShelter } = answers.toShelter;
-
   useEffect(() => {
     handleShelterId(toShelter, shelterId);
-  }, [shelterId]);
+    console.table(section1);
+  }, [shelterId, section1]);
 
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;
-    updateAnswer("section1", "email", emailValue);
+    updateSection1({ email: emailValue });
   };
 
   const handleRadioChange = (e) => {
     const radioValue = e.target.value;
-    updateAnswer("section1", "bestDescribe", radioValue);
+    updateSection1({ bestDescribe: radioValue });
   };
 
   return (
@@ -47,6 +48,7 @@ const QSection1 = () => {
             onChange={handleEmailChange}
             fullWidth
           />
+          <FormHelperText sx={{ color: "red" }}>Required*</FormHelperText>
         </div>
         <div className="flex flex-col">
           <FormControl>
@@ -55,6 +57,9 @@ const QSection1 = () => {
               this form?
             </label>
             <RadioOptions value={bestDescribe} onChange={handleRadioChange} />
+            <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
+              Required*
+            </FormHelperText>
           </FormControl>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { FormControlLabel, RadioGroup } from "@mui/material";
+import { FormControlLabel, FormHelperText, RadioGroup } from "@mui/material";
 import { RadioSmall } from "../../Pages/Questionnaire";
 
 export default function RadioGroupWithLabels({ id, options, onChange, value }) {
@@ -22,6 +22,9 @@ export default function RadioGroupWithLabels({ id, options, onChange, value }) {
           control={<RadioSmall />}
         />
       ))}
+      <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
+        Required*
+      </FormHelperText>
     </RadioGroup>
   );
 }
