@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
         online: Boolean,
         seen: Boolean,
         receiverName: String,
+        dp: String,
         conversation: [
             {   
                 timestamp: Date,

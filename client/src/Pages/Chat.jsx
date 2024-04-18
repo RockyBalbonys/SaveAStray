@@ -37,12 +37,14 @@ const Chat = () => {
               },
             }).then(function(response) {
               const { messages } = response.data
+              console.log(messages);
               const mappedMessages = messages.map(message => (
                 {
                   name: message.receiverName,
                   chatId: message.chatId,
-                  timestamp: message.timestamp,
-                  conversation: message.conversation
+                  timestamp: "sample timestamp"/* message.timestamp */,
+                  conversation: message.conversation,
+                  dp: message.dp
                 }
               ))
               setContacts(mappedMessages)
@@ -140,7 +142,7 @@ function ContactListContainer({ contacts }) {
                   variant="dot"
                   color={contact.online ? "success" : undefined}
                 >
-                  <Avatar src={avatar_placeholder} />
+                  <Avatar src={contact.dp} />
                 </Badge>
 
                 {/* Contact info container */}
@@ -171,7 +173,7 @@ function ContactListContainer({ contacts }) {
 }
 
 // Create component for chat based system
-function Chatbox({ contacts/* , loading */ }) {
+function Chatbox({ contacts }) {
   const { chatId } = useParams();
   const contactInfo = contacts.find((contact) => contact.chatId === chatId);
   return (
@@ -199,7 +201,7 @@ function Chatbox({ contacts/* , loading */ }) {
 
 function Messages({ contactInfo, inputMessage/* , loading */ }) {
   const { user } = useAuth(); // Assuming useAuth provides user info
-  const { name, online, chatId, conversation } = contactInfo;
+  const { name, online, chatId, conversation, dp, timestamp } = contactInfo;
   // Ensure convo state updates when conversation changes
   const [convo, setConvo] = useState(conversation);
   const [userMessage, setUserMessage] = useState({
@@ -287,7 +289,7 @@ function generateChatId(senderId, receiverId) {
             sx={{ display: "flex", alignItems: "center", columnGap: "16px" }}
           >
             <Badge variant="dot" color={"success"}>
-              <Avatar src={avatar_placeholder} />
+              <Avatar src={dp} />
             </Badge>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <p className="text-2xl font-bold text-[#FF8210]">{name}</p>
