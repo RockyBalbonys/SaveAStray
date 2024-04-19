@@ -12,16 +12,12 @@ import { useParams } from "react-router-dom";
 import { useEffect, memo } from "react";
 
 const QSection1 = () => {
-  const { section1, updateSection1, toShelter, handleShelterId } =
-    useQuestionnaireContext();
+  const { section1, updateSection1 } = useQuestionnaireContext();
   const { email, bestDescribe } = section1;
 
-  const { shelterId } = useParams();
-
   useEffect(() => {
-    handleShelterId(toShelter, shelterId);
     console.table(section1);
-  }, [shelterId, section1]);
+  }, [section1]);
 
   const handleEmailChange = (e) => {
     const emailValue = e.target.value;

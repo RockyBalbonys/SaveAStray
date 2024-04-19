@@ -137,42 +137,42 @@ const useQuestionnaire = () => {
 
   const submitAnswers = () => {
     const respondent = user;
-    // Check if any section has empty values
-    const isEmptySection = (section) => {
-      return Object.values(section).some((value) => {
-        return value === "" || (Array.isArray(value) && value.length === 0);
-      });
+    const formData = {
+      respondent,
+      section1,
+      section2,
+      section3,
+      section4,
+      section5,
+      section6,
+      toShelter,
     };
 
+    // Check if any section has empty values
+    // const isEmptySection = (section) => {
+    //   return Object.values(section).some(
+    //     (value) => value === "" || (Array.isArray(value) && value.length === 0)
+    //   );
+    // };
+
     // Check if any section is empty
-    if (
-      isEmptySection(section1) ||
-      isEmptySection(section2) ||
-      isEmptySection(section3) ||
-      isEmptySection(section4) ||
-      isEmptySection(section5) ||
-      isEmptySection(section6)
-    ) {
-      console.log("Error: Some sections have empty values.");
-      return; // Stop execution if any section is empty
-    }
-
-    const formData = new FormData();
-
-    // Append user and section data to FormData object
-    formData.append("respondent", JSON.stringify(user));
-    formData.append("section1", JSON.stringify(section1));
-    formData.append("section2", JSON.stringify(section2));
-    formData.append("section3", JSON.stringify(section3));
-    formData.append("section4", JSON.stringify(section4));
-    formData.append("section5", JSON.stringify(section5));
-    formData.append("section6", JSON.stringify(section6));
-    formData.append("toShelter", toShelter);
+    // if (
+    //   isEmptySection(section1) ||
+    //   isEmptySection(section2) ||
+    //   isEmptySection(section3) ||
+    //   isEmptySection(section4) ||
+    //   isEmptySection(section5) ||
+    //   isEmptySection(section6)
+    // ) {
+    //   console.log("Error: Some sections have empty values.");
+    //   return;
+    // }
+    console.log(formData);
 
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/sendAnswers`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Ensure correct content type
+          "Content-Type": "application/json",
         },
       })
       .then(function (response) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import top from "../assets/images/top.png";
 import {
   Paper,
@@ -23,8 +23,17 @@ import {
   QuestionnaireProvider,
   useQuestionnaireContext,
 } from "../hooks/useQuestionnaire.jsx";
+import { useParams } from "react-router-dom";
 
 const Questionnaire = () => {
+  const { shelterId } = useParams();
+  const { toShelter, handleShelterId } = useQuestionnaireContext();
+
+  useEffect(() => {
+    handleShelterId(shelterId);
+    console.log("toShelter: " + toShelter);
+  }, [shelterId]);
+
   const showButton = useScroll(500);
 
   const scrollToTop = () => {
@@ -39,15 +48,13 @@ const Questionnaire = () => {
         <Container maxWidth="lg" className="space-y-6">
           <QHeader />
           <QWelcome />
-          <QuestionnaireProvider>
-            <QSection1 />
-            <QSection2 />
-            <QSection3 />
-            <QSection4 />
-            <QSection5 />
-            <QSection6 />
-            <SubmitButton />
-          </QuestionnaireProvider>
+          <QSection1 />
+          <QSection2 />
+          <QSection3 />
+          <QSection4 />
+          <QSection5 />
+          <QSection6 />
+          <SubmitButton />
           {/* Button to go back to the top */}
           {showButton && (
             <Tooltip title="Back to top">

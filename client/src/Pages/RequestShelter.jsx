@@ -149,6 +149,7 @@ function RequestShelter() {
       });
     console.log("Approval Denied: ", request);
   };
+
   return (
     <div
       style={{
@@ -266,7 +267,7 @@ function RequestShelter() {
                         variant="contained"
                         style={buttonStyle}
                         component={RouterLink}
-                        to="/messages"
+                        to={`/messages/t/${request.requestId}_${user}`}
                       >
                         <img
                           src={Frame200Send}
