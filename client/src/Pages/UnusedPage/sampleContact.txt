@@ -1,0 +1,135 @@
+
+  {
+    name: "Lance",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "12345678",
+    online: true,
+    conversation: [/* 
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      }, */
+    ],
+  },
+  {
+    name: "Lawrence",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "24681012",
+    online: false,
+    conversation: [
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+
+        contactMessage: "Hello",
+      },
+      {
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+      },
+    ],
+  },
+  {
+    name: "Jhude",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "36912151",
+    online: true,
+    conversation: [
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+      {
+        yourMessage: "Hi",
+        contactMessage: "Hello",
+      },
+    ],
+  },
+  {
+    name: "An-ghelo",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "48121620",
+    online: true,
+    conversation: [
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hi",
+      },
+      {
+        yourMessage: "Hello An",
+      },
+      {
+        contactMessage: "Hello rin",
+      },
+    ],
+  },
+  {
+    name: "Joshua",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "51015202",
+    online: true,
+  },
+  {
+    name: "Jericho",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "61218243",
+    online: false,
+  },
+  {
+    name: "Jericho",
+    message: "Type Text here",
+    timestamp: "Today 05:30 PM",
+    userId: "81624324",
+    online: true,
+  },

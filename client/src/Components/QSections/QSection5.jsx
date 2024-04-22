@@ -3,10 +3,10 @@ import RadioGroupWithLabels from "./RadioGroupWithLabels";
 import InputField from "./InputField";
 import { paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 const QSection5 = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { section5, updateSection5 } = useQuestionnaireContext();
   const {
     rescueName,
     isWillingToChoose,
@@ -18,13 +18,15 @@ const QSection5 = () => {
     responsibleForFinance,
     emergency,
     listOfPets,
-  } = answers.section5;
-
-  const section = "section5";
+  } = section5;
 
   const handleValueChange = (id, value) => {
-    updateAnswer(section, id, value);
+    updateSection5({ [id]: value });
   };
+
+  useEffect(() => {
+    console.table(section5);
+  }, [section5]);
 
   return (
     <Paper sx={paperStyle}>
@@ -112,13 +114,13 @@ const QSection5 = () => {
   );
 };
 
-const RadioGroupQuestion = ({ label, options, onChange }) => {
+const RadioGroupQuestion = ({ id, label, options, onChange }) => {
   return (
     <div className="input-container w-full sm:flex-col sm:items-start">
       <label htmlFor={label} className="font-bold">
         {label}
       </label>
-      <RadioGroupWithLabels id={label} options={options} onChange={onChange} />
+      <RadioGroupWithLabels id={id} options={options} onChange={onChange} />
     </div>
   );
 };

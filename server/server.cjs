@@ -7,7 +7,14 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const app = express();
 const port = 3001;
-const uri = process.env.DB_URI;
+const http = require("http").createServer(app); // Create HTTP server
+const io = require("socket.io")(http, {
+  cors: {
+    origin: `${process.env.CLIENT_URL}`,
+    methods: ["GET", "POST"],
+  },
+});
+
 const User = require("./Models/userSchema.js");
 const Pet = require("./Models/petSchema.js");
 const ShelterInfo = require("./Models/shelterInfoSchema.js");
@@ -16,6 +23,7 @@ const { OAuth2Client } = require("google-auth-library");
 const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
 const PawrentNotif = require("./Models/pawrentNotif.js");
+const Contact = require("./Models/contactSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -461,45 +469,83 @@ app.post("/api/googleLogin", async (req, res) => {
 app.post("/api/sendAnswers", async (req, res) => {
   const data = req.body;
   const respondent = data.respondent;
-  const section1 = data.section1;
-  const section2 = data.section2;
-  const section3 = data.section3;
-  const section4 = data.section4;
-  const section5 = data.section5;
-  const section6 = data.section6;
+  const { section1, section2, section3, section4, section5, section6 } = data;
   const toShelter = data.toShelter;
   const timestamp = Date.now();
+
   if (data) {
     try {
       const newQuestRes = new QuestRes({
         respondent,
         timestamp,
-        answers: {
-          section1,
-          section2,
-          section3,
-          section4,
-          section5,
-          section6,
-        },
+        answers: { section1, section2, section3, section4, section5, section6 },
         toShelter,
         approvalStatus: "pending",
       });
+
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
       res.send({ status: 200, message: "Success!!" });
     } catch (error) {
       console.log(error);
+      res.status(500).send({ status: 500, message: "Internal server error" });
     }
   } else {
-    res.send({
-      status: 400,
-      message: "No response!",
-    });
+    res.status(400).send({ status: 400, message: "No response!" });
   }
 });
 
-app.get("/getPet", async (req, res) => {
+app.get("/getPet/:user", async (req, res) => {
+  console.log(req.params);
+
+  try {
+    const userId = req.params.user;
+
+    // Look for user in User collection
+    let user = await User.findOne({ _id: userId });
+
+    // If user not found in User collection, try GoogleUser collection
+    if (!user) {
+      user = await GoogleUser.findOne({ _id: userId });
+    }
+
+    let userRole;
+    if (user) {
+      userRole = user.role; // Access role only if user is found
+    }
+
+    let gUserRole;
+    if (gUserRole) {
+      // Check for existence before accessing role
+      gUserRole = await GoogleUser.findOne({ _id: userId });
+      gUserRole = gUserRole.role; // Access role only if gUserRole is found
+    }
+
+    if (userRole === "Adoptive Pawrent" || gUserRole === "Adoptive Pawrent") {
+      const allPets = await Pet.find();
+      res.send({
+        status: 200,
+        allPets,
+      });
+    } else if (
+      userRole === "Rescue Shelter" ||
+      gUserRole === "Rescue Shelter"
+    ) {
+      const allPets = await Pet.find({ shelter: userId }); // Assuming 'shelter' field in Pet model
+      res.send({
+        status: 200,
+        allPets,
+      });
+    } else {
+      res.status(403).send({ error: "Unauthorized user role" }); // Handle unauthorized roles
+    }
+  } catch (err) {
+    console.log("error: ", err);
+    res.status(500).send({ error: "Internal server error" });
+  }
+});
+
+/* app.get("/getPet", async (req, res) => {
   try {
     const allPets = await Pet.find();
     res.send({
@@ -509,7 +555,8 @@ app.get("/getPet", async (req, res) => {
   } catch (err) {
     console.log("error: ", err);
   }
-});
+}); */
+
 app.post("/api/fetchRequests", async (req, res) => {
   const { user } = req.body;
 
@@ -760,6 +807,7 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
   if (userId) {
     try {
       const shelterInfo = await ShelterInfo.findOne({ userId });
+
       console.log(shelterInfo);
       if (shelterInfo) {
         const user =
@@ -858,6 +906,7 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 //Fetch Pawrent Info API
 app.get("/api/pawrentInfo/:userId", async (req, res) => {
   const { userId } = req.query;
+
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
@@ -953,6 +1002,57 @@ app.post("/api/updateDp", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log("Connected to PORT ", port);
+app.get("/api/fetchContacts/:userId", async (req, res) => {
+  const { userId } = req.params;
+  let messages;
+
+  if (userId) {
+    messages = await Contact.find({ shelter: userId });
+    for (let message of messages) {
+      const receiver = await PawrentInfo.findOne({ userId: message.pawrent });
+      message.receiverName = receiver
+        ? `${receiver.firstName} ${receiver.lastName}`
+        : ""; // Add receiverName if receiver is found
+      message.dp = receiver.dp;
+    }
+    if (!messages || messages.length === 0) {
+      messages = await Contact.find({ pawrent: userId });
+      for (let message of messages) {
+        const receiver = await ShelterInfo.findOne({ userId: message.shelter });
+        message.receiverName = receiver ? `${receiver.shelterName}` : ""; // Add receiverName if receiver is found
+        message.dp = receiver.dp;
+      }
+    }
+  }
+  res.json({
+    status: 200,
+    messages,
+  });
+});
+
+//socket
+io.on("connection", (socket) => {
+  const userId = socket.handshake.query.user;
+  //console.log("Socket connected:", userId);
+
+  socket.on("send-message", async (messageInfo) => {
+    const { timestamp, messageSender, content, chatId } = messageInfo;
+
+    const contact = await Contact.findOne({ chatId: chatId });
+    if (!contact) {
+      console.log("no contact");
+      //gumawa
+      return;
+    }
+    contact.conversation.push(messageInfo);
+    await contact.save();
+    console.log(contact);
+    // mga gagawin: isave sa database
+    io.emit("broadcast-message", messageInfo);
+  });
+});
+
+// Start the server
+http.listen(3001, () => {
+  console.log("Server listening on port 3001");
 });

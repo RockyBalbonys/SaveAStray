@@ -52,7 +52,11 @@ const AnimalsShelter = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet`)
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
+        params: {
+          user: user
+        }
+      })
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);

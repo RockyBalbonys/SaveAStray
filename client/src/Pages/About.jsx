@@ -5,6 +5,7 @@ import { aboutContent, team, sectionContent } from "../constants/about";
 import Footer from "../Components/PageComponent/Footer";
 import Donate from "../Components/PageComponent/Donate";
 import aboutHero from "../assets/images/aboutHero.png";
+import { motion, AnimatePresence } from "framer-motion";
 
 const About = () => {
   return (
@@ -74,28 +75,26 @@ function SecondSection({ contents }) {
 function ThirdSection({ contents }) {
   return (
     <>
-      {contents.map((content, index) => (
-        <Grid
-          container
-          key={index}
-          spacing={0}
-          sx={{
-            "& > *": {
-              mb: { xs: 2, sm: 0 }, // Add margin bottom only on mobile devices
-            },
-          }}
-        >
-          {index % 2 !== 0 ? (
-            <>
+      <AnimatePresence>
+        {contents.map((content, index) => (
+          <Grid
+            container
+            key={index}
+            spacing={0}
+            sx={{
+              "& > *": {
+                mb: { xs: 2, sm: 0 }, // Add margin bottom only on mobile devices
+              },
+            }}
+          >
+            {index % 2 !== 0 ? (
               <OddIndexContent content={content} />
-            </>
-          ) : (
-            <>
+            ) : (
               <EvenIndexContent content={content} />
-            </>
-          )}
-        </Grid>
-      ))}
+            )}
+          </Grid>
+        ))}
+      </AnimatePresence>
     </>
   );
 }
@@ -114,6 +113,11 @@ function OddIndexContent({ content }) {
             md: "block",
           },
         }}
+        component={motion.div}
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "-100%" }}
+        transition={{ duration: 0.5 }}
       >
         <Box
           sx={{
@@ -163,6 +167,11 @@ function OddIndexContent({ content }) {
             md: "block",
           },
         }}
+        component={motion.div}
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "-100%" }}
+        transition={{ duration: 0.5 }}
       >
         <Box
           position="relative"
@@ -211,6 +220,11 @@ function EvenIndexContent({ content }) {
             md: "block",
           },
         }}
+        component={motion.div}
+        initial={{ x: "-100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ duration: 0.5 }}
       >
         <Box
           position="relative"
@@ -253,6 +267,11 @@ function EvenIndexContent({ content }) {
             md: "block",
           },
         }}
+        component={motion.div}
+        initial={{ x: "-100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ duration: 0.5 }}
       >
         <Box
           sx={{
