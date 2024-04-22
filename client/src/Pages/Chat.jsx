@@ -177,8 +177,20 @@ function ContactListContainer({ contacts }) {
 // Create component for chat based system
 function Chatbox({ contacts }) {
   const { chatId } = useParams();
-  console.log("chatId " + chatId);
-  const contactInfo = contacts.find((contact) => contact.chatId === chatId);
+  const [contactInfo, setContactInfo] = useState(null);
+
+  useEffect(() => {
+    async function fetchContactInfo() {
+      console.log("chatId " + chatId);
+      const foundContact = contacts.find(
+        (contact) => contact?.chatId === chatId
+      );
+      console.log("contact info", foundContact);
+      setContactInfo(foundContact);
+    }
+
+    fetchContactInfo();
+  }, [chatId, contacts]);
 
   return (
     <>

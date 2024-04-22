@@ -262,6 +262,7 @@ function RequestShelter() {
                       </Button>
                     </Tooltip>
 
+                    {/* TODO: Reroute current user to chat page */}
                     <Tooltip title="Send Message">
                       <Button
                         variant="contained"
