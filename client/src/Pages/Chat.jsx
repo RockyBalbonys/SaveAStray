@@ -23,7 +23,7 @@ import Navbar from "../Components/PageComponent/Navbar";
 import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
 import axios from "axios"
-
+import { formatDistanceToNow } from "date-fns";
 
 
 const Chat = () => {
@@ -36,17 +36,23 @@ const Chat = () => {
                 user,
               },
             }).then(function(response) {
-              const { messages } = response.data
-              console.log(messages);
-              const mappedMessages = messages.map(message => (
-                {
-                  name: message.receiverName,
-                  chatId: message.chatId,
-                  timestamp: "sample timestamp"/* message.timestamp */,
-                  conversation: message.conversation,
-                  dp: message.dp
-                }
-              ))
+              const { messages } = response.data;
+              function setTimestamp(timestamp) {
+                const notificationReceivedAt = new Date(timestamp);
+                const formattedTime = formatDistanceToNow(notificationReceivedAt, {
+                  addSuffix: true,
+                });
+                return formattedTime;
+              }
+              
+              const mappedMessages = messages.map(message => ({
+                name: message.receiverName,
+                chatId: message.chatId,
+                timestamp: setTimestamp(message.conversation[message.conversation.length - 1].timestamp),
+                conversation: message.conversation,
+                dp: message.dp
+              }));
+              
               setContacts(mappedMessages)
               setLoading(false)
             }).catch(function(error){

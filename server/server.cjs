@@ -1014,10 +1014,20 @@ app.post("/api/updateDp", async (req, res) => {
   }
 });
 
+// change password
+
+app.get("/api/changePassword", async(req, res) => {
+  const {currentPassword, newPassword} = req.body
+})
+
+app.get("/api/forgotPassword", async(req, res) => {
+  console.log("forgot password");
+})
+
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
   let messages;
- 
+
   if (userId) {
     messages = await Contact.find({ shelter: userId });
       for (let message of messages) {
@@ -1051,7 +1061,7 @@ io.on("connection", (socket) => {
 
     socket.on("send-message", async (messageInfo) => {
       const { timestamp, messageSender, content, chatId } = messageInfo
-      
+      console.log(timestamp)
       const contact = await Contact.findOne({ chatId: chatId })
       if (!contact) {
         console.log("no contact")
