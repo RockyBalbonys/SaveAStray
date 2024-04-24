@@ -8,15 +8,21 @@ import gcashIcon from "../assets/icons/gcash.svg";
 import paypalIcon from "../assets/icons/paypal.svg";
 import atmIcons from "../assets/images/donate/atmIcons.png";
 import { Link } from "react-router-dom";
-import donateHero from '../assets/images/donateHero.png'
+import donateHero from "../assets/images/donateHero.png";
+
 const Donate = () => {
   return (
     <>
-            <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
+      <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
         <div className="absolute left-0 z-10 w-full">
           <Container maxWidth="lg">
             <Typography variant="h2" className="text-white">
-              Make A <span className="text-[#2F4858]">Big <br />Difference</span> <br />
+              Make A{" "}
+              <span className="text-[#2F4858]">
+                Big <br />
+                Difference
+              </span>{" "}
+              <br />
               Today!
             </Typography>
           </Container>
@@ -27,7 +33,7 @@ const Donate = () => {
           }}
           className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
-      </div> 
+      </div>
       <Container maxWidth="lg">
         <CarouselSection />
         <DonateChannelsSection />
@@ -55,6 +61,8 @@ function CarouselSection() {
         </Typography>
       </Box>
       <CustomCarousel itemList={carouselItems} />
+
+      {/* <DonateCarousel items={carouselItems} /> */}
     </Box>
   );
 }
