@@ -20,6 +20,8 @@ import Register from "./Pages/Authentication/Register";
 import Home from "./Pages/Home";
 import Verify from "./Pages/Redirect/Verify";
 import DeadEnd from "./Pages/Redirect/DeadEnd";
+import AdminDashboardSignup from "./Pages/Dashboard/AdminDashboardSignup";
+import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 
 // import mui components, theme, functions
 import { ThemeProvider } from "@emotion/react";
@@ -106,6 +108,8 @@ function App() {
             <Route path="/deadend" element={<DeadEnd />} />
             <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
             <Route path="/messages/t/:roomId" element={<Messages />} />
+            <Route path="/adminsignup" element={<AdminDashboardSignup />} />
+            <Route path="dashboard" element={<AdminDashboard/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ThemeProvider>
