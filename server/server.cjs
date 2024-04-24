@@ -1004,55 +1004,53 @@ app.post("/api/updateDp", async (req, res) => {
 
 // change password
 
-app.get("/api/changePassword", async(req, res) => {
-  const {currentPassword, newPassword} = req.body
-})
+app.get("/api/changePassword", async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+});
 
-app.post("/api/forgotPassword", async(req, res) => {
-  const { email } = req.body
+app.post("/api/forgotPassword", async (req, res) => {
+  const { email } = req.body;
   console.log("email: ", email);
 
-  const existingAcc = await User.findOne({email})
+  const existingAcc = await User.findOne({ email });
 
-  console.log(existingAcc)
+  console.log(existingAcc);
   if (existingAcc) {
-  async function sendChangePassEmail(existingAcc) {
-    try {
-      // Create a Nodemailer transporter using SMTP
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.USER_EMAIL,
-          pass: process.env.USER_PASSWORD,
-        },
-      });
+    async function sendChangePassEmail(existingAcc) {
+      try {
+        // Create a Nodemailer transporter using SMTP
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASSWORD,
+          },
+        });
 
-      let info = await transporter.sendMail({
-        from: process.env.USER_EMAIL,
-        to: existingAcc.email,
-        subject: "Change Password",
-        html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
-      });
-      console.log("Change pass sent: ", info);
-    } catch (error) {
-      console.error("Error sending Change pass email:", error);
-      throw error; // Rethrow the error to be handled by the caller
+        let info = await transporter.sendMail({
+          from: process.env.USER_EMAIL,
+          to: existingAcc.email,
+          subject: "Change Password",
+          html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
+        });
+        console.log("Change pass sent: ", info);
+      } catch (error) {
+        console.error("Error sending Change pass email:", error);
+        throw error; // Rethrow the error to be handled by the caller
+      }
     }
-  }
-  sendChangePassEmail(existingAcc)
-      res.json({
-        message: "check your email"
-      })
+    sendChangePassEmail(existingAcc);
+    res.json({
+      message: "check your email",
+    });
   } else {
-    console.log("no acc")
+    console.log("no acc");
     res.json({
       status: 200,
-      message: `no ${email} found!`
-    })
+      message: `no ${email} found!`,
+    });
   }
-
-  
-})
+});
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -1087,21 +1085,21 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
   //console.log("Socket connected:", userId);
 
-    socket.on("send-message", async (messageInfo) => {
-      const { timestamp, messageSender, content, chatId } = messageInfo
-      console.log(timestamp)
-      const contact = await Contact.findOne({ chatId: chatId })
-      if (!contact) {
-        console.log("no contact")
-        //gumawa
-        return;
-      }
-      contact.conversation.push(messageInfo)
-      await contact.save();
-      console.log(contact)
-      // mga gagawin: isave sa database
-      io.emit("broadcast-message", messageInfo);
-    });
+  socket.on("send-message", async (messageInfo) => {
+    const { timestamp, messageSender, content, chatId } = messageInfo;
+    console.log(timestamp);
+    const contact = await Contact.findOne({ chatId: chatId });
+    if (!contact) {
+      console.log("no contact");
+      //gumawa
+      return;
+    }
+    contact.conversation.push(messageInfo);
+    await contact.save();
+    console.log(contact);
+    // mga gagawin: isave sa database
+    io.emit("broadcast-message", messageInfo);
+  });
 });
 
 // Start the server

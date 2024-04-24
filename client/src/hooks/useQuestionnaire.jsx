@@ -149,24 +149,24 @@ const useQuestionnaire = () => {
     };
 
     // Check if any section has empty values
-    // const isEmptySection = (section) => {
-    //   return Object.values(section).some(
-    //     (value) => value === "" || (Array.isArray(value) && value.length === 0)
-    //   );
-    // };
+    const isEmptySection = (section) => {
+      return Object.values(section).some(
+        (value) => value === "" || (Array.isArray(value) && value.length === 0)
+      );
+    };
 
     // Check if any section is empty
-    // if (
-    //   isEmptySection(section1) ||
-    //   isEmptySection(section2) ||
-    //   isEmptySection(section3) ||
-    //   isEmptySection(section4) ||
-    //   isEmptySection(section5) ||
-    //   isEmptySection(section6)
-    // ) {
-    //   console.log("Error: Some sections have empty values.");
-    //   return;
-    // }
+    if (
+      isEmptySection(section1) ||
+      isEmptySection(section2) ||
+      isEmptySection(section3) ||
+      isEmptySection(section4) ||
+      isEmptySection(section5) ||
+      isEmptySection(section6)
+    ) {
+      console.log("Error: Some sections have empty values.");
+      return;
+    }
     console.log(formData);
 
     axios

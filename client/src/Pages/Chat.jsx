@@ -22,71 +22,46 @@ import Navbar from "../Components/PageComponent/Navbar";
 
 import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
-import axios from "axios"
+import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
-
 
 const Chat = () => {
   const [contacts, setContacts] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
   const [loading, setLoading] = useState(true);
-  axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, 
-            {
-              params: {
-                user,
-              },
-            }).then(function(response) {
-              const { messages } = response.data;
-              function setTimestamp(timestamp) {
-                const notificationReceivedAt = new Date(timestamp);
-                const formattedTime = formatDistanceToNow(notificationReceivedAt, {
-                  addSuffix: true,
-                });
-                return formattedTime;
-              }
-              
-              const mappedMessages = messages.map(message => ({
-                name: message.receiverName,
-                chatId: message.chatId,
-                timestamp: setTimestamp(message.conversation[message.conversation.length - 1].timestamp),
-                conversation: message.conversation,
-                dp: message.dp
-              }));
-              
-              setContacts(mappedMessages)
-              setLoading(false)
-            }).catch(function(error){
-              console.log(error);
-              setLoading(false)
-            })
-
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`,
-          {
-            params: { user },
-          }
-        );
-        const { messages } = response.data;
-        const mappedMessages = messages.map((message) => ({
-          name: message.receiverName,
-          chatId: message.chatId,
-          timestamp: "sample timestamp" /* message.timestamp */,
-          conversation: message.conversation,
-          dp: message.dp,
-        }));
-        setContacts(mappedMessages);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
+  axios
+    .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
+      params: {
+        user,
+      },
+    })
+    .then(function (response) {
+      const { messages } = response.data;
+      function setTimestamp(timestamp) {
+        const notificationReceivedAt = new Date(timestamp);
+        const formattedTime = formatDistanceToNow(notificationReceivedAt, {
+          addSuffix: true,
+        });
+        return formattedTime;
       }
-    };
 
-    fetchContacts();
-  }, [user]);
+      const mappedMessages = messages.map((message) => ({
+        name: message.receiverName,
+        chatId: message.chatId,
+        timestamp: setTimestamp(
+          message.conversation[message.conversation.length - 1].timestamp
+        ),
+        conversation: message.conversation,
+        dp: message.dp,
+      }));
+
+      setContacts(mappedMessages);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.log(error);
+      setLoading(false);
+    });
 
   return (
     <>
@@ -221,7 +196,9 @@ function Chatbox({ contacts }) {
     }
 
     fetchContactInfo();
-  }, [chatId, contacts]);
+  }, []);
+
+  console.log("contactInfo: " + contactInfo);
 
   return (
     <>

@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const questResSchema = new mongoose.Schema({
   respondent: {
     type: String,
-    unique: true,
   },
   timestamp: {
     type: Date,
@@ -14,6 +13,7 @@ const questResSchema = new mongoose.Schema({
   },
   toShelter: {
     type: String,
+    unique: true,
   },
   answers: {
     section1: {
@@ -30,12 +30,7 @@ const questResSchema = new mongoose.Schema({
       fullName: String,
       occupation: String,
       phoneNum: String,
-      shelterReach: {
-        call: Boolean,
-        email: Boolean,
-        fbMessenger: Boolean,
-        telegram: Boolean,
-      },
+      shelterReach: Array,
     },
     section4: {
       building: String,
@@ -43,15 +38,7 @@ const questResSchema = new mongoose.Schema({
       householdMembers: String,
       isAllergic: String,
       isSupportive: String,
-      liveWith: {
-        livingAlone: Boolean,
-        withChildrenOver18: Boolean,
-        withChildrenOBelow18: Boolean,
-        spouse: Boolean,
-        roomates: Boolean,
-        parents: Boolean,
-        relatives: Boolean,
-      },
+      liveWith: Array,
       moved: String,
       rent: String,
     },
