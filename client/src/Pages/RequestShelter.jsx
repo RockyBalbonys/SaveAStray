@@ -149,6 +149,10 @@ function RequestShelter() {
       });
     console.log("Approval Denied: ", request);
   };
+
+  console.log(adoptionRequests[0].respondent);
+  console.log(user);
+
   return (
     <div
       style={{
@@ -261,12 +265,13 @@ function RequestShelter() {
                       </Button>
                     </Tooltip>
 
+                    {/* TODO: Reroute current user to chat page */}
                     <Tooltip title="Send Message">
                       <Button
                         variant="contained"
                         style={buttonStyle}
                         component={RouterLink}
-                        to="/messages"
+                        to={`/messages/t/${request.respondent}_${user}`}
                       >
                         <img
                           src={Frame200Send}

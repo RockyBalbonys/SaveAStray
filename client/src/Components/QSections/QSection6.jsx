@@ -6,6 +6,7 @@ import {
   Button,
   Alert,
   Snackbar,
+  FormHelperText,
 } from "@mui/material";
 import RadioGroupWithLabels from "./RadioGroupWithLabels";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -15,17 +16,15 @@ import InputField from "./InputField";
 import styled from "@emotion/styled";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { format } from "date-fns";
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 
 const QSection6 = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { section6, updateSection6 } = useQuestionnaireContext();
   const { prompted, considerToAdopt, preferInterview, preferTime, validID } =
-    answers.section6;
-
-  const section = "section6";
+    section6;
 
   const handleValueChange = (id, value) => {
-    updateAnswer(section, id, value);
+    updateSection6({ [id]: value });
   };
 
   // Image Validation
@@ -46,7 +45,7 @@ const QSection6 = () => {
             setValidId(e.target.result);
             setError(null);
 
-            updateAnswer(section, "validID", imageBase64);
+            updateSection6({ validID: imageBase64 });
           };
           reader.readAsDataURL(file);
         } else {
@@ -61,6 +60,10 @@ const QSection6 = () => {
   const handleCloseSnackbar = () => {
     setError(null);
   };
+
+  useEffect(() => {
+    console.table(section6);
+  }, [section6]);
 
   return (
     <Paper sx={paperStyle}>
@@ -136,6 +139,17 @@ const QSection6 = () => {
               onChange={handleFileChange}
             />
           </Button>
+          <FormHelperText
+            sx={{
+              color: "red",
+              ml: ".1rem",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            Required*
+          </FormHelperText>
           {validId && (
             <div className="mt-2  items-center w-full flex justify-center">
               <img
@@ -168,14 +182,13 @@ const RadioGroupQuestion = ({ id, value, onChange, label, options }) => {
 };
 
 const DateTimePickerWithLabel = ({ id, value, handleValueChange, label }) => {
-  const [dv1, setDv1] = useState("");
-  const [dv2, setDv2] = useState("");
-  const [dv3, setDv3] = useState("");
-
-  const handleDateChange = (date) => {
+  const handleDateChange = (date, index) => {
     const dateString = format(date, "MM/dd/yyyy hh:mm aa");
-    handleValueChange(id, dateString);
+    const newValues = [...value];
+    newValues[index] = dateString;
+    handleValueChange(id, newValues);
   };
+
   return (
     <div className="input-container sm:items-center sm:flex-col md:flex-col md:items-start">
       <label htmlFor={id} className="font-bold w-full mb-4">
@@ -183,20 +196,23 @@ const DateTimePickerWithLabel = ({ id, value, handleValueChange, label }) => {
       </label>
       <div className="flex flex-col items-center justify-center w-full space-y-4">
         <DateTimePicker
-          value={dv1}
-          onChange={handleDateChange}
+          value={value[0] ? new Date(value[0]) : null}
+          onChange={(date) => handleDateChange(date, 0)}
           sx={{ width: "50%" }}
         />
         <DateTimePicker
-          value={dv2}
-          onChange={handleDateChange}
+          value={value[1] ? new Date(value[1]) : null}
+          onChange={(date) => handleDateChange(date, 1)}
           sx={{ width: "50%" }}
         />
         <DateTimePicker
-          value={dv3}
-          onChange={handleDateChange}
+          value={value[2] ? new Date(value[2]) : null}
+          onChange={(date) => handleDateChange(date, 2)}
           sx={{ width: "50%" }}
         />
+        <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
+          Required*
+        </FormHelperText>
       </div>
     </div>
   );

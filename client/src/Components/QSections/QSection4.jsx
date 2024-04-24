@@ -1,13 +1,33 @@
-import { Paper, FormControl } from "@mui/material";
+import { Paper, FormControl, FormHelperText } from "@mui/material";
 import CheckboxGroupWithLabels from "./CheckboxGroupWithLabels";
 import RadioGroupWithLabels from "./RadioGroupWithLabels";
 import { paperStyle } from "../../Pages/Questionnaire";
 import InputField from "./InputField";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
-import { memo } from "react";
+import { memo, useEffect } from "react";
+
+const optionLabels = {
+  livingAlone: "Living Alone",
+  withChildrenOver18: "With Children Over 18",
+  withChildrenOBelow18: "With Children Below 18",
+  spouse: "Spouse",
+  roomates: "Roomate(s)",
+  parents: "Parents",
+  relatives: "Relatives (Grandparents, Uncle, Aunties, Cousins)",
+};
+
+const validOptions = [
+  "livingAlone",
+  "withChildrenOver18",
+  "withChildrenOBelow18",
+  "spouse",
+  "roomates",
+  "parents",
+  "relatives",
+];
 
 const QSection4 = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
+  const { section4, updateSection4 } = useQuestionnaireContext();
   const {
     building,
     rent,
@@ -17,24 +37,32 @@ const QSection4 = () => {
     isAllergic,
     isSupportive,
     moved,
-  } = answers.section4;
-
-  const section = "section4";
+  } = section4;
 
   const handleValueChange = (id, value) => {
-    updateAnswer(section, id, value);
+    updateSection4({ [id]: value });
   };
 
-  const handleCheckboxChange = (option, id, value) => {
-    try {
-      const updatedLiveWith = value.includes(option)
-        ? value.filter((item) => item !== option)
-        : [...value, option];
-      updateAnswer(section, id, updatedLiveWith);
-    } catch (e) {
-      console.error(e);
+  const handleChangeLiveWith = (option) => {
+    const camelCaseOption = Object.keys(optionLabels).find(
+      (key) => optionLabels[key] === option
+    );
+
+    if (validOptions.includes(camelCaseOption)) {
+      updateSection4({
+        liveWith: {
+          ...liveWith,
+          [camelCaseOption]: !liveWith[camelCaseOption], // Toggle the selected option
+        },
+      });
+    } else {
+      console.error(`Invalid option: ${option}`);
     }
   };
+
+  useEffect(() => {
+    console.table(section4);
+  }, [section4]);
 
   return (
     <Paper sx={paperStyle}>
@@ -59,7 +87,7 @@ const QSection4 = () => {
         <LiveWithQuestion
           id={"liveWith"}
           liveWith={liveWith}
-          handleCheckboxChange={handleCheckboxChange}
+          handleCheckboxChange={handleChangeLiveWith}
         />
 
         <HouseholdMembersQuestion
@@ -147,15 +175,7 @@ const LiveWithQuestion = ({ id, liveWith, handleCheckboxChange }) => {
         value={liveWith}
         onChange={handleCheckboxChange}
         id={id}
-        options={[
-          "Living Alone",
-          "With children over 18 years old",
-          "With children below 18 years old",
-          "Spouse",
-          "Roomate(s)",
-          "Parents",
-          "Relatives (Grandparents, Uncle, Aunties, Cousins)",
-        ]}
+        options={validOptions.map((option) => optionLabels[option])}
       />
     </FormControl>
   );

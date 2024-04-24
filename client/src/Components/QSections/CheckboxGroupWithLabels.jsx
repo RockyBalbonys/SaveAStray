@@ -1,4 +1,9 @@
-import { FormControl, FormControlLabel, FormGroup } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
+} from "@mui/material";
 import { CheckboxSmall } from "../../Pages/Questionnaire";
 
 export default function CheckboxGroupWithLabels({
@@ -23,12 +28,15 @@ export default function CheckboxGroupWithLabels({
           label={option}
           control={
             <CheckboxSmall
-              checked={value.includes(option)}
-              onChange={() => onChange(option, id, value)}
+              checked={value[option]} // Use value[option] to determine the checked state
+              onChange={() => onChange(option)}
             />
           }
         />
       ))}
+      <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
+        Required*
+      </FormHelperText>
     </FormGroup>
   );
 }
