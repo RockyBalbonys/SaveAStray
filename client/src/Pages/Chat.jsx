@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 
 // mui components
@@ -14,162 +14,60 @@ import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import Badge from "@mui/material/Badge";
-
 // icons and images
 import AnnouncementRoundedIcon from "@mui/icons-material/AnnouncementRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import avatar_placeholder from "../assets/images/avatar_placeholder.png";
 import Navbar from "../Components/PageComponent/Navbar";
 
-// hard coded contacts
-const contacts = [
-  {
-    name: "Lance",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "12345678",
-    online: true,
-    conversation: [
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-    ],
-  },
-  {
-    name: "Lawrence",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "24681012",
-    online: false,
-    conversation: [
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-    ],
-  },
-  {
-    name: "Jhude",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "36912151",
-    online: true,
-    conversation: [
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-      {
-        yourMessage: "Hi",
-        contactMessage: "Hello",
-      },
-    ],
-  },
-  {
-    name: "An-ghelo",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "48121620",
-    online: true,
-    conversation: [
-      {
-        yourMessage: "Hi",
-      },
-      {
-        yourMessage: "Hi",
-      },
-      {
-        yourMessage: "Hi",
-      },
-      {
-        yourMessage: "Hi",
-      },
-      {
-        yourMessage: "Hi",
-      },
-      {
-        yourMessage: "Hello An",
-      },
-      {
-        contactMessage: "Hello rin",
-      },
-    ],
-  },
-  {
-    name: "Joshua",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "51015202",
-    online: true,
-  },
-  {
-    name: "Jericho",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "61218243",
-    online: false,
-  },
-  {
-    name: "Jericho",
-    message: "Type Text here",
-    timestamp: "Today 05:30 PM",
-    userId: "81624324",
-    online: true,
-  },
-];
+import { io } from "socket.io-client";
+import useAuth from "../hooks/useAuth";
+import axios from "axios"
+import { formatDistanceToNow } from "date-fns";
 
-console.table(contacts);
 
 const Chat = () => {
+  const [contacts, setContacts] = useState([])
+  const { isLoggedIn, user, role } = useAuth();
+  const [loading, setLoading] = useState(true);
+  axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, 
+            {
+              params: {
+                user,
+              },
+            }).then(function(response) {
+              const { messages } = response.data;
+              function setTimestamp(timestamp) {
+                const notificationReceivedAt = new Date(timestamp);
+                const formattedTime = formatDistanceToNow(notificationReceivedAt, {
+                  addSuffix: true,
+                });
+                return formattedTime;
+              }
+              
+              const mappedMessages = messages.map(message => ({
+                name: message.receiverName,
+                chatId: message.chatId,
+                timestamp: setTimestamp(message.conversation[message.conversation.length - 1].timestamp),
+                conversation: message.conversation,
+                dp: message.dp
+              }));
+              
+              setContacts(mappedMessages)
+              setLoading(false)
+            }).catch(function(error){
+              console.log(error);
+              setLoading(false)
+            })
+
+
   return (
     <>
       <Navbar />
       <div className="bgLogin h-screen w-screen mt-[-64px]">
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
         <Container sx={{ height: "70%" }}>
           <Grid
             container
@@ -183,10 +81,11 @@ const Chat = () => {
 
             {/* Chatbox */}
             <Grid item xs={8} sx={{ height: "100%" }}>
-              <Chatbox contacts={contacts} />
+              <Chatbox contacts={contacts} loading={loading} />
             </Grid>
           </Grid>
         </Container>
+          )}
       </div>
     </>
   );
@@ -235,7 +134,7 @@ function ContactListContainer({ contacts }) {
                 },
               }}
               component={RouterLink}
-              to={`/messages/t/${contact.userId}`} //pass userId to url
+              to={`/messages/t/${contact.chatId}`} //pass userId to url
             >
               <Box
                 sx={{
@@ -249,7 +148,7 @@ function ContactListContainer({ contacts }) {
                   variant="dot"
                   color={contact.online ? "success" : undefined}
                 >
-                  <Avatar src={avatar_placeholder} />
+                  <Avatar src={contact.dp} />
                 </Badge>
 
                 {/* Contact info container */}
@@ -281,10 +180,8 @@ function ContactListContainer({ contacts }) {
 
 // Create component for chat based system
 function Chatbox({ contacts }) {
-  const { roomId } = useParams();
-
-  const contactInfo = contacts.find((contact) => contact.userId === roomId);
-
+  const { chatId } = useParams();
+  const contactInfo = contacts.find((contact) => contact.chatId === chatId);
   return (
     <>
       <Box sx={{ height: "100%" }}>
@@ -297,10 +194,10 @@ function Chatbox({ contacts }) {
             height: "100%",
           }}
         >
-          {!roomId ? (
+          {!chatId ? (
             "No chat selected"
           ) : (
-            <Messages contactInfo={contactInfo} />
+            <Messages contactInfo={contactInfo}/>
           )}
         </Box>
       </Box>
@@ -308,10 +205,77 @@ function Chatbox({ contacts }) {
   );
 }
 
-function Messages({ roomId, contactInfo }) {
-  console.log({ contactInfo });
-  const { name, online, conversation } = contactInfo;
-  console.log(name, online, conversation);
+function Messages({ contactInfo, inputMessage/* , loading */ }) {
+  const { user } = useAuth(); // Assuming useAuth provides user info
+  const { name, online, chatId, conversation, dp, timestamp } = contactInfo;
+  // Ensure convo state updates when conversation changes
+  const [convo, setConvo] = useState(conversation);
+  const [userMessage, setUserMessage] = useState({
+    timestamp: Date.now(),
+    chatId,
+    messageSender: user,
+    content: "",
+  });
+
+  const socketRef = useRef(null); // Create a mutable ref for the socket object
+
+  useEffect(() => {
+    setUserMessage((prevUserMessage) => ({
+      ...prevUserMessage,
+      chatId: contactInfo.chatId, // Update chatId when contactInfo changes
+    }));
+    // Update convo state when conversation changes
+    setConvo(conversation);
+  }, [chatId]);
+
+  useEffect(() => {
+    try {
+      socketRef.current = io(process.env.REACT_APP_SERVER_URL, { transports: ['websocket'], query: { user } });
+
+      // Socket event handlers
+      socketRef.current.on('connect', () => {
+        console.log('Socket connected!');
+      });
+
+      socketRef.current.on('broadcast-message', (broadcastedMessage) => {
+        console.log('Broadcasted message:', broadcastedMessage);
+        // Update convo state with new message
+        setConvo(prevConvo => [...prevConvo, broadcastedMessage]);
+      });
+
+      socketRef.current.on('connect_error', (error) => {
+        console.error('Socket connection error:', error);
+      });
+
+      return () => {
+        socketRef.current.disconnect();
+      };
+    } catch (error) {
+      console.error('Error initializing socket:', error);
+    }
+  }, [user, chatId]); // Include user and chatId in the dependency array
+
+// functions
+
+const changeHandler = (e) => {
+  setUserMessage({...userMessage, content: e.target.value});
+};
+
+function sendMessage() {
+  // Send the updated message to the server using the socketRef.current object
+  socketRef.current.emit('send-message', userMessage);
+  setUserMessage({...userMessage, content: ""})
+}
+
+function generateChatId(senderId, receiverId) {
+  if (senderId < receiverId) {
+    return `${senderId}_${receiverId}`;
+  } else {
+    return `${receiverId}_${senderId}`;
+  }
+}
+
+
 
   return (
     <>
@@ -331,7 +295,7 @@ function Messages({ roomId, contactInfo }) {
             sx={{ display: "flex", alignItems: "center", columnGap: "16px" }}
           >
             <Badge variant="dot" color={"success"}>
-              <Avatar src={avatar_placeholder} />
+              <Avatar src={dp} />
             </Badge>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <p className="text-2xl font-bold text-[#FF8210]">{name}</p>
@@ -352,12 +316,15 @@ function Messages({ roomId, contactInfo }) {
               overflow: "auto",
             }}
           >
-            {conversation?.map((message, idx) => (
+            {convo.map((message, idx) => (
               <React.Fragment key={idx}>
-                <Box sx={{ textAlign: "end" }}>{message.yourMessage}</Box>
-                <Box sx={{ textAlign: "start" }}>{message.contactMessage}</Box>
+                {message.messageSender === user ? (
+                  <Box sx={{ textAlign: "end" }}>{message.content}</Box>
+                ) : (
+                  <Box sx={{ textAlign: "start" }}>{message.content}</Box>
+                )}
               </React.Fragment>
-            ))}
+            ))} 
           </Box>
         </Box>
 
@@ -365,9 +332,11 @@ function Messages({ roomId, contactInfo }) {
           <input
             className="w-full rounded-lg border-gray-100 focus:border-orange-300 focus:ring-orange-300 border-2 mr-4 p-2.5"
             type="text"
+            value={userMessage.content}
             placeholder="Type your message..."
+            onChange={changeHandler}
           />
-          <IconButton>
+          <IconButton onClick={sendMessage}>
             <Tooltip title="Send Message">
               <SendRoundedIcon sx={{ color: "#FF8210" }} />
             </Tooltip>

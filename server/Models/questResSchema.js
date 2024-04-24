@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const questResSchema = new mongoose.Schema(
     {
         respondent: {
-            type: String,
-            unique: true
+            type: String
         },
         timestamp: {
             type: Date
@@ -14,7 +13,8 @@ const questResSchema = new mongoose.Schema(
             enum: ['pending', 'approved', 'rejected'],
         },
         toShelter: {
-            type: String
+            type: String,
+            unique: true
         },
         answers: {
             section1: {

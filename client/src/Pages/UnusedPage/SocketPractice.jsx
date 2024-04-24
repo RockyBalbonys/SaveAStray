@@ -10,7 +10,7 @@ function SocketPractice() {
 
   socket.on('connect', () => {
     console.log('Socket connected!'); // Log here after successful connection
-  });
+  }); 
 
   socket.on('broadcast-message', (broadcastedMessage) => {
     console.log('Broadcasted message:', broadcastedMessage);
