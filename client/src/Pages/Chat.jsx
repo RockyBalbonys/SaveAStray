@@ -196,7 +196,9 @@ function Chatbox({ contacts }) {
     }
 
     fetchContactInfo();
-  }, [chatId, contacts]);
+  }, []);
+
+  console.log("contactInfo: " + contactInfo);
 
   return (
     <>
