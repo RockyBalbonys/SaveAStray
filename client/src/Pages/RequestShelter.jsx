@@ -150,6 +150,9 @@ function RequestShelter() {
     console.log("Approval Denied: ", request);
   };
 
+  console.log(adoptionRequests[0].respondent);
+  console.log(user);
+
   return (
     <div
       style={{
@@ -268,7 +271,7 @@ function RequestShelter() {
                         variant="contained"
                         style={buttonStyle}
                         component={RouterLink}
-                        to={`/messages/t/${request.requestId}_${user}`}
+                        to={`/messages/t/${request.respondent}_${user}`}
                       >
                         <img
                           src={Frame200Send}
