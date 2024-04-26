@@ -125,9 +125,9 @@ function RequestShelter() {
       });
   }, []);
 
-  const handleClick = (redirectTo) => {
+/*   const handleClick = (redirectTo) => {
     navigate(redirectTo);
-  };
+  }; */
 
   const handleAcceptButton = (request) => {
     const { requestId, approvalStatus } = request;

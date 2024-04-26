@@ -45,15 +45,16 @@ const Chat = () => {
         return formattedTime;
       }
 
-      const mappedMessages = messages.map((message) => ({
-        name: message.receiverName,
-        chatId: message.chatId,
-        timestamp: setTimestamp(
-          message.conversation[message.conversation.length - 1].timestamp
-        ),
-        conversation: message.conversation,
-        dp: message.dp,
-      }));
+      const mappedMessages = messages.map((message) => {
+        const lastMessage = message.conversation ? message.conversation[message.conversation.length - 1] : null;
+        return {
+          name: message.receiverName,
+          chatId: message.chatId,
+          timestamp: lastMessage ? setTimestamp(lastMessage.timestamp) : null,
+          conversation: message.conversation,
+          dp: message.dp,
+        };
+      });
 
       setContacts(mappedMessages);
       setLoading(false);
@@ -183,9 +184,9 @@ function ContactListContainer({ contacts }) {
 // Create component for chat based system
 function Chatbox({ contacts }) {
   const { chatId } = useParams();
-  const [contactInfo, setContactInfo] = useState(null);
+  const contactInfo = contacts.find((contact) => contact.chatId === chatId);
 
-  useEffect(() => {
+ /*  useEffect(() => {
     async function fetchContactInfo() {
       console.log("chatId " + chatId);
       const foundContact = contacts.find(
@@ -196,9 +197,7 @@ function Chatbox({ contacts }) {
     }
 
     fetchContactInfo();
-  }, []);
-
-  console.log("contactInfo: " + contactInfo);
+  }, []); */
 
   return (
     <>
@@ -226,6 +225,7 @@ function Chatbox({ contacts }) {
 function Messages({ contactInfo, inputMessage /* , loading */ }) {
   const { user } = useAuth(); // Assuming useAuth provides user info
   const { name, online, chatId, conversation, dp, timestamp } = contactInfo;
+  console.log("contactInfo: " + contactInfo);
   // Ensure convo state updates when conversation changes
   const [convo, setConvo] = useState(conversation);
   const [userMessage, setUserMessage] = useState({

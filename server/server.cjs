@@ -1080,6 +1080,43 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
   });
 });
 
+app.post("/api/createChat", async (req, res) => {
+  const { chatId, user, respondent } = req.body
+  const isContactExisting = await Contact.findOne({chatId})
+  let shelter
+  let pawrent
+  const recipientOne = await User.findOne({_id: user})
+  const recipientGoogleOne = await GoogleUser.findOne({_id: user})
+
+  if (recipientOne.role === "Rescue Shelter" || recipientGoogleOne.role === "Rescue Shelter" ) {
+    shelter = user
+    pawrent = respondent
+  } else if(recipientOne.role === "Adoptive Pawrent" || recipientGoogleOne.role === "Adoptive Pawrent"){
+    pawrent = user
+    shelter = respondent
+  }
+
+console.log("pawrent: ", pawrent)
+console.log("shelter: ", shelter)
+
+  if (!isContactExisting) {
+    console.log(isContactExisting)
+    const newContact = new Contact({
+      chatId,
+      pawrent,
+      shelter
+    })
+    const savedNewContact = await newContact.save();
+    console.log(savedNewContact);
+    res.json({
+      status: 200,
+      savedNewContact
+    })
+  } else {
+    console.log("chat existing: ", isContactExisting)
+  }
+})
+
 //socket
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
