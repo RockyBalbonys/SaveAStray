@@ -12,7 +12,9 @@ const mongoose = require('mongoose');
         dp: String,
         conversation: [
             {   
-                timestamp: Date,
+                timestamp: {
+                    type: Date,
+                    default: null},
                 messageSender: String,
                 content: String,
                 seen: Boolean

@@ -22,70 +22,73 @@ import Navbar from "../Components/PageComponent/Navbar";
 
 import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
-import axios from "axios"
+import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 
-
 const Chat = () => {
-  const [contacts, setContacts] = useState([])
+  const [contacts, setContacts] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
   const [loading, setLoading] = useState(true);
-  axios.get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, 
-            {
-              params: {
-                user,
-              },
-            }).then(function(response) {
-              const { messages } = response.data;
-              function setTimestamp(timestamp) {
-                const notificationReceivedAt = new Date(timestamp);
-                const formattedTime = formatDistanceToNow(notificationReceivedAt, {
-                  addSuffix: true,
-                });
-                return formattedTime;
-              }
-              
-              const mappedMessages = messages.map(message => ({
-                name: message.receiverName,
-                chatId: message.chatId,
-                timestamp: setTimestamp(message.conversation[message.conversation.length - 1].timestamp),
-                conversation: message.conversation,
-                dp: message.dp
-              }));
-              
-              setContacts(mappedMessages)
-              setLoading(false)
-            }).catch(function(error){
-              console.log(error);
-              setLoading(false)
-            })
+  axios
+    .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
+      params: {
+        user,
+      },
+    })
+    .then(function (response) {
+      const { messages } = response.data;
+      function setTimestamp(timestamp) {
+        const notificationReceivedAt = new Date(timestamp);
+        const formattedTime = formatDistanceToNow(notificationReceivedAt, {
+          addSuffix: true,
+        });
+        return formattedTime;
+      }
 
+      const mappedMessages = messages.map((message) => {
+        const lastMessage = message.conversation ? message.conversation[message.conversation.length - 1] : null;
+        return {
+          name: message.receiverName,
+          chatId: message.chatId,
+          timestamp: lastMessage ? setTimestamp(lastMessage.timestamp) : null,
+          conversation: message.conversation,
+          dp: message.dp,
+        };
+      });
+
+      setContacts(mappedMessages);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.log(error);
+      setLoading(false);
+    });
 
   return (
     <>
       <Navbar />
       <div className="bgLogin h-screen w-screen mt-[-64px]">
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <Container sx={{ height: "70%" }}>
-          <Grid
-            container
-            component={Paper}
-            sx={{ height: "100%", borderRadius: "7px" }}
-          >
-            {/* Contact List */}
-            <Grid item xs={4} sx={{ height: "100%", width: "100%" }}>
-              <ContactListContainer contacts={contacts} />
-            </Grid>
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <Container sx={{ height: "70%" }}>
+            <Grid
+              container
+              component={Paper}
+              sx={{ height: "100%", borderRadius: "7px" }}
+            >
+              {/* Contact List */}
+              <Grid item xs={4} sx={{ height: "100%", width: "100%" }}>
+                <ContactListContainer contacts={contacts} />
+              </Grid>
 
-            {/* Chatbox */}
-            <Grid item xs={8} sx={{ height: "100%" }}>
-              <Chatbox contacts={contacts} loading={loading} />
+              {/* Chatbox */}
+              <Grid item xs={8} sx={{ height: "100%" }}>
+                <Chatbox contacts={contacts} loading={loading} />
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-          )}
+          </Container>
+        )}
       </div>
     </>
   );
@@ -182,6 +185,20 @@ function ContactListContainer({ contacts }) {
 function Chatbox({ contacts }) {
   const { chatId } = useParams();
   const contactInfo = contacts.find((contact) => contact.chatId === chatId);
+
+ /*  useEffect(() => {
+    async function fetchContactInfo() {
+      console.log("chatId " + chatId);
+      const foundContact = contacts.find(
+        (contact) => contact?.chatId === chatId
+      );
+      console.log("contact info", foundContact);
+      setContactInfo(foundContact);
+    }
+
+    fetchContactInfo();
+  }, []); */
+
   return (
     <>
       <Box sx={{ height: "100%" }}>
@@ -197,7 +214,7 @@ function Chatbox({ contacts }) {
           {!chatId ? (
             "No chat selected"
           ) : (
-            <Messages contactInfo={contactInfo}/>
+            <Messages contactInfo={contactInfo} />
           )}
         </Box>
       </Box>
@@ -205,9 +222,10 @@ function Chatbox({ contacts }) {
   );
 }
 
-function Messages({ contactInfo, inputMessage/* , loading */ }) {
+function Messages({ contactInfo, inputMessage /* , loading */ }) {
   const { user } = useAuth(); // Assuming useAuth provides user info
   const { name, online, chatId, conversation, dp, timestamp } = contactInfo;
+  console.log("contactInfo: " + contactInfo);
   // Ensure convo state updates when conversation changes
   const [convo, setConvo] = useState(conversation);
   const [userMessage, setUserMessage] = useState({
@@ -230,52 +248,53 @@ function Messages({ contactInfo, inputMessage/* , loading */ }) {
 
   useEffect(() => {
     try {
-      socketRef.current = io(process.env.REACT_APP_SERVER_URL, { transports: ['websocket'], query: { user } });
+      socketRef.current = io(process.env.REACT_APP_SERVER_URL, {
+        transports: ["websocket"],
+        query: { user },
+      });
 
       // Socket event handlers
-      socketRef.current.on('connect', () => {
-        console.log('Socket connected!');
+      socketRef.current.on("connect", () => {
+        console.log("Socket connected!");
       });
 
-      socketRef.current.on('broadcast-message', (broadcastedMessage) => {
-        console.log('Broadcasted message:', broadcastedMessage);
+      socketRef.current.on("broadcast-message", (broadcastedMessage) => {
+        console.log("Broadcasted message:", broadcastedMessage);
         // Update convo state with new message
-        setConvo(prevConvo => [...prevConvo, broadcastedMessage]);
+        setConvo((prevConvo) => [...prevConvo, broadcastedMessage]);
       });
 
-      socketRef.current.on('connect_error', (error) => {
-        console.error('Socket connection error:', error);
+      socketRef.current.on("connect_error", (error) => {
+        console.error("Socket connection error:", error);
       });
 
       return () => {
         socketRef.current.disconnect();
       };
     } catch (error) {
-      console.error('Error initializing socket:', error);
+      console.error("Error initializing socket:", error);
     }
   }, [user, chatId]); // Include user and chatId in the dependency array
 
-// functions
+  // functions
 
-const changeHandler = (e) => {
-  setUserMessage({...userMessage, content: e.target.value});
-};
+  const changeHandler = (e) => {
+    setUserMessage({ ...userMessage, content: e.target.value });
+  };
 
-function sendMessage() {
-  // Send the updated message to the server using the socketRef.current object
-  socketRef.current.emit('send-message', userMessage);
-  setUserMessage({...userMessage, content: ""})
-}
-
-function generateChatId(senderId, receiverId) {
-  if (senderId < receiverId) {
-    return `${senderId}_${receiverId}`;
-  } else {
-    return `${receiverId}_${senderId}`;
+  function sendMessage() {
+    // Send the updated message to the server using the socketRef.current object
+    socketRef.current.emit("send-message", userMessage);
+    setUserMessage({ ...userMessage, content: "" });
   }
-}
 
-
+  function generateChatId(senderId, receiverId) {
+    if (senderId < receiverId) {
+      return `${senderId}_${receiverId}`;
+    } else {
+      return `${receiverId}_${senderId}`;
+    }
+  }
 
   return (
     <>
@@ -324,7 +343,7 @@ function generateChatId(senderId, receiverId) {
                   <Box sx={{ textAlign: "start" }}>{message.content}</Box>
                 )}
               </React.Fragment>
-            ))} 
+            ))}
           </Box>
         </Box>
 

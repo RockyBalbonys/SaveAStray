@@ -1,22 +1,32 @@
-import { Paper, FormControl, FormControlLabel } from "@mui/material";
+import {
+  Paper,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+} from "@mui/material";
 import { CheckboxSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 const QSection2 = () => {
-  const { answers, updateAnswer } = useQuestionnaireContext();
-  const { awareAdoptionFee } = answers.section2;
+  const { section2, updateSection2 } = useQuestionnaireContext();
+  const { awareAdoptionFee } = section2;
 
-  const handleRadioChange = (e) => {
-    updateAnswer("section2", "awareAdoptionFee", !awareAdoptionFee);
+  const handleCheckboxChange = (e) => {
+    const awareAdoptionFeeValue = e.target.checked;
+    updateSection2({ awareAdoptionFee: !awareAdoptionFee });
   };
+
+  useEffect(() => {
+    console.table(section2);
+  }, [section2]);
 
   return (
     <Paper sx={paperStyle}>
       <div className="paper-format font-light">
         <p className="q-section-text">SECTION 2 : ADOPTION FEE</p>
         <Introduction />
-        <Awareness value={awareAdoptionFee} onChange={handleRadioChange} />
+        <Awareness value={awareAdoptionFee} onChange={handleCheckboxChange} />
       </div>
     </Paper>
   );
@@ -51,6 +61,9 @@ const Awareness = ({ value, onChange }) => {
           label="Yes, I am fully aware about adoption fee and willing to pay it."
           control={<CheckboxSmall />}
         />
+        <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
+          Required*
+        </FormHelperText>
       </FormControl>
     </>
   );

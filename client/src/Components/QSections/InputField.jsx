@@ -1,4 +1,4 @@
-import { Input } from "@mui/material";
+import { FormHelperText, Input } from "@mui/material";
 
 export default function InputField({
   label,
@@ -22,6 +22,9 @@ export default function InputField({
         id={id}
         fullWidth
       />
+      <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
+        Required*
+      </FormHelperText>
     </div>
   );
 }

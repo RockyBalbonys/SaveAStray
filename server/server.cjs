@@ -469,41 +469,29 @@ app.post("/api/googleLogin", async (req, res) => {
 app.post("/api/sendAnswers", async (req, res) => {
   const data = req.body;
   const respondent = data.respondent;
-  const section1 = data.section1;
-  const section2 = data.section2;
-  const section3 = data.section3;
-  const section4 = data.section4;
-  const section5 = data.section5;
-  const section6 = data.section6;
+  const { section1, section2, section3, section4, section5, section6 } = data;
   const toShelter = data.toShelter;
   const timestamp = Date.now();
+
   if (data) {
     try {
       const newQuestRes = new QuestRes({
         respondent,
         timestamp,
-        answers: {
-          section1,
-          section2,
-          section3,
-          section4,
-          section5,
-          section6,
-        },
+        answers: { section1, section2, section3, section4, section5, section6 },
         toShelter,
         approvalStatus: "pending",
       });
+
       const savedQuestRes = await newQuestRes.save();
       console.log(savedQuestRes);
       res.send({ status: 200, message: "Success!!" });
     } catch (error) {
       console.log(error);
+      res.status(500).send({ status: 500, message: "Internal server error" });
     }
   } else {
-    res.send({
-      status: 400,
-      message: "No response!",
-    });
+    res.status(400).send({ status: 400, message: "No response!" });
   }
 });
 
@@ -1016,55 +1004,53 @@ app.post("/api/updateDp", async (req, res) => {
 
 // change password
 
-app.get("/api/changePassword", async(req, res) => {
-  const {currentPassword, newPassword} = req.body
-})
+app.get("/api/changePassword", async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+});
 
-app.post("/api/forgotPassword", async(req, res) => {
-  const { email } = req.body
+app.post("/api/forgotPassword", async (req, res) => {
+  const { email } = req.body;
   console.log("email: ", email);
 
-  const existingAcc = await User.findOne({email})
+  const existingAcc = await User.findOne({ email });
 
-  console.log(existingAcc)
+  console.log(existingAcc);
   if (existingAcc) {
-  async function sendChangePassEmail(existingAcc) {
-    try {
-      // Create a Nodemailer transporter using SMTP
-      let transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.USER_EMAIL,
-          pass: process.env.USER_PASSWORD,
-        },
-      });
+    async function sendChangePassEmail(existingAcc) {
+      try {
+        // Create a Nodemailer transporter using SMTP
+        let transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASSWORD,
+          },
+        });
 
-      let info = await transporter.sendMail({
-        from: process.env.USER_EMAIL,
-        to: existingAcc.email,
-        subject: "Change Password",
-        html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
-      });
-      console.log("Change pass sent: ", info);
-    } catch (error) {
-      console.error("Error sending Change pass email:", error);
-      throw error; // Rethrow the error to be handled by the caller
+        let info = await transporter.sendMail({
+          from: process.env.USER_EMAIL,
+          to: existingAcc.email,
+          subject: "Change Password",
+          html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
+        });
+        console.log("Change pass sent: ", info);
+      } catch (error) {
+        console.error("Error sending Change pass email:", error);
+        throw error; // Rethrow the error to be handled by the caller
+      }
     }
-  }
-  sendChangePassEmail(existingAcc)
-      res.json({
-        message: "check your email"
-      })
+    sendChangePassEmail(existingAcc);
+    res.json({
+      message: "check your email",
+    });
   } else {
-    console.log("no acc")
+    console.log("no acc");
     res.json({
       status: 200,
-      message: `no ${email} found!`
-    })
+      message: `no ${email} found!`,
+    });
   }
-
-  
-})
+});
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -1072,17 +1058,19 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
 
   if (userId) {
     messages = await Contact.find({ shelter: userId });
-      for (let message of messages) {
-        const receiver = await PawrentInfo.findOne({ userId: message.pawrent });
-        message.receiverName = receiver ? `${receiver.firstName} ${receiver.lastName}` : ''; // Add receiverName if receiver is found
-        message.dp = receiver.dp
-      }
-        if (!messages || messages.length === 0) {
+    for (let message of messages) {
+      const receiver = await PawrentInfo.findOne({ userId: message.pawrent });
+      message.receiverName = receiver
+        ? `${receiver.firstName} ${receiver.lastName}`
+        : ""; // Add receiverName if receiver is found
+      message.dp = receiver.dp;
+    }
+    if (!messages || messages.length === 0) {
       messages = await Contact.find({ pawrent: userId });
       for (let message of messages) {
         const receiver = await ShelterInfo.findOne({ userId: message.shelter });
-        message.receiverName = receiver ? `${receiver.shelterName}` : ''; // Add receiverName if receiver is found
-        message.dp = receiver.dp
+        message.receiverName = receiver ? `${receiver.shelterName}` : ""; // Add receiverName if receiver is found
+        message.dp = receiver.dp;
       }
     }
   }
@@ -1092,30 +1080,63 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
   });
 });
 
+app.post("/api/createChat", async (req, res) => {
+  const { chatId, user, respondent } = req.body
+  const isContactExisting = await Contact.findOne({chatId})
+  let shelter
+  let pawrent
+  const recipientOne = await User.findOne({_id: user})
+  const recipientGoogleOne = await GoogleUser.findOne({_id: user})
 
+  if (recipientOne.role === "Rescue Shelter" || recipientGoogleOne.role === "Rescue Shelter" ) {
+    shelter = user
+    pawrent = respondent
+  } else if(recipientOne.role === "Adoptive Pawrent" || recipientGoogleOne.role === "Adoptive Pawrent"){
+    pawrent = user
+    shelter = respondent
+  }
 
+console.log("pawrent: ", pawrent)
+console.log("shelter: ", shelter)
 
+  if (!isContactExisting) {
+    console.log(isContactExisting)
+    const newContact = new Contact({
+      chatId,
+      pawrent,
+      shelter
+    })
+    const savedNewContact = await newContact.save();
+    console.log(savedNewContact);
+    res.json({
+      status: 200,
+      savedNewContact
+    })
+  } else {
+    console.log("chat existing: ", isContactExisting)
+  }
+})
 
 //socket
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
   //console.log("Socket connected:", userId);
 
-    socket.on("send-message", async (messageInfo) => {
-      const { timestamp, messageSender, content, chatId } = messageInfo
-      console.log(timestamp)
-      const contact = await Contact.findOne({ chatId: chatId })
-      if (!contact) {
-        console.log("no contact")
-        //gumawa
-        return;
-      }
-      contact.conversation.push(messageInfo)
-      await contact.save();
-      console.log(contact)
-      // mga gagawin: isave sa database
-      io.emit("broadcast-message", messageInfo);
-    });
+  socket.on("send-message", async (messageInfo) => {
+    const { timestamp, messageSender, content, chatId } = messageInfo;
+    console.log(timestamp);
+    const contact = await Contact.findOne({ chatId: chatId });
+    if (!contact) {
+      console.log("no contact");
+      //gumawa
+      return;
+    }
+    contact.conversation.push(messageInfo);
+    await contact.save();
+    console.log(contact);
+    // mga gagawin: isave sa database
+    io.emit("broadcast-message", messageInfo);
+  });
 });
 
 // Start the server

@@ -58,6 +58,37 @@ function RequestShelter() {
   const { user } = useAuth();
   const [adoptionRequests, setAdoptionRequests] = useState([]);
 
+  const handleSendMessage = async (request) => {
+    const chatId = generateChatId(user, request.respondent);
+    console.log("chatId " + chatId);
+
+    try {
+      // TODO: api for createChat
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/createChat`,
+        {
+          chatId: chatId,
+          user: user,
+          respondent: request.respondent,
+        }
+      );
+
+      // Navigate if success
+      navigate(`/messages/t/${chatId}`);
+    } catch (error) {
+      // Handle errors if any
+      console.error("Error creating chat:", error);
+    }
+  };
+
+  function generateChatId(senderId, receiverId) {
+    if (senderId < receiverId) {
+      return `${senderId}_${receiverId}`;
+    } else {
+      return `${receiverId}_${senderId}`;
+    }
+  }
+
   useEffect(() => {
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
@@ -94,9 +125,9 @@ function RequestShelter() {
       });
   }, []);
 
-  const handleClick = (redirectTo) => {
+/*   const handleClick = (redirectTo) => {
     navigate(redirectTo);
-  };
+  }; */
 
   const handleAcceptButton = (request) => {
     const { requestId, approvalStatus } = request;
@@ -149,6 +180,9 @@ function RequestShelter() {
       });
     console.log("Approval Denied: ", request);
   };
+
+  console.log(user);
+
   return (
     <div
       style={{
@@ -188,10 +222,6 @@ function RequestShelter() {
               /*      request.approvalStatus == 'pending' ? ( */
               <div
                 key={index}
-                onClick={(event) => {
-                  event.preventDefault();
-                  handleClick(request.redirectTo);
-                }}
                 style={{
                   cursor: "pointer",
                   display: "flex",
@@ -261,12 +291,12 @@ function RequestShelter() {
                       </Button>
                     </Tooltip>
 
+                    {/* TODO: Reroute current user to chat page */}
                     <Tooltip title="Send Message">
                       <Button
                         variant="contained"
                         style={buttonStyle}
-                        component={RouterLink}
-                        to="/messages"
+                        onClick={() => handleSendMessage(request)}
                       >
                         <img
                           src={Frame200Send}
@@ -277,7 +307,12 @@ function RequestShelter() {
                     </Tooltip>
 
                     <Tooltip title="Print">
-                      <Button variant="contained" style={buttonStyle}>
+                      <Button
+                        variant="contained"
+                        style={buttonStyle}
+                        component={RouterLink}
+                        to={"/about"}
+                      >
                         <GetAppIcon style={{ color: "#FFFFFF" }} />
                       </Button>
                     </Tooltip>
@@ -321,9 +356,14 @@ function RequestShelter() {
               /*             ) : null */
             ))
           ) : (
-            <p>No adoption requests found.</p>
+            <>
+              <p>No adoption requests found.</p>
+            </>
           )}
         </Container>
+        <Button component={RouterLink} to={`/messages/t`}>
+          Click Me
+        </Button>
       </div>
       <Footer />
     </div>

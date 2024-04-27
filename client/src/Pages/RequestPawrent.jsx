@@ -69,7 +69,7 @@ function RequestPawrent() {
   }, []);
 
   const handleClick = () => {
-    navigate("/questionnaire");
+    navigate("/messages/t");
   };
 
   return (
