@@ -22,7 +22,7 @@ import Verify from "./Pages/Redirect/Verify";
 import DeadEnd from "./Pages/Redirect/DeadEnd";
 import SocketPractice from "./Pages/UnusedPage/SocketPractice";
 import ForgotPassword from "./Pages/Redirect/ForgotPassword";
-
+import ChangePass from "./Pages/Redirect/ChangePass";
 
 // import mui components, theme, functions
 import { ThemeProvider } from "@emotion/react";
@@ -53,6 +53,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot" element={<ForgotPassword/>}/>
+            <Route path="/forgot/changePass" element={<ChangePass/>}/>
             {/* Route for manage account page */}
             <Route
               path="/manage"
