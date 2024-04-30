@@ -803,20 +803,24 @@ app.post("/api/updateApproval", async (req, res) => {
 
 //Fetch Shelter Info API
 app.get("/api/shelterInfo/:userId", async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.params;
+
   if (userId) {
     try {
       const shelterInfo = await ShelterInfo.findOne({ userId });
-
       console.log(shelterInfo);
       if (shelterInfo) {
-        const user =
-          (await GoogleUser.findById(userId)) || (await User.findById(userId));
-
+        let user = await GoogleUser.findOne({ _id: userId });
+        
+        if (!user) {
+          user = await User.findOne({ _id: userId });
+        }
+        
         res.json({
           status: 200,
           shelterInfo,
           email: user.email,
+          isGoogleUser: user instanceof GoogleUser // This will be true if the user is from GoogleUser collection
         });
       } else {
         res.json({
@@ -831,6 +835,7 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
     console.log("user not exists");
   }
 });
+
 
 app.post("/api/notifPawrent", async (req, res) => {
   const notif = req.body.response.data.updatedRequest;
@@ -905,20 +910,24 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 
 //Fetch Pawrent Info API
 app.get("/api/pawrentInfo/:userId", async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.params; // Use req.params instead of req.query
 
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
       console.log(pawrentInfo);
       if (pawrentInfo) {
-        const user =
-          (await GoogleUser.findById(userId)) || (await User.findById(userId));
-
+        let user = await GoogleUser.findById(userId);
+        
+        if (!user) {
+          user = await User.findById(userId);
+        }
+        
         res.json({
           status: 200,
           pawrentInfo,
           email: user.email,
+          isGoogleUser: user instanceof GoogleUser // This will be true if the user is from GoogleUser collection
         });
       } else {
         res.json({
@@ -933,6 +942,7 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
     console.log("user not exists");
   }
 });
+
 
 // API Delete Google User Credentials
 app.delete("/api/deleteGoogleUserCredentials/:id", async (req, res) => {
@@ -1058,6 +1068,15 @@ app.post("/api/forgotPassword", async (req, res) => {
     });
   }
 });
+
+app.post("/api/repassword", async (req, res) => {
+  const { password, rePassword, user } = req.body
+  const userToChange = await User.findOne({_id: user})
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  userToChange.password = hashedPassword
+  await userToChange.save()
+})
 
 app.get("/api/forgot/changePass", async (req, res) => {
   const token = req.query.token;
