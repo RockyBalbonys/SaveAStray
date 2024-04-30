@@ -803,20 +803,24 @@ app.post("/api/updateApproval", async (req, res) => {
 
 //Fetch Shelter Info API
 app.get("/api/shelterInfo/:userId", async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.params;
+
   if (userId) {
     try {
       const shelterInfo = await ShelterInfo.findOne({ userId });
-
       console.log(shelterInfo);
       if (shelterInfo) {
-        const user =
-          (await GoogleUser.findById(userId)) || (await User.findById(userId));
-
+        let user = await GoogleUser.findOne({ _id: userId });
+        
+        if (!user) {
+          user = await User.findOne({ _id: userId });
+        }
+        
         res.json({
           status: 200,
           shelterInfo,
           email: user.email,
+          isGoogleUser: user instanceof GoogleUser // This will be true if the user is from GoogleUser collection
         });
       } else {
         res.json({
@@ -831,6 +835,7 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
     console.log("user not exists");
   }
 });
+
 
 app.post("/api/notifPawrent", async (req, res) => {
   const notif = req.body.response.data.updatedRequest;
@@ -905,20 +910,24 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 
 //Fetch Pawrent Info API
 app.get("/api/pawrentInfo/:userId", async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = req.params; // Use req.params instead of req.query
 
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
       console.log(pawrentInfo);
       if (pawrentInfo) {
-        const user =
-          (await GoogleUser.findById(userId)) || (await User.findById(userId));
-
+        let user = await GoogleUser.findById(userId);
+        
+        if (!user) {
+          user = await User.findById(userId);
+        }
+        
         res.json({
           status: 200,
           pawrentInfo,
           email: user.email,
+          isGoogleUser: user instanceof GoogleUser // This will be true if the user is from GoogleUser collection
         });
       } else {
         res.json({
@@ -933,6 +942,7 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
     console.log("user not exists");
   }
 });
+
 
 // API Delete Google User Credentials
 app.delete("/api/deleteGoogleUserCredentials/:id", async (req, res) => {
@@ -1011,11 +1021,18 @@ app.get("/api/changePassword", async (req, res) => {
 app.post("/api/forgotPassword", async (req, res) => {
   const { email } = req.body;
   console.log("email: ", email);
+  function changePassToken() {
+    return crypto.randomBytes(16).toString("hex");
+  }
 
   const existingAcc = await User.findOne({ email });
 
   console.log(existingAcc);
   if (existingAcc) {
+    generatedChangePassToken = changePassToken()
+    existingAcc.resetPasswordToken = generatedChangePassToken
+    existingAcc.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiry
+    await existingAcc.save();
     async function sendChangePassEmail(existingAcc) {
       try {
         // Create a Nodemailer transporter using SMTP
@@ -1031,7 +1048,7 @@ app.post("/api/forgotPassword", async (req, res) => {
           from: process.env.USER_EMAIL,
           to: existingAcc.email,
           subject: "Change Password",
-          html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
+          html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass?token=${generatedChangePassToken}" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
         });
         console.log("Change pass sent: ", info);
       } catch (error) {
@@ -1051,6 +1068,36 @@ app.post("/api/forgotPassword", async (req, res) => {
     });
   }
 });
+
+app.post("/api/repassword", async (req, res) => {
+  const { password, rePassword, user } = req.body
+  const userToChange = await User.findOne({_id: user})
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  userToChange.password = hashedPassword
+  await userToChange.save()
+})
+
+app.get("/api/forgot/changePass", async (req, res) => {
+  const token = req.query.token;
+  const user = await User.findOne({ resetPasswordToken: token });
+
+  if (!user || user.resetPasswordExpires < Date.now()) {
+    return res.status(400).json({ status: 400, message: "Token not found or expired" });
+  }
+
+  res.status(200).json({ status: 200 });
+});
+
+app.post("/api/updatePass", async (req, res) => {
+  const { inputData, token } = req.body
+  const user = await User.findOne({resetPasswordToken: token})
+  const hashedPassword = await bcrypt.hash(inputData, 12);
+
+  user.password = hashedPassword
+  await user.save()
+  console.log(user)
+})
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;

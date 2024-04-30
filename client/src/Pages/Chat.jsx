@@ -186,7 +186,7 @@ function Chatbox({ contacts }) {
   const { chatId } = useParams();
   const contactInfo = contacts.find((contact) => contact.chatId === chatId);
 
- /*  useEffect(() => {
+/*  useEffect(() => {
     async function fetchContactInfo() {
       console.log("chatId " + chatId);
       const foundContact = contacts.find(

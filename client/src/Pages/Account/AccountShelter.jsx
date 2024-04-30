@@ -51,11 +51,29 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 function AccountShelter() {
+  const [isLoading, setIsLoading] = useState(true); // Initial loading state
+
+  useEffect(() => {
+    // Simulate asynchronous data fetching (replace with your actual logic)
+    setTimeout(() => {
+      const fetchedData = {
+        // ... your actual data
+        isGoogleUser: true, // Example value
+      };
+      setIsLoading(false);
+      // Update inputData state with fetchedData
+    }, 2000); // Simulate delay (adjust as needed)
+  }, []);
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <>
       <AccountHeader />
-      <AccountForm />
-      <AccountDrawer />
+      <AccountForm/>
+      <AccountDrawer/>
       <Footer />
     </>
   );
@@ -67,6 +85,7 @@ const AccountForm = () => {
   const navigate = useNavigate();
 
   const { user } = useAuth();
+  
 
   //API Fetch Shelter Info
   const [shelterInfo, setShelterInfo] = useState({
@@ -100,10 +119,11 @@ const AccountForm = () => {
         }
       );
       console.log(response);
-      const { shelterInfo, email } = response.data;
+      const { shelterInfo, email, isGoogleUser } = response.data;
       setShelterInfo({
         ...shelterInfo,
         shelterEmailAddress: email,
+        isGoogleUser
       });
 
       setProfilePic(shelterInfo.dp);
@@ -145,6 +165,9 @@ const AccountForm = () => {
     }
   };
 
+
+
+
   const handleLogout = () => {
     console.log("initial State: ", store.getState());
     const unsubscribe = store.subscribe(() =>
@@ -154,6 +177,7 @@ const AccountForm = () => {
     store.dispatch(logout());
     unsubscribe();
   };
+
 
   // profile picture
   const [profilePic, setProfilePic] = useState("");
@@ -250,9 +274,13 @@ const AccountForm = () => {
                   onSave={handleSaveChanges}
                 />
               </Grid>
-              <Grid item sx={{ width: "100%" }}>
-                <ResetPass />
-              </Grid>
+              {
+                shelterInfo && !shelterInfo.isGoogleUser && ( // Check for shelterInfo and isGoogleUser
+                  <Grid item sx={{ width: "100%" }}>
+                    <ResetPass />
+                  </Grid>
+                )
+              }
               <Grid item sx={{ width: "100%" }}>
                 <DeleteAcc forcedLogout={handleLogout} />
               </Grid>
@@ -541,6 +569,31 @@ const ShelterRepInfo = ({ formData, onChange }) => {
 };
 
 const ResetPass = () => {
+  const { user } = useAuth();
+  const [inputValue, setInputValue] = useState({
+    password: '',
+    rePassword: ''
+  });
+
+  const handleChangePass = (e) => {
+    setInputValue({
+      ...inputValue,
+      [e.target.name]: e.target.value
+    });
+  };
+  
+  const handleRepassword = () => {
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/repassword`, {
+      password: inputValue.password,
+      rePassword: inputValue.rePassword,
+      user
+    }).then(function(response){
+      console.log(response)
+    }).catch(function (error){
+      console.log(error)
+    })
+  }
+  
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Reset Password"} />
@@ -550,14 +603,26 @@ const ResetPass = () => {
       </Typography>
       <Grid container spacing={3} mb={2}>
         <Grid item sm={6}>
-          <TextField fullWidth label="Enter Current Password" />
+          <TextField 
+            fullWidth 
+            onChange={handleChangePass}
+            value={inputValue.password}
+            name="password"
+            label="Enter Current Password" />
         </Grid>
         <Grid item sm={6}>
-          <TextField type="password" fullWidth label="Enter New Password" />
+          <TextField 
+            type="password" 
+            onChange={handleChangePass}
+            value={inputValue.rePassword}
+            name="rePassword"
+            fullWidth 
+            label="Enter New Password" />
         </Grid>
       </Grid>
       <Button
         variant="contained"
+        onClick={handleRepassword}
         sx={{
           color: "white",
           textTransform: "none",
@@ -570,6 +635,7 @@ const ResetPass = () => {
     </FormPaper>
   );
 };
+
 
 const DeleteAcc = ({ forcedLogout }) => {
   const { user } = useAuth();

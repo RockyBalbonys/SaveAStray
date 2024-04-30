@@ -94,10 +94,11 @@ const AccountForm = () => {
         }
       );
       console.log(response);
-      const { pawrentInfo, email } = response.data;
+      const { pawrentInfo, email, isGoogleUser } = response.data;
       setPawrentInfo({
         ...pawrentInfo,
         emailAddress: email,
+        isGoogleUser
       });
       setProfilePic(pawrentInfo.dp);
     } catch (error) {
@@ -227,6 +228,13 @@ const AccountForm = () => {
                   onSave={handleSaveChanges}
                 />
               </Grid>
+              {
+                pawrentInfo && !pawrentInfo.isGoogleUser && ( // Check for shelterInfo and isGoogleUser
+                  <Grid item sx={{ width: "100%" }}>
+                    <ResetPass />
+                  </Grid>
+                )
+              }
               <Grid item sx={{ width: "100%" }}>
                 <DeleteAcc forcedLogout={handleLogout} />
               </Grid>
@@ -385,6 +393,74 @@ const ContactInfoCard = ({ formData, onChange }) => {
           </Grid>
         </FormControl>
       </Box>
+    </FormPaper>
+  );
+};
+
+const ResetPass = () => {
+  const { user } = useAuth();
+  const [inputValue, setInputValue] = useState({
+    password: '',
+    rePassword: ''
+  });
+
+  const handleChangePass = (e) => {
+    setInputValue({
+      ...inputValue,
+      [e.target.name]: e.target.value
+    });
+  };
+  
+  const handleRepassword = () => {
+    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/repassword`, {
+      password: inputValue.password,
+      rePassword: inputValue.rePassword,
+      user
+    }).then(function(response){
+      console.log(response)
+    }).catch(function (error){
+      console.log(error)
+    })
+  }
+  
+  return (
+    <FormPaper className="py-6 px-4">
+      <FormHeader color={"#EE7200"} header={"Reset Password"} />
+      <Typography className="pb-6">
+        Do you want to
+        <span className="font-medium"> Reset Password?</span>
+      </Typography>
+      <Grid container spacing={3} mb={2}>
+        <Grid item sm={6}>
+          <TextField 
+            fullWidth 
+            onChange={handleChangePass}
+            value={inputValue.password}
+            name="password"
+            label="Enter Current Password" />
+        </Grid>
+        <Grid item sm={6}>
+          <TextField 
+            type="password" 
+            onChange={handleChangePass}
+            value={inputValue.rePassword}
+            name="rePassword"
+            fullWidth 
+            label="Enter New Password" />
+        </Grid>
+      </Grid>
+      <Button
+        variant="contained"
+        onClick={handleRepassword}
+        sx={{
+          color: "white",
+          textTransform: "none",
+          width: "216px",
+          borderRadius: "7px",
+        }}
+      >
+        Confirm Repassword
+      </Button>
     </FormPaper>
   );
 };
