@@ -496,54 +496,41 @@ app.post("/api/sendAnswers", async (req, res) => {
 });
 
 app.get("/getPet/:user", async (req, res) => {
-  console.log(req.params);
-
   try {
     const userId = req.params.user;
 
-    // Look for user in User collection
-    let user = await User.findOne({ _id: userId });
+    let petFilter = {};
 
-    // If user not found in User collection, try GoogleUser collection
-    if (!user) {
-      user = await GoogleUser.findOne({ _id: userId });
+    if (userId) { // Check if user ID exists (logged-in user)
+      const user = await User.findOne({ _id: userId }); // Find user
+      if (user) {
+        const role = user.role; // Access user role
+
+        if (role === "Adoptive Pawrent") {
+          petFilter = {}; // All pets for adoptive pawrents
+        } else if (role === "Rescue Shelter") {
+          petFilter = { shelter: userId }; // Pets belonging to the shelter
+        } else {
+          // Handle unauthorized roles (optional)
+        }
+      }
+    } else { // No user ID (not logged-in user)
+      petFilter = {}; // Fetch all pets for non-logged-in users
     }
 
-    let userRole;
-    if (user) {
-      userRole = user.role; // Access role only if user is found
-    }
-
-    let gUserRole;
-    if (gUserRole) {
-      // Check for existence before accessing role
-      gUserRole = await GoogleUser.findOne({ _id: userId });
-      gUserRole = gUserRole.role; // Access role only if gUserRole is found
-    }
-
-    if (userRole === "Adoptive Pawrent" || gUserRole === "Adoptive Pawrent") {
-      const allPets = await Pet.find();
-      res.send({
-        status: 200,
-        allPets,
-      });
-    } else if (
-      userRole === "Rescue Shelter" ||
-      gUserRole === "Rescue Shelter"
-    ) {
-      const allPets = await Pet.find({ shelter: userId }); // Assuming 'shelter' field in Pet model
-      res.send({
-        status: 200,
-        allPets,
-      });
-    } else {
-      res.status(403).send({ error: "Unauthorized user role" }); // Handle unauthorized roles
-    }
+    const allPets = await Pet.find(petFilter);
+    res.send({ status: 200, allPets });
   } catch (err) {
-    console.log("error: ", err);
+    console.error("Internal server error:", err);
     res.status(500).send({ error: "Internal server error" });
   }
 });
+
+app.get("/getPet", async(req, res) => {
+  const allPets = await Pet.find();
+  res.send({ status: 200, allPets });
+})
+
 
 /* app.get("/getPet", async (req, res) => {
   try {
