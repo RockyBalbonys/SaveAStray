@@ -21,6 +21,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Donate from "../Components/PageComponent/Donate";
 import Footer from "../Components/PageComponent/Footer";
 import { cardContent, helpContent } from "../constants/landingPage";
+import { AnimatePresence, motion } from "framer-motion";
 
 function Home() {
   return (
@@ -94,8 +95,6 @@ const cardHeroStyle = {
 
   "&:hover": {
     boxShadow: "0px 4px 20px 3px rgba(0, 0, 0, 0.15)",
-    transform: "scaleY(1.1)",
-    transformOrigin: "top",
   },
 };
 
@@ -138,6 +137,10 @@ function HeroSection() {
           gap: 4,
           paddingBottom: 8,
         }}
+        component={motion.div}
+        initial={{ opacity: 0, y: "100px" }}
+        whileInView={{ opacity: 1, y: 0, transition: { duration: 0.8 } }}
+        viewport={{ once: true }}
       >
         <Typography sx={H1Style}>Rescue. Adopt. Love.</Typography>
         <Typography sx={H2Style}>
@@ -190,7 +193,26 @@ function HeroCard() {
     <Container maxWidth="lg" sx={{ mt: "-10rem", zIndex: "100" }}>
       <Grid container justifyContent="center" spacing={2} alignContent="top">
         {cardContent.map((card, index) => (
-          <Grid item md={4} key={index} width="300px">
+          <Grid
+            item
+            md={4}
+            key={index}
+            width="300px"
+            component={motion.div}
+            whileHover={{ scale: 1.09 }}
+            initial={{ opacity: 0, y: "100px" }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.8,
+              },
+            }}
+            viewport={{
+              once: true,
+              amount: 0.5,
+            }}
+          >
             <Card
               sx={cardHeroStyle}
               onMouseEnter={() => handleMouseEnter(index)}
@@ -258,6 +280,16 @@ function AboutContent() {
         my: { xs: "40px", sm: "50px", md: "0px" },
         color: "#2F4858",
       }}
+      component={motion.div}
+      initial={{ x: "-100px", opacity: 0 }}
+      whileInView={{
+        x: 0,
+        opacity: 1,
+        transition: {
+          duration: 0.8,
+        },
+      }}
+      viewport={{ once: true, amount: 0.5 }}
     >
       <Grid container>
         <Grid item md={6}>
@@ -322,7 +354,13 @@ function AboutContent() {
 
 function HelpContent() {
   return (
-    <Container maxWidth="md">
+    <Container
+      maxWidth="md"
+      component={motion.div}
+      initial={{ opacity: 0, y: "100px" }}
+      whileInView={{ opacity: 1, y: 0, transition: { duration: 0.8 } }}
+      viewport={{ once: true }}
+    >
       <Box
         textAlign="center"
         sx={{
@@ -405,6 +443,17 @@ function HelpCardItem({ card, index }) {
           sm: "326px",
         },
       }}
+      component={motion.div}
+      initial={{ opacity: 0, y: "100px" }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        transition: {
+          type: "fade",
+          duration: 0.8,
+        },
+      }}
+      viewport={{ once: true }}
     >
       <Card
         sx={cardHelpStyle}
@@ -472,7 +521,7 @@ function MeetTheRescues() {
     <Container
       maxWidth="lg"
       sx={{
-        mt: { xs: "40px", sm: "50px", md: "195px", color: "#2F4858" },
+        mt: { xs: "40px", sm: "50px", md: "108px", color: "#2F4858" },
       }}
     >
       <Box
@@ -484,6 +533,10 @@ function MeetTheRescues() {
           marginBottom: "32px",
           color: "#2F4858",
         }}
+        initial={{ opacity: 0, y: "100px" }}
+        whileInView={{ opacity: 1, y: 0, transition: { duration: 0.8 } }}
+        viewport={{ once: true }}
+        component={motion.div}
       >
         <Typography mb={2} variant="h4" component="div" fontWeight="bold">
           Meet The Rescues
@@ -493,7 +546,15 @@ function MeetTheRescues() {
           in giving them a voice through rescue.
         </Typography>
         <Grid container textAlign="center" columnSpacing={4}>
-          <Grid item xs={12} sm={12} md={6} mb={2}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={6}
+            mb={2}
+            component={motion.div}
+            whileHover={{ scale: 1.1 }}
+          >
             <Box>
               <ButtonAnimals img={dogImage} />
               <Typography color="initial" mt={1}>
@@ -501,7 +562,15 @@ function MeetTheRescues() {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} mb={2}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={6}
+            mb={2}
+            component={motion.div}
+            whileHover={{ scale: 1.1 }}
+          >
             <Box>
               <ButtonAnimals img={catImage} />
               <Typography color="initial" mt={1}>

@@ -14,7 +14,7 @@ import placeholder from "../../assets/icons/SAS_Logo4.png";
 import BadgeAnimal from "../Badge/BadgeAnimal";
 import ModalPawrentInfoPet from "../Modal/ModalPawrentInfoPet";
 
-const PawrentCard = ({ animals, height, width, setAnimals }) => {
+const PawrentCard = ({ animals, setAnimals }) => {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -32,13 +32,12 @@ const PawrentCard = ({ animals, height, width, setAnimals }) => {
               transition: "opacity 0.3s ease-in-out",
             },
           },
+          minWidth: "257px",
         }}
       >
         <BadgeAnimal status={animals.status} />
         <Card
           sx={{
-            height: height,
-            width: width,
             background: "hsl(28, 77%, 88%)",
             padding: "12px",
             border: "2px solid #EE7200",

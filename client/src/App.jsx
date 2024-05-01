@@ -38,6 +38,7 @@ import useAuth from "./hooks/useAuth";
 import ScrollToTop from "./tools/scrollToTop";
 import DeadEnd2 from "./Pages/Redirect/DeadEnd2";
 import Chat from "./Pages/Chat";
+import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -52,36 +53,32 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/forgot" element={<ForgotPassword/>}/>
-            <Route path="/forgot/changePass" element={<ChangePass/>}/>
+            <Route path="/forgot" element={<ForgotPassword />} />
+            <Route path="/forgot/changePass" element={<ChangePass />} />
             {/* Route for manage account page */}
             <Route
               path="/manage"
               element={
-                isLoggedIn ? (
-                  role === "Adoptive Pawrent" ? (
+                (isLoggedIn &&
+                  (role === "Adoptive Pawrent" ? (
                     <AccountPawrent />
-                  ) : role === "Rescue Shelter" ? (
-                    <AccountShelter />
                   ) : (
-                    <Navigate to="/login" />
-                  )
-                ) : (
-                  <Navigate to="/login" />
-                )
+                    <AccountShelter />
+                  ))) || <Navigate to="/login" />
               }
             />
 
             <Route
               path="/manage/pawrent"
               element={
-                isLoggedIn ? <AccountPawrent /> : <Navigate to="/login" />
+                (isLoggedIn && <AccountPawrent />) || <Navigate to="/login" />
               }
             />
+
             <Route
               path="/manage/shelter"
               element={
-                isLoggedIn ? <AccountShelter /> : <Navigate to="/login" />
+                (isLoggedIn && <AccountShelter />) || <Navigate to="/login" />
               }
             />
             <Route path="/animals" element={<AnimalsShelter />} />

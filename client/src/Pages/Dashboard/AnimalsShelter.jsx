@@ -54,8 +54,8 @@ const AnimalsShelter = () => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
         params: {
-          user: user
-        }
+          user: user,
+        },
       })
       .then(function (response) {
         const allPets = response.data.allPets;
@@ -323,7 +323,19 @@ const DisplayAnimalCards = ({
   setAnimals,
 }) => {
   return (
-    <Grid container columnSpacing={3} rowSpacing={4} mt={4} alignItems="center">
+    <Grid
+      container
+      columnSpacing={3}
+      rowSpacing={4}
+      mt={4}
+      sx={{
+        alignItems: "center",
+        justifyContent: {
+          xs: "center",
+          md: "flex-start",
+        },
+      }}
+    >
       {currentAnimals.length === 0 ? (
         <Typography
           variant="h6"
@@ -342,8 +354,9 @@ const DisplayAnimalCards = ({
             xs={12}
             sm={6}
             md={3}
-            display="flex"
-            justifyContent="center"
+            sx={{
+              minWidth: "257px",
+            }}
           >
             {isShelter && isLoggedIn ? (
               <AnimalCard

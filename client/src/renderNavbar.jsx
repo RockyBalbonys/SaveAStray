@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "./Components/PageComponent/Navbar";
+import NewNavbar from "./Components/PageComponent/NewNavbar";
 import { useLocation, useParams } from "react-router-dom";
 
 export const renderNavbar = () => {
@@ -28,7 +29,7 @@ export const renderNavbar = () => {
 
   // Check if the current path is a valid path
   if (validPaths.includes(pathname.toLowerCase())) {
-    return <Navbar />;
+    return <NewNavbar />;
   }
 
   return null;

@@ -16,9 +16,34 @@ import stw from "../assets/icons/landingIcons/helpIcons/stw.png";
 import stw_filled from "../assets/icons/landingIcons/helpIcons/stw_filled.png";
 import volunteer from "../assets/icons/landingIcons/helpIcons/volunteer.png";
 import volunteer_filled from "../assets/icons/landingIcons/helpIcons/volunteer_filled.png";
+import facebook_icon from "../assets/icons/facebook.png";
+import email_icon from "../assets/icons/email.png";
+import telegram_icon from "../assets/icons/telegram.png";
 
 // Footer and Navbar content links
 const pages = ["About", "Animals", "Learn", "Donate", "Contact"];
+const pages2 = [
+  {
+    name: "About",
+    path: "/about",
+  },
+  {
+    name: "Animals",
+    path: "/animals",
+  },
+  {
+    name: "Learn",
+    path: "/articles",
+  },
+  {
+    name: "Donate",
+    path: "/donate",
+  },
+  {
+    name: "Contact",
+    path: "/contact",
+  },
+];
 
 const legal = ["Terms of Services", "Privacy Policy", "Data Privacy Act"];
 
@@ -101,6 +126,12 @@ const helpContent = [
   },
 ];
 
+const icons = [
+  { icon: facebook_icon, alt: "facebook icon" },
+  { icon: email_icon, alt: "email icon" },
+  { icon: telegram_icon, alt: "telegram icon" },
+];
+
 // Orange filter for image
 const filter = {
   position: "absolute",
@@ -109,4 +140,13 @@ const filter = {
   background: "rgba(213, 127, 46, 0.5)",
 };
 
-export { pages, legal, contacts, cardContent, helpContent, filter };
+export {
+  pages,
+  legal,
+  contacts,
+  cardContent,
+  helpContent,
+  filter,
+  pages2,
+  icons,
+};
