@@ -52,10 +52,10 @@ const AnimalsShelter = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user ?? ""}`, { // Use nullish coalescing for user ID
         params: {
-          user: user
-        }
+          user: user, // Include user ID for potential filtering on server-side
+        },
       })
       .then(function (response) {
         const allPets = response.data.allPets;
