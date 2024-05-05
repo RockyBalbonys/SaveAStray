@@ -34,12 +34,13 @@ import { ascendingPets, descendingPets } from "../../constants/sortLogic";
 // icons and images
 import animalHero from "../../assets/images/animals/animalHero.png";
 import AddIcon from "@mui/icons-material/Add";
-import { useTheme } from "@mui/material";
+import { Skeleton, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 
 const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
+  const [loadingCards, setLoadingCards] = useState(false);
 
   const isShelter = role === "Rescue Shelter";
 
@@ -160,6 +161,10 @@ const AnimalsShelter = () => {
     // TODO: Shelter change logic
     setShelter(selectedShelter);
   };
+
+  useEffect(() => {
+    window.scrollTo(150, 1300);
+  }, [currentPage]);
 
   const theme = useTheme();
 
@@ -331,12 +336,7 @@ const OptionSection = ({
   );
 };
 
-const DisplayAnimalCards = ({
-  isShelter,
-  isLoggedIn,
-  currentAnimals,
-  setAnimals,
-}) => {
+const DisplayAnimalCards = ({ currentAnimals, setAnimals }) => {
   return (
     <Grid
       container
@@ -387,21 +387,12 @@ const DisplayAnimalCards = ({
             whileHover={{ scale: 1.1 }}
             viewport={{ once: true, amount: 0.5 }}
           >
-            {isShelter && isLoggedIn ? (
-              <AnimalCard
-                animals={animal}
-                height="auto"
-                width="257px"
-                setAnimals={setAnimals}
-              />
-            ) : (
-              <PawrentCard
-                animals={animal}
-                height="auto"
-                width="257px"
-                setAnimals={setAnimals}
-              />
-            )}
+            <AnimalCard
+              animals={animal}
+              height="auto"
+              width="257px"
+              setAnimals={setAnimals}
+            />
           </Grid>
         ))
       )}
@@ -432,5 +423,13 @@ const PageComponent = ({ count, page, onChange }) => {
         sx={{ mt: 2, justifyContent: "center" }}
       />
     </Box>
+  );
+};
+
+const GridItemSkeleton = () => {
+  return (
+    <Grid item xs={12} sm={6} md={4} lg={3} sx={{ minWidth: "257px" }}>
+      <Skeleton variant="rectangular" width={257} height={321} />
+    </Grid>
   );
 };

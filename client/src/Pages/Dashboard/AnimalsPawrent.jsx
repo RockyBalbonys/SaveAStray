@@ -161,6 +161,10 @@ const AnimalsPawrent = () => {
     setShelter(selectedShelter);
   };
 
+  useEffect(() => {
+    window.scrollTo(150, 1300);
+  }, [currentPage]);
+
   // theme
   const theme = useTheme();
 

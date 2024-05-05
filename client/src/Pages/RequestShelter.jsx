@@ -125,7 +125,7 @@ function RequestShelter() {
       });
   }, []);
 
-/*   const handleClick = (redirectTo) => {
+  /*   const handleClick = (redirectTo) => {
     navigate(redirectTo);
   }; */
 
@@ -361,9 +361,6 @@ function RequestShelter() {
             </>
           )}
         </Container>
-        <Button component={RouterLink} to={`/messages/t`}>
-          Click Me
-        </Button>
       </div>
       <Footer />
     </div>
