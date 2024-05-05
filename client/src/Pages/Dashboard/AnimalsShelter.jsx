@@ -52,7 +52,8 @@ const AnimalsShelter = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user ?? ""}`, { // Use nullish coalescing for user ID
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user ?? ""}`, {
+        // Use nullish coalescing for user ID
         params: {
           user: user, // Include user ID for potential filtering on server-side
         },
@@ -176,7 +177,7 @@ const AnimalsShelter = () => {
           className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
       </div>
-      <Container maxWidth="lg" sx={{ my: "64px", position: "relative" }}>
+      <Container maxWidth="lg" sx={{ my: "64px" }}>
         <Container
           maxWidth="md"
           sx={{
@@ -323,7 +324,19 @@ const DisplayAnimalCards = ({
   setAnimals,
 }) => {
   return (
-    <Grid container columnSpacing={3} rowSpacing={4} mt={4} alignItems="center">
+    <Grid
+      container
+      columnSpacing={3}
+      rowGap={4}
+      mt={4}
+      sx={{
+        alignItems: "center",
+        justifyContent: {
+          xs: "center",
+          md: "flex-start",
+        },
+      }}
+    >
       {currentAnimals.length === 0 ? (
         <Typography
           variant="h6"
@@ -341,9 +354,11 @@ const DisplayAnimalCards = ({
             item
             xs={12}
             sm={6}
-            md={3}
-            display="flex"
-            justifyContent="center"
+            md={4}
+            lg={3}
+            sx={{
+              minWidth: "257px",
+            }}
           >
             {isShelter && isLoggedIn ? (
               <AnimalCard

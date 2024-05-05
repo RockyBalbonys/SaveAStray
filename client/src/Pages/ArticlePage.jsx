@@ -5,6 +5,7 @@ import { articlesCardContent } from "../constants/article";
 import { ArticleCard } from "../Components/Card/CustomCard";
 import { Link as RouterLink } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useScroll, useSpring, motion, useTransform } from "framer-motion";
 
 const ArticlePage = () => {
   const { id } = useParams(); // Extract the id parameter from the URL
@@ -20,8 +21,21 @@ const ArticlePage = () => {
   // Limit other articles to the first four
   const limitedOtherArticles = otherArticles.slice(0, 4);
 
+  // framer motion
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+    initial: 0.5,
+  });
+
   return (
     <>
+      <motion.div
+        className="w-screen bg-orange-600 h-[8px] fixed"
+        style={{ scaleX, transformOrigin: "left" }}
+      />
       <Button
         startIcon={<ArrowBackIcon />}
         sx={{ m: "34px 0 0 34px" }}

@@ -12,22 +12,22 @@ const team = [
   {
     media: jhude,
     name: "Jhude Vergara",
-    position: "Project Manager",
+    position: "Project Manager | UX Engineer",
   },
   {
     media: lawrence,
     name: "Prince Lawrence Jacinto",
-    position: "Software Engineer",
+    position: "Software Engineer | Backend Developer",
   },
   {
     media: lance,
     name: "Lance Samuel Ballesteros",
-    position: "Software Engineer",
+    position: "Software Engineer | Frontend Developer",
   },
   {
     media: jericho,
     name: "Prince Jericho Mabini",
-    position: "Backend Developer",
+    position: "Data Analyst",
   },
   {
     media: anGhelo,
