@@ -177,7 +177,7 @@ const AnimalsShelter = () => {
           className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
       </div>
-      <Container maxWidth="lg" sx={{ my: "64px", position: "relative" }}>
+      <Container maxWidth="lg" sx={{ my: "64px" }}>
         <Container
           maxWidth="md"
           sx={{
@@ -327,7 +327,7 @@ const DisplayAnimalCards = ({
     <Grid
       container
       columnSpacing={3}
-      rowSpacing={4}
+      rowGap={4}
       mt={4}
       sx={{
         alignItems: "center",
@@ -354,7 +354,8 @@ const DisplayAnimalCards = ({
             item
             xs={12}
             sm={6}
-            md={3}
+            md={4}
+            lg={3}
             sx={{
               minWidth: "257px",
             }}

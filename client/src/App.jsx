@@ -39,6 +39,7 @@ import ScrollToTop from "./tools/scrollToTop";
 import DeadEnd2 from "./Pages/Redirect/DeadEnd2";
 import Chat from "./Pages/Chat";
 import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -49,74 +50,77 @@ function App() {
         <ThemeProvider theme={theme}>
           {renderNavbar()}
           <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot" element={<ForgotPassword />} />
-            <Route path="/forgot/changePass" element={<ChangePass />} />
-            {/* Route for manage account page */}
-            <Route
-              path="/manage"
-              element={
-                (isLoggedIn &&
-                  (role === "Adoptive Pawrent" ? (
-                    <AccountPawrent />
-                  ) : (
-                    <AccountShelter />
-                  ))) || <Navigate to="/login" />
-              }
-            />
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot" element={<ForgotPassword />} />
+              <Route path="/forgot/changePass" element={<ChangePass />} />
+              {/* Route for manage account page */}
+              <Route
+                path="/manage"
+                element={
+                  (isLoggedIn &&
+                    (role === "Adoptive Pawrent" ? (
+                      <AccountPawrent />
+                    ) : (
+                      <AccountShelter />
+                    ))) || <Navigate to="/login" />
+                }
+              />
 
-            <Route
-              path="/manage/pawrent"
-              element={
-                (isLoggedIn && <AccountPawrent />) || <Navigate to="/login" />
-              }
-            />
+              <Route
+                path="/manage/pawrent"
+                element={
+                  (isLoggedIn && <AccountPawrent />) || <Navigate to="/login" />
+                }
+              />
 
-            <Route
-              path="/manage/shelter"
-              element={
-                (isLoggedIn && <AccountShelter />) || <Navigate to="/login" />
-              }
-            />
-            <Route path="/animals" element={<AnimalsShelter />} />
-            <Route
-              path="/questionnaire/:shelterId"
-              element={<Questionnaire />}
-            />
-            {/* End - Route for manage account page */}
+              <Route
+                path="/manage/shelter"
+                element={
+                  (isLoggedIn && <AccountShelter />) || <Navigate to="/login" />
+                }
+              />
+              <Route path="/animals" element={<AnimalsShelter />} />
+              <Route
+                path="/questionnaire/:shelterId"
+                element={<Questionnaire />}
+              />
+              {/* End - Route for manage account page */}
 
-            {/* Route for request page */}
-            <Route
-              path="/request/pawrent"
-              element={
-                isLoggedIn ? <RequestPawrent /> : <Navigate to="/login" />
-              }
-            />
-            <Route
-              path="/request/shelter"
-              element={
-                isLoggedIn ? <RequestShelter /> : <Navigate to="/login" />
-              }
-            />
-            {/* End - Route for request page */}
+              {/* Route for request page */}
+              <Route
+                path="/request/pawrent"
+                element={
+                  isLoggedIn ? <RequestPawrent /> : <Navigate to="/login" />
+                }
+              />
+              <Route
+                path="/request/shelter"
+                element={
+                  isLoggedIn ? <RequestShelter /> : <Navigate to="/login" />
+                }
+              />
+              {/* End - Route for request page */}
 
-            <Route path="/about" element={<About />} />
-            <Route path="/articles/" element={<Articles />} />
-            <Route path="/articles/:id" element={<ArticlePage />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/donate" element={<Donate />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/verify" element={<Verify />} />
-            <Route path="/deadend" element={<DeadEnd />} />
-            <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
-            <Route path="/socketPractice" element={<SocketPractice />} />
-            <Route path="/messages/t/" element={<Chat />} />
-            <Route path="/messages/t/:chatId" element={<Chat />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="/about" element={<About />} />
+              <Route path="/articles/" element={<Articles />} />
+              <Route path="/articles/:id" element={<ArticlePage />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/donate" element={<Donate />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/verify" element={<Verify />} />
+              <Route path="/deadend" element={<DeadEnd />} />
+              <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
+              <Route path="/socketPractice" element={<SocketPractice />} />
+              <Route path="/messages/t/" element={<Chat />} />
+              <Route path="/messages/t/:chatId" element={<Chat />} />
+              <Route path="/terms of services" element={<TermsOfServices />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AnimatePresence>
         </ThemeProvider>
       </LocalizationProvider>
     </>

@@ -47,10 +47,40 @@ const pages2 = [
 
 const legal = ["Terms of Services", "Privacy Policy", "Data Privacy Act"];
 
+const legal2 = [
+  {
+    name: "Terms of Services",
+    path: "/termsOfServices",
+  },
+  {
+    name: "Privacy Policy",
+    path: "/privacyPolicy",
+  },
+  {
+    name: "Data Privacy Act",
+    path: "https://privacy.gov.ph/data-privacy-act",
+  },
+];
+
 const contacts = [
   "University of Caloocan City - North Congress",
   "+63-994-478-639",
   "lyfiesupport@gmail.com",
+];
+
+const contacts2 = [
+  {
+    name: "University of Caloocan City - North Congress",
+    path: "https://ucc-caloocan.edu.ph",
+  },
+  {
+    name: "+63-994-478-639",
+    path: "/contact",
+  },
+  {
+    name: "lyfiesupport@gmail.com",
+    path: "https://mail.google.com/",
+  },
 ];
 
 // Content for the card in Hero section
@@ -149,4 +179,6 @@ export {
   filter,
   pages2,
   icons,
+  contacts2,
+  legal2,
 };

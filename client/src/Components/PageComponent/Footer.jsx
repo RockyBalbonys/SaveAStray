@@ -12,7 +12,14 @@ import { Link as RouterLink } from "react-router-dom";
 import facebook_icon from "../../assets/icons/facebook.png";
 import email_icon from "../../assets/icons/email.png";
 import telegram_icon from "../../assets/icons/telegram.png";
-import { pages, contacts, legal } from "../../constants/landingPage";
+import {
+  pages,
+  contacts,
+  legal,
+  contacts2,
+  pages2,
+  legal2,
+} from "../../constants/landingPage";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import IconLinks from "../IconLinks";
 
@@ -34,10 +41,15 @@ function LinksItem({ items, category }) {
           underline="hover"
           key={index}
           sx={{ color: "rgba(255, 161, 52, 1)" }}
-          to={`/${page}`}
+          to={`${page.path}`}
           component={RouterLink}
+          target={
+            category === "Legal" || category === "Contacts"
+              ? "_blank"
+              : undefined
+          }
         >
-          {page}
+          {page.name}
         </Link>
       ))}
     </Stack>
@@ -59,18 +71,11 @@ const Footer = () => {
       component="footer"
     >
       <Container maxWidth="xl">
-        {/* TODO: Fix responsiveness */}
         <Grid container spacing={2}>
           <Grid item md={12} lg={6}>
             <Stack direction="column" rowGap={2}>
               <Box display="flex" alignItems="center" gap={1}>
-                <img
-                  src={logo}
-                  width={85}
-                  height={85}
-                  alt="Logo"
-                  // className="hidden"
-                />
+                <img src={logo} width={85} height={85} alt="Logo" />
                 <Typography sx={{ fontSize: "36px", fontWeight: "bold" }}>
                   SaveAStray
                 </Typography>
@@ -90,13 +95,13 @@ const Footer = () => {
           <Grid item md={12} lg={6}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={4}>
-                <LinksItem items={pages} category="Websites" />
+                <LinksItem items={pages2} category="Websites" />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <LinksItem items={legal} category="Legal" />
+                <LinksItem items={legal2} category="Legal" />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <LinksItem items={contacts} category="Contacts" />
+                <LinksItem items={contacts2} category="Contacts" />
               </Grid>
             </Grid>
           </Grid>

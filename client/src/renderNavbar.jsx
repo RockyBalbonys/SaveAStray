@@ -19,6 +19,7 @@ export const renderNavbar = () => {
     "/contact",
     "/animalsPawrent",
     "/manage/pawrent",
+    "/manage",
     "/manage/shelter",
     "/request/pawrent",
     "/request/shelter",
