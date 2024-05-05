@@ -40,9 +40,12 @@ import DeadEnd2 from "./Pages/Redirect/DeadEnd2";
 import Chat from "./Pages/Chat";
 import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
 import { AnimatePresence } from "framer-motion";
+import AnimalsPawrent from "./Pages/Dashboard/AnimalsPawrent";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
+
+  console.log(role);
 
   return (
     <>
@@ -59,36 +62,32 @@ function App() {
               <Route path="/forgot/changePass" element={<ChangePass />} />
               {/* Route for manage account page */}
               <Route
-                path="/manage"
-                element={
-                  (isLoggedIn &&
-                    (role === "Adoptive Pawrent" ? (
-                      <AccountPawrent />
-                    ) : (
-                      <AccountShelter />
-                    ))) || <Navigate to="/login" />
-                }
-              />
-
-              <Route
                 path="/manage/pawrent"
                 element={
                   (isLoggedIn && <AccountPawrent />) || <Navigate to="/login" />
                 }
               />
-
               <Route
                 path="/manage/shelter"
                 element={
                   (isLoggedIn && <AccountShelter />) || <Navigate to="/login" />
                 }
               />
-              <Route path="/animals" element={<AnimalsShelter />} />
+              {/* End - Route for manage account page */}
+
+              <Route
+                path="/animals/"
+                element={
+                  (isLoggedIn && role === "Rescue Shelter" && (
+                    <AnimalsShelter />
+                  )) || <AnimalsPawrent />
+                }
+              />
+
               <Route
                 path="/questionnaire/:shelterId"
                 element={<Questionnaire />}
               />
-              {/* End - Route for manage account page */}
 
               {/* Route for request page */}
               <Route

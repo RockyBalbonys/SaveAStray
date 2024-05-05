@@ -7,6 +7,7 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MyFormControlLabel } from "../Components/MyFormControlLabel";
@@ -53,11 +54,18 @@ export function FilterOptions({
     setFiltersApplied(true);
   };
 
+  const theme = useTheme();
+
   return (
     <Grid
       container
       width="100%"
-      sx={{ p: "24px 24px 32px 24px" }}
+      sx={{
+        p: "24px 24px 32px 24px",
+        backgroundColor: theme.palette.common.white,
+        borderRadius: "7px",
+        my: "32px",
+      }}
       rowSpacing={3}
     >
       {filters.map((filter, index) => (
