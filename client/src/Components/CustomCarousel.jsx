@@ -1,8 +1,34 @@
+import React, { useState, useEffect } from "react";
 import Carousel from "react-material-ui-carousel";
 import { Paper, Box, Grid } from "@mui/material";
 
 const CustomCarousel = ({ itemList }) => {
-  const sliderItems = itemList.length > 3 ? 3 : itemList.length;
+  const [sliderItems, setSliderItems] = useState(getInitialSliderItems());
+
+  useEffect(() => {
+    function handleResize() {
+      setSliderItems(getInitialSliderItems());
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  function getInitialSliderItems() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 600) {
+      // Mobile
+      return 1;
+    } else if (screenWidth < 960) {
+      // Tablet
+      return 2;
+    } else {
+      // Desktop and wide screens
+      return 3;
+    }
+  }
+
   const items = [];
 
   for (let i = 0; i < itemList.length; i += sliderItems) {
@@ -85,19 +111,13 @@ export function AnimalImageCarousel({ animalImages }) {
   return (
     <>
       <Carousel
-        autoPlay={true}
+        autoPlay={false}
         animation="slide"
         cycleNavigation={true}
         indicators={false}
         height="30vh"
       >
         {items}
-        {/* TODO: https://www.youtube.com/watch?v=sR5Z8AJ-zRU */}
-        {/* {animalImages.map((image, idx) => (
-          <div key={idx} className="h-[35vh]">
-            <img src={image} alt={`${image} ${idx}`} />
-          </div>
-        ))} */}
       </Carousel>
     </>
   );

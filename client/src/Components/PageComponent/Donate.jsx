@@ -29,7 +29,12 @@ const Donate = () => {
           gap: 7.8,
         }}
       >
-        <Typography variant="h4" fontWeight="bold" color="white">
+        <Typography
+          variant="h4"
+          fontWeight="bold"
+          color="white"
+          textAlign={"center"}
+        >
           Help SaveAStray to end animal loneliness
         </Typography>
         <CustomButton

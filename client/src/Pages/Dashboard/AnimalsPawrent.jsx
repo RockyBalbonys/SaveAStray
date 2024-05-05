@@ -39,10 +39,11 @@ const AnimalsPawrent = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,{
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
         params: {
-          user: user
-        }})
+          user: user,
+        },
+      })
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
@@ -255,7 +256,14 @@ const OptionSection = ({
 
 const DisplayAnimalCards = ({ currentAnimals, setAnimals }) => {
   return (
-    <Grid container columnSpacing={3} rowSpacing={4} mt={4} alignItems="center">
+    <Grid
+      container
+      columnSpacing={3}
+      rowSpacing={4}
+      mt={4}
+      alignItems="center"
+      sx={{ border: "1px solid red" }}
+    >
       {currentAnimals.length === 0 ? (
         <Typography
           variant="h6"
@@ -271,18 +279,14 @@ const DisplayAnimalCards = ({ currentAnimals, setAnimals }) => {
           <Grid
             key={idx}
             item
-            xs={12}
-            sm={6}
-            md={3}
-            display="flex"
-            justifyContent="center"
+            sx={{
+              minWidth: "257px",
+              flexWrap: "wrap",
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
-            <PawrentCard
-              animals={animal}
-              height="auto"
-              width="257px"
-              setAnimals={setAnimals}
-            />
+            <PawrentCard animals={animal} setAnimals={setAnimals} />
           </Grid>
         ))
       )}

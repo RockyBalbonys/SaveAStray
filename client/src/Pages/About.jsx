@@ -18,8 +18,9 @@ import Donate from "../Components/PageComponent/Donate";
 import Footer from "../Components/PageComponent/Footer";
 
 // framer motion
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import OddIndexContent from "../Components/OddIndexContent";
+import EvenIndexContent from "../Components/EvenIndexContent";
 
 const About = () => {
   return (
@@ -92,7 +93,12 @@ function ThirdSection({ contents }) {
   return (
     <>
       {contents.map((content, idx) => (
-        <Grid container key={idx} spacing={0} sx={{ mb: { xs: 2, sm: 0 } }}>
+        <Grid
+          container
+          key={idx}
+          spacing={0}
+          sx={{ mb: { xs: 2, sm: 0 }, overflowX: "hidden" }}
+        >
           {idx % 2 !== 0 ? (
             <OddIndexContent content={content} />
           ) : (
@@ -100,115 +106,6 @@ function ThirdSection({ contents }) {
           )}
         </Grid>
       ))}
-    </>
-  );
-}
-
-function EvenIndexContent({ content }) {
-  return (
-    <>
-      <Grid
-        item
-        md={6}
-        sx={{
-          display: {
-            xs: "none",
-            md: "block",
-          },
-        }}
-      >
-        <Box
-          position="relative"
-          sx={{
-            backgroundColor: "rgb(238, 114, 0)",
-            width: "100%",
-            height: "422px",
-          }}
-        >
-          <Box
-            sx={{
-              position: "absolute",
-              height: "100%",
-              width: "100%",
-            }}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            className="bg-gradient-to-bl from-amber-500 to-orange-600"
-          >
-            <Typography
-              fontSize={168}
-              fontWeight="bold"
-              color="white"
-              textAlign="center"
-            >
-              {content.section}
-            </Typography>
-          </Box>
-        </Box>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={6}
-        sx={{
-          display: {
-            sm: "block",
-            md: "block",
-          },
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-            justifyContent: {
-              sm: "center",
-              md: "flex-start",
-            },
-          }}
-        >
-          <Box
-            sx={{
-              width: "70%",
-              height: "80%",
-              marginLeft: {
-                sm: "0px",
-                md: "40px",
-              },
-              color: "#2F4858",
-            }}
-          >
-            <Typography fontSize={26} fontWeight="bold" mb={3}>
-              {content.title}
-            </Typography>
-            <Stack direction="column" spacing={3}>
-              <Typography>{content.p1}</Typography>
-              <Typography>{content.p2}</Typography>
-              <Typography>{content.p3}</Typography>
-            </Stack>
-          </Box>
-          <Box
-            sx={{
-              position: "absolute",
-              background: `url(${content.icon})`,
-              width: "30%", // Adjusted width to fit the remaining space
-              height: "100%",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "contain",
-              right: 0, // Icon on the right side
-              display: {
-                sm: "none",
-                md: "block",
-              },
-            }}
-          ></Box>
-        </Box>
-      </Grid>
     </>
   );
 }
@@ -232,7 +129,7 @@ function MeetTheTeam() {
           <Typography fontWeight="bold" variant="h5" mb={3}>
             Meet The Team
           </Typography>
-          <Typography mb={3} width="600px">
+          <Typography mb={3} maxWidth="600px" textAlign={"center"}>
             We're not just CS students, we're animal advocates in code. We dream
             of a day when every stray has a home.
           </Typography>
@@ -260,6 +157,18 @@ function MeetTheTeam() {
                   },
                 }}
                 key={idx}
+                component={motion.div}
+                initial={{ opacity: 0, translateY: "100px" }}
+                whileInView={{
+                  opacity: 1,
+                  translateY: 0,
+                  transition: {
+                    type: "fade",
+                    bounce: 0.4,
+                    duration: 0.8,
+                  },
+                }}
+                viewport={{ once: true, amount: 0.5 }}
               >
                 <Paper
                   sx={{
