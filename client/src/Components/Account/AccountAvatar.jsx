@@ -74,10 +74,10 @@ export const AccountAvatar = ({
                 {!accountNum ? "No phone number" : accountNum}
               </Typography>
             </Stack>
-            <Stack direction={"row"} sx={{ columnGap: "8px" }}>
+            <Stack direction={"row"} sx={{ columnGap: "8px", width: "100%" }}>
               {/* TODO: email icon */}
               <LanguageRoundedIcon />
-              <Typography>
+              <Typography noWrap>
                 {!accountEmail ? "No email" : accountEmail}
               </Typography>
             </Stack>

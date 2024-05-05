@@ -1,7 +1,6 @@
 import React from "react";
-import Navbar from "./Components/PageComponent/Navbar";
-import NewNavbar from "./Components/PageComponent/NewNavbar";
 import { useLocation, useParams } from "react-router-dom";
+import Navbar from "./Components/PageComponent/Navbar";
 
 export const renderNavbar = () => {
   const { id } = useParams(); // Extract the id parameter from the URL
@@ -18,6 +17,8 @@ export const renderNavbar = () => {
     "/donate",
     "/contact",
     "/animalsPawrent",
+    "/dashboard/pawrent",
+    "/dashboard/shelter",
     "/manage/pawrent",
     "/manage",
     "/manage/shelter",
@@ -30,7 +31,7 @@ export const renderNavbar = () => {
 
   // Check if the current path is a valid path
   if (validPaths.includes(pathname.toLowerCase())) {
-    return <NewNavbar />;
+    return <Navbar />;
   }
 
   return null;

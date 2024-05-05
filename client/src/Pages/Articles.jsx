@@ -3,7 +3,7 @@ import Footer from "../Components/PageComponent/Footer";
 import Donate from "../Components/PageComponent/Donate";
 import { articlesCardContent } from "../constants/article";
 import { ArticleCard } from "../Components/Card/CustomCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
 const Articles = () => {
@@ -27,6 +27,11 @@ const Articles = () => {
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   return (
     <>
       <Box component="main">

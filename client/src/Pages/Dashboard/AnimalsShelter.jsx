@@ -34,14 +34,17 @@ import { ascendingPets, descendingPets } from "../../constants/sortLogic";
 // icons and images
 import animalHero from "../../assets/images/animals/animalHero.png";
 import AddIcon from "@mui/icons-material/Add";
+import { Skeleton, useTheme } from "@mui/material";
+import { motion } from "framer-motion";
 
 const AnimalsShelter = () => {
   const [animals, setAnimals] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
+  const [loadingCards, setLoadingCards] = useState(false);
 
   const isShelter = role === "Rescue Shelter";
 
-  console.table(animals);
+  console.table(role);
 
   const [filters, setFilters] = useState({
     type: null,
@@ -52,7 +55,7 @@ const AnimalsShelter = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user ?? ""}`, {
+      .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
         // Use nullish coalescing for user ID
         params: {
           user: user, // Include user ID for potential filtering on server-side
@@ -159,6 +162,12 @@ const AnimalsShelter = () => {
     setShelter(selectedShelter);
   };
 
+  useEffect(() => {
+    window.scrollTo(150, 1300);
+  }, [currentPage]);
+
+  const theme = useTheme();
+
   return (
     <>
       <div className="relative bg-gradient-to-bl from-amber-500 to-orange-600 h-[65vh] w-full flex justify-end items-center">
@@ -177,62 +186,72 @@ const AnimalsShelter = () => {
           className="absolute hidden md:block h-full bg-no-repeat bg-contain w-full bg-right"
         ></div>
       </div>
-      <Container maxWidth="lg" sx={{ my: "64px" }}>
-        <Container
-          maxWidth="md"
-          sx={{
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "32px",
-          }}
-        >
-          <Typography variant="h6" fontWeight={600} gutterBottom>
-            It’s My Pawssion!
-          </Typography>
-          <Typography variant="body2" fontWeight={300}>
-            Here is the list of animals in your shelter. You can add another
-            rescue, update some of their information, or remove adopted pets
-          </Typography>
+      <Box
+        sx={{
+          bgcolor: theme.palette.common.dirtyWhite,
+          width: "100%",
+          height: "100%",
+          py: "64px",
+        }}
+      >
+        <Container maxWidth="lg">
+          <Container
+            maxWidth="md"
+            sx={{
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              marginBottom: "32px",
+              color: theme.palette.secondary.main,
+            }}
+          >
+            <Typography variant="h6" fontWeight={600} gutterBottom>
+              It’s My Pawssion!
+            </Typography>
+            <Typography variant="body2" fontWeight={300}>
+              Here is the list of animals in your shelter. You can add another
+              rescue, update some of their information, or remove adopted pets
+            </Typography>
+          </Container>
+
+          {/* Sort by, search, add / shelter component */}
+          <OptionSection
+            isShelter={isShelter}
+            isLoggedIn={isLoggedIn}
+            setAnimals={setAnimals}
+            sortBy={sortBy}
+            handleChangeSortBy={handleChangeSortBy}
+            searchValue={searchValue}
+            handleSearchInputChange={handleSearchInputChange}
+            shelter={shelter}
+            handleChangeShelter={handleChangeShelter}
+          />
+
+          {/* Filter Component */}
+          <FilterOptions
+            filters={filteredOptions}
+            handleFilterChange={handleFilterChange}
+            handleApplyFilters={handleApplyFilters}
+          />
+
+          {/* Display animal cards */}
+          <DisplayAnimalCards
+            isShelter={isShelter}
+            isLoggedIn={isLoggedIn}
+            currentAnimals={currentAnimals}
+            setAnimals={setAnimals}
+          />
+
+          {/* Page Component */}
+          <PageComponent
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+          />
         </Container>
-
-        {/* Sort by, search, add / shelter component */}
-        <OptionSection
-          isShelter={isShelter}
-          isLoggedIn={isLoggedIn}
-          setAnimals={setAnimals}
-          sortBy={sortBy}
-          handleChangeSortBy={handleChangeSortBy}
-          searchValue={searchValue}
-          handleSearchInputChange={handleSearchInputChange}
-          shelter={shelter}
-          handleChangeShelter={handleChangeShelter}
-        />
-
-        {/* Filter Component */}
-        <FilterOptions
-          filters={filteredOptions}
-          handleFilterChange={handleFilterChange}
-          handleApplyFilters={handleApplyFilters}
-        />
-
-        {/* Display animal cards */}
-        <DisplayAnimalCards
-          isShelter={isShelter}
-          isLoggedIn={isLoggedIn}
-          currentAnimals={currentAnimals}
-          setAnimals={setAnimals}
-        />
-
-        {/* Page Component */}
-        <PageComponent
-          count={totalPages}
-          page={currentPage}
-          onChange={handlePageChange}
-        />
-      </Container>
+      </Box>
 
       {/* Footer */}
       <Footer />
@@ -317,12 +336,7 @@ const OptionSection = ({
   );
 };
 
-const DisplayAnimalCards = ({
-  isShelter,
-  isLoggedIn,
-  currentAnimals,
-  setAnimals,
-}) => {
+const DisplayAnimalCards = ({ currentAnimals, setAnimals }) => {
   return (
     <Grid
       container
@@ -359,22 +373,26 @@ const DisplayAnimalCards = ({
             sx={{
               minWidth: "257px",
             }}
+            component={motion.div}
+            initial={{ opacity: 0, translateY: "100px" }}
+            whileInView={{
+              opacity: 1,
+              translateY: 0,
+              transition: {
+                type: "fade",
+                bounce: 0.4,
+                duration: 0.8,
+              },
+            }}
+            whileHover={{ scale: 1.1 }}
+            viewport={{ once: true, amount: 0.5 }}
           >
-            {isShelter && isLoggedIn ? (
-              <AnimalCard
-                animals={animal}
-                height="auto"
-                width="257px"
-                setAnimals={setAnimals}
-              />
-            ) : (
-              <PawrentCard
-                animals={animal}
-                height="auto"
-                width="257px"
-                setAnimals={setAnimals}
-              />
-            )}
+            <AnimalCard
+              animals={animal}
+              height="auto"
+              width="257px"
+              setAnimals={setAnimals}
+            />
           </Grid>
         ))
       )}
@@ -405,5 +423,13 @@ const PageComponent = ({ count, page, onChange }) => {
         sx={{ mt: 2, justifyContent: "center" }}
       />
     </Box>
+  );
+};
+
+const GridItemSkeleton = () => {
+  return (
+    <Grid item xs={12} sm={6} md={4} lg={3} sx={{ minWidth: "257px" }}>
+      <Skeleton variant="rectangular" width={257} height={321} />
+    </Grid>
   );
 };

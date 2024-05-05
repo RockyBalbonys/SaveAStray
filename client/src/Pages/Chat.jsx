@@ -18,7 +18,7 @@ import Badge from "@mui/material/Badge";
 import AnnouncementRoundedIcon from "@mui/icons-material/AnnouncementRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import avatar_placeholder from "../assets/images/avatar_placeholder.png";
-import Navbar from "../Components/PageComponent/Navbar";
+import Navbar from "../Components/PageComponent/OldNavbar";
 
 import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
@@ -46,7 +46,9 @@ const Chat = () => {
       }
 
       const mappedMessages = messages.map((message) => {
-        const lastMessage = message.conversation ? message.conversation[message.conversation.length - 1] : null;
+        const lastMessage = message.conversation
+          ? message.conversation[message.conversation.length - 1]
+          : null;
         return {
           name: message.receiverName,
           chatId: message.chatId,
@@ -186,7 +188,7 @@ function Chatbox({ contacts }) {
   const { chatId } = useParams();
   const contactInfo = contacts.find((contact) => contact.chatId === chatId);
 
-/*  useEffect(() => {
+  /*  useEffect(() => {
     async function fetchContactInfo() {
       console.log("chatId " + chatId);
       const foundContact = contacts.find(

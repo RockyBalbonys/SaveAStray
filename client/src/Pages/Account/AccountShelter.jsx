@@ -72,8 +72,8 @@ function AccountShelter() {
   return (
     <>
       <AccountHeader />
-      <AccountForm/>
-      <AccountDrawer/>
+      <AccountForm />
+      <AccountDrawer />
       <Footer />
     </>
   );
@@ -85,7 +85,6 @@ const AccountForm = () => {
   const navigate = useNavigate();
 
   const { user } = useAuth();
-  
 
   //API Fetch Shelter Info
   const [shelterInfo, setShelterInfo] = useState({
@@ -123,7 +122,7 @@ const AccountForm = () => {
       setShelterInfo({
         ...shelterInfo,
         shelterEmailAddress: email,
-        isGoogleUser
+        isGoogleUser,
       });
 
       setProfilePic(shelterInfo.dp);
@@ -165,9 +164,6 @@ const AccountForm = () => {
     }
   };
 
-
-
-
   const handleLogout = () => {
     console.log("initial State: ", store.getState());
     const unsubscribe = store.subscribe(() =>
@@ -177,7 +173,6 @@ const AccountForm = () => {
     store.dispatch(logout());
     unsubscribe();
   };
-
 
   // profile picture
   const [profilePic, setProfilePic] = useState("");
@@ -232,7 +227,10 @@ const AccountForm = () => {
             item
             md={4}
             lg={3}
-            sx={{ display: { xs: "none", sm: "none", md: "block" } }}
+            sx={{
+              display: { xs: "none", sm: "none", md: "block" },
+              maxWidth: "327px",
+            }}
           >
             <Box sx={{ height: "100%" }}>
               <AccountAvatar
@@ -274,13 +272,12 @@ const AccountForm = () => {
                   onSave={handleSaveChanges}
                 />
               </Grid>
-              {
-                shelterInfo && !shelterInfo.isGoogleUser && ( // Check for shelterInfo and isGoogleUser
+              {shelterInfo &&
+                !shelterInfo.isGoogleUser && ( // Check for shelterInfo and isGoogleUser
                   <Grid item sx={{ width: "100%" }}>
                     <ResetPass />
                   </Grid>
-                )
-              }
+                )}
               <Grid item sx={{ width: "100%" }}>
                 <DeleteAcc forcedLogout={handleLogout} />
               </Grid>
@@ -571,29 +568,32 @@ const ShelterRepInfo = ({ formData, onChange }) => {
 const ResetPass = () => {
   const { user } = useAuth();
   const [inputValue, setInputValue] = useState({
-    password: '',
-    rePassword: ''
+    password: "",
+    rePassword: "",
   });
 
   const handleChangePass = (e) => {
     setInputValue({
       ...inputValue,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleRepassword = () => {
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/api/repassword`, {
-      password: inputValue.password,
-      rePassword: inputValue.rePassword,
-      user
-    }).then(function(response){
-      console.log(response)
-    }).catch(function (error){
-      console.log(error)
-    })
-  }
-  
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/repassword`, {
+        password: inputValue.password,
+        rePassword: inputValue.rePassword,
+        user,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Reset Password"} />
@@ -603,21 +603,23 @@ const ResetPass = () => {
       </Typography>
       <Grid container spacing={3} mb={2}>
         <Grid item sm={6}>
-          <TextField 
-            fullWidth 
+          <TextField
+            fullWidth
             onChange={handleChangePass}
             value={inputValue.password}
             name="password"
-            label="Enter Current Password" />
+            label="Enter Current Password"
+          />
         </Grid>
         <Grid item sm={6}>
-          <TextField 
-            type="password" 
+          <TextField
+            type="password"
             onChange={handleChangePass}
             value={inputValue.rePassword}
             name="rePassword"
-            fullWidth 
-            label="Enter New Password" />
+            fullWidth
+            label="Enter New Password"
+          />
         </Grid>
       </Grid>
       <Button
@@ -635,7 +637,6 @@ const ResetPass = () => {
     </FormPaper>
   );
 };
-
 
 const DeleteAcc = ({ forcedLogout }) => {
   const { user } = useAuth();
