@@ -531,19 +531,6 @@ app.get("/getPet", async(req, res) => {
   res.send({ status: 200, allPets });
 })
 
-
-/* app.get("/getPet", async (req, res) => {
-  try {
-    const allPets = await Pet.find();
-    res.send({
-      status: 200,
-      allPets,
-    });
-  } catch (err) {
-    console.log("error: ", err);
-  }
-}); */
-
 app.post("/api/fetchRequests", async (req, res) => {
   const { user } = req.body;
 
