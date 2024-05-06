@@ -2,17 +2,9 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { motion, useInView } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 export default function OddIndexContent({ content }) {
-  const ref = useRef();
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    console.log("isInView: " + isInView);
-  }, [isInView]);
-
   return (
     <>
       <Grid
@@ -25,13 +17,18 @@ export default function OddIndexContent({ content }) {
             sm: "block",
             md: "block",
           },
-          transform: isInView ? "none" : "translateX(100px)",
-          opacity: isInView ? 1 : 0,
-          transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
           minHeight: "422px",
         }}
         component={motion.div}
-        ref={ref}
+        initial={{ opacity: 0, x: "100px" }}
+        whileInView={{
+          opacity: 1,
+          x: 0,
+          transition: {
+            duration: 0.8,
+          },
+        }}
+        viewport={{ once: true }}
       >
         <Box
           sx={{
@@ -90,13 +87,18 @@ export default function OddIndexContent({ content }) {
             xs: "none",
             md: "block",
           },
-          transform: isInView ? "none" : "translateX(100px)",
-          opacity: isInView ? 1 : 0,
-          transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
           minHeight: "422px",
         }}
         component={motion.div}
-        ref={ref}
+        initial={{ opacity: 0, x: "100px" }}
+        whileInView={{
+          opacity: 1,
+          x: 0,
+          transition: {
+            duration: 0.8,
+          },
+        }}
+        viewport={{ once: true }}
       >
         <Box
           position="relative"
