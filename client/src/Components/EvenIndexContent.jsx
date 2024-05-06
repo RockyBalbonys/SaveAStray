@@ -2,17 +2,9 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
-import { motion, useInView } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 export default function EvenIndexContent({ content }) {
-  const ref = useRef();
-  const isInView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    console.log("isInView: " + isInView);
-  }, [isInView]);
-
   return (
     <>
       <Grid
@@ -23,13 +15,18 @@ export default function EvenIndexContent({ content }) {
             xs: "none",
             md: "block",
           },
-          transform: isInView ? "none" : "translateX(-100px)",
-          opacity: isInView ? 1 : 0,
-          transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
-          height: "422px",
+          minHeight: "422px",
         }}
-        ref={ref}
         component={motion.div}
+        initial={{ opacity: 0, x: "-100px" }}
+        whileInView={{
+          opacity: 1,
+          x: 0,
+          transition: {
+            duration: 0.8,
+          },
+        }}
+        viewport={{ once: true }}
       >
         <Box
           position="relative"
@@ -71,13 +68,18 @@ export default function EvenIndexContent({ content }) {
             sm: "block",
             md: "block",
           },
-          transform: isInView ? "none" : "translateX(-100px)",
-          opacity: isInView ? 1 : 0,
-          transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
-          height: "422px",
+          minHeight: "422px",
         }}
-        ref={ref}
         component={motion.div}
+        initial={{ opacity: 0, x: "-100px" }}
+        whileInView={{
+          opacity: 1,
+          x: 0,
+          transition: {
+            duration: 0.8,
+          },
+        }}
+        viewport={{ once: true }}
       >
         <Box
           sx={{
