@@ -21,6 +21,8 @@ export function FilterOptions({
     filters.map(() => null)
   );
 
+  console.log(selectedOptions);
+
   console.log(filters);
 
   const [filtersApplied, setFiltersApplied] = useState(false);
@@ -55,6 +57,12 @@ export function FilterOptions({
   };
 
   const theme = useTheme();
+
+  function allItemsAreNull(array) {
+    return array.every((item) => item === null);
+  }
+
+  const isEmptyOptions = allItemsAreNull(selectedOptions);
 
   return (
     <Grid
@@ -124,6 +132,7 @@ export function FilterOptions({
             textTransform: "none",
             borderRadius: "7px",
           }}
+          disabled={isEmptyOptions}
           width="100%"
         >
           Apply Filters

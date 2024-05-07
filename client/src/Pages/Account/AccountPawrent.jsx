@@ -80,6 +80,8 @@ const AccountForm = () => {
     phoneNumber: "",
   });
 
+  console.log(pawrentInfo);
+
   // profile picture
   const [profilePic, setProfilePic] = useState("");
 

@@ -153,18 +153,6 @@ export default function ForgotPassword() {
           </Paper>
         </Container>
       </Background>
-      {/* <div className="bg-gradient-to-bl from-amber-500 to-orange-600 flex justify-center items-center relative h-screen">
-        <h1>Enter your email that you want to change password:</h1>
-        <input
-          type="text"
-          placeholder="Enter email..."
-          onChange={changeHandler}
-          value={inputData.email}
-        />
-        <button type="button" onClick={verifyEmail}>
-          Change Password
-        </button>
-      </div> */}
     </>
   );
 }

@@ -62,6 +62,18 @@ function App() {
               <Route path="/forgot/changePass" element={<ChangePass />} />
               {/* Route for manage account page */}
               <Route
+                path="/manage"
+                element={
+                  (isLoggedIn &&
+                    (role === "Adoptive Pawrent" ? (
+                      <AccountPawrent />
+                    ) : (
+                      <AccountShelter />
+                    ))) || <Navigate to="/login" />
+                }
+              />
+
+              <Route
                 path="/manage/pawrent"
                 element={
                   (isLoggedIn && <AccountPawrent />) || <Navigate to="/login" />

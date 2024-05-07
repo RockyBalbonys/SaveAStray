@@ -56,6 +56,7 @@ const TermsAndPrivacyModal = ({
           .then(function (res) {
             const data = res.data;
             console.log(data);
+
             if (res.data.status == 200) {
               axios
                 .post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
@@ -68,10 +69,11 @@ const TermsAndPrivacyModal = ({
                   console.log(err);
                 });
               onClose();
+              console.log("Dapat hindi ka nandito ");
               navigate("/deadend");
-              console.log("Noooooooooo!");
-            } else if (res.data.status == 409) {
+            } else if (res.data.status == 407) {
               console.log(res.data);
+              console.log("Dapat nandito ka");
               setOpenSnackbar(true);
             }
           })
@@ -124,22 +126,17 @@ const TermsAndPrivacyModal = ({
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        "& .MuiPaper-root": {
-          width: {
-            xs: "90%",
-            sm: "80%",
-            md: "50%",
-          },
-          maxHeight: "80vh", // Set the maximum height to 80% of the viewport height
-          overflowY: "auto", // Enable vertical scrolling if the content exceeds the height
-        },
       }}
       onClick={handleBackdropClick}
     >
       <Paper
         className="custom-scrollbar "
         sx={{
-          width: "50%",
+          width: {
+            xs: "90%",
+            sm: "80%",
+            md: "50%",
+          },
           bgcolor: "background.paper",
           px: {
             xs: "18px",
@@ -151,6 +148,8 @@ const TermsAndPrivacyModal = ({
             sm: "22px",
             md: "32px",
           },
+          maxHeight: "80%",
+          overflowY: "auto",
         }}
       >
         <Typography variant="h6" gutterBottom>
@@ -281,10 +280,11 @@ const TermsAndPrivacyModal = ({
         <Snackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(!openSnackbar)}
-          message="User already exists"
           autoHideDuration={6000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        ></Snackbar>
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert severity="error">User already exists</Alert>
+        </Snackbar>
       </Paper>
     </Modal>
   );

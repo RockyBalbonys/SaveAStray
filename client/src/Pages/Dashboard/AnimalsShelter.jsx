@@ -51,6 +51,7 @@ const AnimalsShelter = () => {
     sex: null,
     age: null,
     size: null,
+    status: null,
   });
 
   useEffect(() => {
@@ -72,16 +73,20 @@ const AnimalsShelter = () => {
   }, []);
 
   const fetchFilteredPets = async () => {
+    console.log(user);
+    console.log(filters);
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/filteredPets`,
+        `${process.env.REACT_APP_SERVER_URL}/api/filteredShelterPets/${user}`, // Update to use user as a route parameter
         {
-          params: filters,
+          params: {
+            filters: filters,
+          },
         }
       );
 
       let filteredPets = response.data.filteredPets;
-
+      console.log(filteredPets);
       if (sortBy === "Ascending") {
         filteredPets = filteredPets.sort((a, b) => {
           return a.name.localeCompare(b.name);
@@ -92,7 +97,7 @@ const AnimalsShelter = () => {
         });
       }
 
-      setAnimals(response.data.filteredPets);
+      setAnimals(filteredPets);
     } catch (error) {
       console.error("Error fetching filtered pets:", error);
     }
