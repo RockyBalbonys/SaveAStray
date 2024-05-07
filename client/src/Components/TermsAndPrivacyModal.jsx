@@ -28,6 +28,8 @@ const TermsAndPrivacyModal = ({
   setUserExists,
   googleResponse,
   isGoogle,
+  loading,
+  setLoading,
 }) => {
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const TermsAndPrivacyModal = ({
   const handleContinueClick = async () => {
     // Redirect the user to another page if the checkbox is checked
     if (isChecked) {
+      setLoading(true);
       // google sign up
       if (isGoogle) {
         const response = googleResponse;
@@ -64,17 +67,23 @@ const TermsAndPrivacyModal = ({
                 })
                 .then(function (res) {
                   console.log(res);
+
+                  if (res.data.status == 200) {
+                    onClose();
+                    console.log("Dapat hindi ka nandito ");
+                    setLoading(false);
+                    navigate("/deadend");
+                  } else if (res.data.status == 407) {
+                    console.log(res.data);
+                    console.log("Dapat nandito ka");
+                    setLoading(false);
+                    setOpenSnackbar(true);
+                  }
                 })
                 .catch(function (err) {
                   console.log(err);
                 });
-              onClose();
-              console.log("Dapat hindi ka nandito ");
-              navigate("/deadend");
             } else if (res.data.status == 407) {
-              console.log(res.data);
-              console.log("Dapat nandito ka");
-              setOpenSnackbar(true);
             }
           })
           .catch(function (err) {
@@ -95,11 +104,13 @@ const TermsAndPrivacyModal = ({
           );
           if (response.data.status === 409) {
             setUserExists(true);
+            setLoading(false);
             console.log("Open snackbar: " + openSnackbar);
             setOpenSnackbar(true);
           } else {
             console.log("Response:", response.data);
             onClose();
+            setLoading(false);
             navigate("/deadend");
           }
         } catch (error) {
@@ -126,6 +137,7 @@ const TermsAndPrivacyModal = ({
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
+        filter: loading ? "blur(4px)" : undefined,
       }}
       onClick={handleBackdropClick}
     >

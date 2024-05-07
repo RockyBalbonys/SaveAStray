@@ -255,7 +255,18 @@ app.post("/api/googleSignup", async (req, res) => {
     const existingUser = await User.findOne({ email });
     const existingGoogleUser = await GoogleUser.findOne({ email });
 
-    if (existingUser || existingGoogleUser) {
+    if (existingUser && existingGoogleUser) {
+      console.log("Email is already taken");
+      res.send({
+        message: "Email is taken",
+        status: 407,
+      });
+    } else if (existingUser) {
+      res.send({
+        message: "Email is taken",
+        status: 407,
+      });
+    } else if (existingGoogleUser) {
       res.send({
         message: "Email is taken",
         status: 407,
@@ -285,6 +296,7 @@ app.post("/api/googleSignup", async (req, res) => {
         },
       });
     }
+    console.log("User created successfully");
   } catch (error) {
     console.error("Error verifying token:", error);
     res.status(401).json({ message: "Invalid Google Sign-In token" });

@@ -18,6 +18,7 @@ const useLogin = (selectedRole) => {
   const [userIn, setUserIn] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [userNotFound, setUserNotFound] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -36,6 +37,8 @@ const useLogin = (selectedRole) => {
   const loginSubmit = async (event) => {
     event.preventDefault();
 
+    setLoading(true);
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/login`,
@@ -49,6 +52,7 @@ const useLogin = (selectedRole) => {
       if (response.data.status === 200 && response.data.checked === true) {
         const user = response.data.user;
         dispatch(loginSuccess(formData.loginRole, user));
+        setLoading(false);
         navigate("/Animals");
       } else if (
         response.data.status === 400 &&
@@ -59,12 +63,14 @@ const useLogin = (selectedRole) => {
         // setUserIn(false);
         setUserNotFound(true);
         setPasswordError(false);
+        setLoading(false);
       } else if (
         response.data.status === 401 &&
         response.data.checked === true
       ) {
         setPasswordError(true);
         setUserNotFound(false);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -82,6 +88,8 @@ const useLogin = (selectedRole) => {
     userNotFound,
     dispatch,
     navigate,
+    loading,
+    setLoading,
   };
 };
 

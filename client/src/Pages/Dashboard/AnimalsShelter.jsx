@@ -75,32 +75,29 @@ const AnimalsShelter = () => {
   const fetchFilteredPets = async () => {
     console.log(user);
     console.log(filters);
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/api/filteredShelterPets/${user}`, // Update to use user as a route parameter
-        {
-          params: {
-            filters: filters,
-          },
-        }
-      );
 
-      let filteredPets = response.data.filteredPets;
-      console.log(filteredPets);
-      if (sortBy === "Ascending") {
-        filteredPets = filteredPets.sort((a, b) => {
-          return a.name.localeCompare(b.name);
-        });
-      } else if (sortBy === "Descending") {
-        filteredPets = filteredPets.sort((a, b) => {
-          return b.name.localeCompare(a.name);
-        });
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/api/filteredShelterPets/${user}`, // Update to use user as a route parameter
+      {
+        params: {
+          filters: filters,
+        },
       }
+    );
 
-      setAnimals(filteredPets);
-    } catch (error) {
-      console.error("Error fetching filtered pets:", error);
+    let filteredPets = response.data.filteredPets;
+    console.log(filteredPets);
+    if (sortBy === "Ascending") {
+      filteredPets = filteredPets.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+    } else if (sortBy === "Descending") {
+      filteredPets = filteredPets.sort((a, b) => {
+        return b.name.localeCompare(a.name);
+      });
     }
+
+    setAnimals(filteredPets);
   };
 
   const handleFilterChange = (filterType, value) => {

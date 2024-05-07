@@ -13,7 +13,7 @@ import Stack from "@mui/material/Stack";
 
 import passive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
-import catCover from "../../assets/images/forgot-image.png";
+import catCover from "../../assets/images/forgot-image.webp";
 
 export default function ForgotPassword() {
   const [inputData, setInputData] = useState({
