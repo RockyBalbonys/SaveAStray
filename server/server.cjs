@@ -255,10 +255,21 @@ app.post("/api/googleSignup", async (req, res) => {
     const existingUser = await User.findOne({ email });
     const existingGoogleUser = await GoogleUser.findOne({ email });
 
-    if (existingUser || existingGoogleUser) {
+    if (existingUser && existingGoogleUser) {
+      console.log("Email is already taken");
       res.send({
         message: "Email is taken",
-        status: 409,
+        status: 407,
+      });
+    } else if (existingUser) {
+      res.send({
+        message: "Email is taken",
+        status: 407,
+      });
+    } else if (existingGoogleUser) {
+      res.send({
+        message: "Email is taken",
+        status: 407,
       });
     } else {
       const verificationToken = generateVerificationToken();
@@ -285,6 +296,7 @@ app.post("/api/googleSignup", async (req, res) => {
         },
       });
     }
+    console.log("User created successfully");
   } catch (error) {
     console.error("Error verifying token:", error);
     res.status(401).json({ message: "Invalid Google Sign-In token" });
@@ -498,23 +510,29 @@ app.post("/api/sendAnswers", async (req, res) => {
 app.get("/getPet/:user", async (req, res) => {
   try {
     const userId = req.params.user;
+    console.log("params", req.params);
+    console.log("user id: " + userId);
 
     let petFilter = {};
 
-    if (userId) { // Check if user ID exists (logged-in user)
-      const user = await User.findOne({ _id: userId }); // Find user
+    if (userId) {
+      // Check if user ID exists (logged-in user)
+      const user =
+        (await User.findOne({ _id: userId })) ||
+        (await GoogleUser.findOne({ _id: userId })); // Find user
+      console.log("user " + user);
       if (user) {
         const role = user.role; // Access user role
+        console.log("role" + role);
 
         if (role === "Adoptive Pawrent") {
           petFilter = {}; // All pets for adoptive pawrents
         } else if (role === "Rescue Shelter") {
           petFilter = { shelter: userId }; // Pets belonging to the shelter
-        } else {
-          // Handle unauthorized roles (optional)
         }
       }
-    } else { // No user ID (not logged-in user)
+    } else {
+      // No user ID (not logged-in user)
       petFilter = {}; // Fetch all pets for non-logged-in users
     }
 
@@ -526,10 +544,10 @@ app.get("/getPet/:user", async (req, res) => {
   }
 });
 
-app.get("/getPet", async(req, res) => {
+app.get("/getPet", async (req, res) => {
   const allPets = await Pet.find();
   res.send({ status: 200, allPets });
-})
+});
 
 app.post("/api/fetchRequests", async (req, res) => {
   const { user } = req.body;
@@ -678,6 +696,31 @@ app.get("/api/filteredPets", async (req, res) => {
   }
 });
 
+app.get(`/api/filteredShelterPets/:user`, async (req, res) => {
+  try {
+    const { type, sex, age, size, status } = req.params.filters;
+    const userId = req.params.user;
+    const species = type;
+
+    console.log("filter shelter user id " + userId);
+    let filter = { shelter: userId };
+
+    if (species) filter.species = species;
+    if (sex) filter.sex = sex;
+    if (age) filter.age = age;
+    if (size) filter.size = size;
+    if (status) filter.status = status;
+
+    const filteredPets = await Pet.find(filter);
+    console.log(filteredPets);
+
+    res.status(200).json({ filteredPets });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Shelter Info API
 app.post("/api/updateShelterInfo", async (req, res) => {
   const userId = req.body.userId;
@@ -785,16 +828,16 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
       console.log(shelterInfo);
       if (shelterInfo) {
         let user = await GoogleUser.findOne({ _id: userId });
-        
+
         if (!user) {
           user = await User.findOne({ _id: userId });
         }
-        
+
         res.json({
           status: 200,
           shelterInfo,
           email: user.email,
-          isGoogleUser: user instanceof GoogleUser // This will be true if the user is from GoogleUser collection
+          isGoogleUser: user instanceof GoogleUser, // This will be true if the user is from GoogleUser collection
         });
       } else {
         res.json({
@@ -809,7 +852,6 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
     console.log("user not exists");
   }
 });
-
 
 app.post("/api/notifPawrent", async (req, res) => {
   const notif = req.body.response.data.updatedRequest;
@@ -892,16 +934,16 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
       console.log(pawrentInfo);
       if (pawrentInfo) {
         let user = await GoogleUser.findById(userId);
-        
+
         if (!user) {
           user = await User.findById(userId);
         }
-        
+
         res.json({
           status: 200,
           pawrentInfo,
           email: user.email,
-          isGoogleUser: user instanceof GoogleUser // This will be true if the user is from GoogleUser collection
+          isGoogleUser: user instanceof GoogleUser, // This will be true if the user is from GoogleUser collection
         });
       } else {
         res.json({
@@ -916,7 +958,6 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
     console.log("user not exists");
   }
 });
-
 
 // API Delete Google User Credentials
 app.delete("/api/deleteGoogleUserCredentials/:id", async (req, res) => {
@@ -1003,8 +1044,8 @@ app.post("/api/forgotPassword", async (req, res) => {
 
   console.log(existingAcc);
   if (existingAcc) {
-    generatedChangePassToken = changePassToken()
-    existingAcc.resetPasswordToken = generatedChangePassToken
+    generatedChangePassToken = changePassToken();
+    existingAcc.resetPasswordToken = generatedChangePassToken;
     existingAcc.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiry
     await existingAcc.save();
     async function sendChangePassEmail(existingAcc) {
@@ -1044,34 +1085,36 @@ app.post("/api/forgotPassword", async (req, res) => {
 });
 
 app.post("/api/repassword", async (req, res) => {
-  const { password, rePassword, user } = req.body
-  const userToChange = await User.findOne({_id: user})
+  const { password, rePassword, user } = req.body;
+  const userToChange = await User.findOne({ _id: user });
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  userToChange.password = hashedPassword
-  await userToChange.save()
-})
+  userToChange.password = hashedPassword;
+  await userToChange.save();
+});
 
 app.get("/api/forgot/changePass", async (req, res) => {
   const token = req.query.token;
   const user = await User.findOne({ resetPasswordToken: token });
 
   if (!user || user.resetPasswordExpires < Date.now()) {
-    return res.status(400).json({ status: 400, message: "Token not found or expired" });
+    return res
+      .status(400)
+      .json({ status: 400, message: "Token not found or expired" });
   }
 
   res.status(200).json({ status: 200 });
 });
 
 app.post("/api/updatePass", async (req, res) => {
-  const { inputData, token } = req.body
-  const user = await User.findOne({resetPasswordToken: token})
+  const { inputData, token } = req.body;
+  const user = await User.findOne({ resetPasswordToken: token });
   const hashedPassword = await bcrypt.hash(inputData, 12);
 
-  user.password = hashedPassword
-  await user.save()
-  console.log(user)
-})
+  user.password = hashedPassword;
+  await user.save();
+  console.log(user);
+});
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -1102,41 +1145,47 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
 });
 
 app.post("/api/createChat", async (req, res) => {
-  const { chatId, user, respondent } = req.body
-  const isContactExisting = await Contact.findOne({chatId})
-  let shelter
-  let pawrent
-  const recipientOne = await User.findOne({_id: user})
-  const recipientGoogleOne = await GoogleUser.findOne({_id: user})
+  const { chatId, user, respondent } = req.body;
+  const isContactExisting = await Contact.findOne({ chatId });
+  let shelter;
+  let pawrent;
+  const recipientOne = await User.findOne({ _id: user });
+  const recipientGoogleOne = await GoogleUser.findOne({ _id: user });
 
-  if (recipientOne.role === "Rescue Shelter" || recipientGoogleOne.role === "Rescue Shelter" ) {
-    shelter = user
-    pawrent = respondent
-  } else if(recipientOne.role === "Adoptive Pawrent" || recipientGoogleOne.role === "Adoptive Pawrent"){
-    pawrent = user
-    shelter = respondent
+  if (
+    recipientOne.role === "Rescue Shelter" ||
+    recipientGoogleOne.role === "Rescue Shelter"
+  ) {
+    shelter = user;
+    pawrent = respondent;
+  } else if (
+    recipientOne.role === "Adoptive Pawrent" ||
+    recipientGoogleOne.role === "Adoptive Pawrent"
+  ) {
+    pawrent = user;
+    shelter = respondent;
   }
 
-console.log("pawrent: ", pawrent)
-console.log("shelter: ", shelter)
+  console.log("pawrent: ", pawrent);
+  console.log("shelter: ", shelter);
 
   if (!isContactExisting) {
-    console.log(isContactExisting)
+    console.log(isContactExisting);
     const newContact = new Contact({
       chatId,
       pawrent,
-      shelter
-    })
+      shelter,
+    });
     const savedNewContact = await newContact.save();
     console.log(savedNewContact);
     res.json({
       status: 200,
-      savedNewContact
-    })
+      savedNewContact,
+    });
   } else {
-    console.log("chat existing: ", isContactExisting)
+    console.log("chat existing: ", isContactExisting);
   }
-})
+});
 
 //socket
 io.on("connection", (socket) => {

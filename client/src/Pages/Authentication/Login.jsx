@@ -29,6 +29,8 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
+import { ClipLoader, ClimbingBoxLoader, DotLoader } from "react-spinners";
+
 function Login() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -47,9 +49,12 @@ function Login() {
     dispatch,
     navigate,
     setPasswordError,
+    loading,
+    setLoading,
   } = useLogin(selectedRole);
 
   function handleCallbackResponse(response) {
+    setLoading(true);
     const cred = response.credential;
     console.log("Encoded JWT ID token: " + response.credential);
     axios
@@ -68,6 +73,7 @@ function Login() {
           );
           store.dispatch(loginSuccess(response.data.role, response.data.user));
           unsubscribe();
+          setLoading(false);
           navigate("/Animals");
         } else if (
           response.data.status === 400 /*  &&
@@ -82,6 +88,7 @@ function Login() {
           unsubscribe();
           setLoginAttempted(true);
           setUserIn(false);
+          setLoading(false);
         }
       })
       .catch(function (err) {
@@ -104,7 +111,7 @@ function Login() {
 
   return (
     <>
-      <div className="bgLogin h-screen w-screen">
+      <div className="bgLogin h-screen w-screen relative flex justify-center items-center">
         <LoginCard
           role={formData.loginRole}
           setRole={setSelectedRole} // Pass setSelectedRole instead of setRole
@@ -116,7 +123,14 @@ function Login() {
           // loginAttempted={loginAttempted}
           passwordError={passwordError}
           userNotFound={userNotFound}
+          loading={loading}
         />
+        {loading && (
+          <DotLoader
+            cssOverride={{ position: "absolute", zIndex: 1 }}
+            color="orange"
+          />
+        )}
       </div>
     </>
   );
@@ -135,6 +149,7 @@ function LoginCard({
   // loginAttempted,
   passwordError,
   userNotFound,
+  loading,
 }) {
   const showPassIcon = showPass ? <VisibilityIcon /> : <VisibilityOffIcon />;
   const showPassText = showPass ? "text" : "password";
@@ -151,14 +166,12 @@ function LoginCard({
             sm: "80%",
             md: "70%",
           },
-          height: {
-            xs: "90%",
-            sm: "90%",
-            md: "80%",
-          },
+          height: "fit-content",
           borderRadius: "12px",
           boxShadow: "0px 0px 16px 0px rgba(0, 0, 0, 0.25)",
           overflow: "auto",
+          position: "relative",
+          filter: loading ? "blur(4px)" : undefined,
         }}
       >
         <Grid container sx={{ width: "100%", height: "100%" }}>
@@ -199,7 +212,7 @@ function LoginCard({
           </Grid>
 
           <Grid item xs={12} sm={12} md={6} order={{ xs: 1, sm: 1, md: 2 }}>
-            <div className="md:p-8 lg:p-8 p-6 sm:p-8 lg:py-18 flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
+            <div className="md:p-8 lg:p-8 p-6 sm:p-8  flex flex-col items-center w-full h-full justify-center border-2 border-white bg-white">
               <Tooltip title="Back to Home">
                 <IconButton sx={{ alignSelf: "flex-start" }}>
                   <Link to={"/"}>
@@ -207,7 +220,7 @@ function LoginCard({
                   </Link>
                 </IconButton>
               </Tooltip>
-              <p className="text-[24px] text-[#FF7A00] mb-9">Login Account</p>
+              <p className="text-[24px] text-[#FF7A00] ">Login Account</p>
               <div className="text-[#FF7A00] text-[12px] flex flex-col items-center justify-center w-full">
                 <FormControl>
                   <RadioGroup
@@ -246,7 +259,6 @@ function LoginCard({
                     sm: "90%",
                     md: "70%",
                   },
-                  mt: "28px",
                 }}
               >
                 <InputLabel htmlFor="email" shrink={false} sx={InputLabelStyle}>
@@ -344,7 +356,7 @@ function LoginCard({
                   </FormHelperText>
                 )}
               </FormControl>
-              <div className="flex justify-around px-5 w-full text-[#FF7A00] mt-2 mb-9">
+              <div className="flex justify-around px-5 text-center w-full text-[#FF7A00] mt-2 mb-9">
                 <p className="font-light cursor-pointer">
                   <Link to="/forgot">Forgot Password?</Link>
                 </p>
