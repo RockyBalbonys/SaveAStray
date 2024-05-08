@@ -7,7 +7,7 @@ import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
 import useAuth from "../../hooks/useAuth";
 import { initializeApp } from "firebase/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { format } from "date-fns";
+import { format, setDate } from "date-fns";
 
 // mui components
 import Avatar from "@mui/material/Avatar";
@@ -95,6 +95,9 @@ const AccountForm = () => {
           },
         }
       );
+
+      if (response.data.status === 400) {
+      }
       console.log(response);
       const { pawrentInfo, email, isGoogleUser } = response.data;
       setPawrentInfo({
@@ -113,11 +116,12 @@ const AccountForm = () => {
   }, [user]);
 
   const handleSaveChanges = () => {
+    console.log(user);
     axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`,
-        pawrentInfo
-      )
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, {
+        pawrentInfo,
+        user,
+      })
       .then(function (response) {
         console.log(response);
         fetchPawrentInfo(user);
@@ -282,7 +286,7 @@ const AccountForm = () => {
   );
 };
 
-const PersonalInfoCard = ({ formData, onChange, dateValue, setDate }) => {
+const PersonalInfoCard = ({ formData, onChange, dateValue }) => {
   const handleDateChange = (date) => {
     const dateString = format(date, "MM/dd/yyyy");
     console.log(dateString);
@@ -290,6 +294,10 @@ const PersonalInfoCard = ({ formData, onChange, dateValue, setDate }) => {
     console.log("date value: " + dateString);
     onChange(dateString, "birthdate", dateString);
   };
+
+  useEffect(() => {
+    console.log(formData.birthdate);
+  }, [formData.birthdate]);
 
   return (
     <FormPaper className="py-6 px-4">

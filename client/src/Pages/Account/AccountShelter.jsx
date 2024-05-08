@@ -62,7 +62,7 @@ function AccountShelter() {
       };
       setIsLoading(false);
       // Update inputData state with fetchedData
-    }, 2000); // Simulate delay (adjust as needed)
+    }, 1000); // Simulate delay (adjust as needed)
   }, []);
 
   if (isLoading) {
@@ -670,6 +670,7 @@ const DeleteAcc = ({ forcedLogout }) => {
       </Typography>
       <Button
         variant="contained"
+        color="error"
         sx={{
           color: "white",
           textTransform: "none",
