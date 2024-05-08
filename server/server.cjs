@@ -1102,9 +1102,6 @@ app.post("/api/forgotPassword", async (req, res) => {
   }
 });
 
-
-
-
 app.post("/api/repassword", async (req, res) => {
   const { password, rePassword, user } = req.body;
   const userToChange = await User.findOne({ _id: user });
@@ -1126,24 +1123,28 @@ app.get("/api/forgot/changePass", async (req, res) => {
 });
 
 app.post("/api/updatePass", async (req, res) => {
-  const { inputData, token } = req.body
-  const user = await User.findOne({resetPasswordToken: token})
-  const hashedPassword = await bcrypt.hash(inputData, 12);
+  const { inputData, token } = req.body;
+  console.log(inputData.password);
+  const user = await User.findOne({ resetPasswordToken: token });
+  const hashedPassword = await bcrypt.hash(inputData.password, 12);
 
-  user.password = hashedPassword
-  const newUser = await user.save()
-  if(newUser){
+  user.password = hashedPassword;
+  const newUser = await user.save();
+  if (newUser) {
+    newUser.resetPasswordExpires = undefined;
+    newUser.resetPasswordToken = undefined;
+    newUser.save();
     res.json({
       status: 200,
-      message: "password change success"
-    })
-  }else{
+      message: "password change success",
+    });
+  } else {
     res.json({
       status: 400,
-      message: "password change unsuccessful"
-    })
+      message: "password change unsuccessful",
+    });
   }
-})
+});
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -1174,20 +1175,22 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
 });
 
 app.post("/api/createChat", async (req, res) => {
-  const { chatId, user, respondent } = req.body
-  const isContactExisting = await Contact.findOne({chatId})
-  let shelter
-  let pawrent
-  const recipient = await User.findOne({_id: user}) || await GoogleUser.findOne({_id: user}) 
+  const { chatId, user, respondent } = req.body;
+  const isContactExisting = await Contact.findOne({ chatId });
+  let shelter;
+  let pawrent;
+  const recipient =
+    (await User.findOne({ _id: user })) ||
+    (await GoogleUser.findOne({ _id: user }));
   //const recipientGoogleOne = await GoogleUser.findOne({_id: user})
-console.log("req.body: ", req.body)
-console.log("recipient: ", recipient.role)
+  console.log("req.body: ", req.body);
+  console.log("recipient: ", recipient.role);
   if (recipient.role === "Rescue Shelter") {
-    shelter = user
-    pawrent = respondent
-  } else if(recipient.role === "Adoptive Pawrent"){
-    pawrent = user
-    shelter = respondent
+    shelter = user;
+    pawrent = respondent;
+  } else if (recipient.role === "Adoptive Pawrent") {
+    pawrent = user;
+    shelter = respondent;
   }
 
   console.log("pawrent: ", pawrent);
