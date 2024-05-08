@@ -151,28 +151,6 @@ function RequestPawrent() {
                       </Typography>
                     </div>
                   </div>
-                  <Tooltip title="Send Message">
-                    <Button
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "#EE7200",
-                        minWidth: "50px",
-                        minHeight: "50px",
-                        padding: "10px",
-                      }}
-                      onClick={handleClick}
-                    >
-                      <img
-                        src={actionImage}
-                        alt="Action"
-                        style={{
-                          minWidth: "24px",
-                          minHeight: "24px",
-                          color: "#FFFFFF",
-                        }}
-                      />
-                    </Button>
-                  </Tooltip>
                 </div>
               </div>
             ))

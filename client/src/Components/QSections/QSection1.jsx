@@ -10,10 +10,12 @@ import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { useParams } from "react-router-dom";
 import { useEffect, memo } from "react";
+import useAuth from "../../hooks/useAuth";
 
 const QSection1 = () => {
   const { section1, updateSection1 } = useQuestionnaireContext();
   const { email, bestDescribe } = section1;
+  const { role } = useAuth();
 
   useEffect(() => {
     console.table(section1);

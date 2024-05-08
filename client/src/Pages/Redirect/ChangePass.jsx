@@ -37,7 +37,7 @@ export default function ChangePass() {
         setTokenStatus(true);
       } else {
         setTokenStatus(false);
-        navigate("*")
+        navigate("*");
       }
     })
     .catch(function (error) {

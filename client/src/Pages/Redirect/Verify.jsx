@@ -25,6 +25,8 @@ import topImage from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import { PawrentIcon } from "../../assets/icons/RoleIcons/PawrentIcon";
 import ShelterIcon from "../../assets/icons/RoleIcons/ShelterIcon";
+import { loginSuccess } from "../../tools/authActions";
+import { useDispatch } from "react-redux";
 
 export default function Verify() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -61,6 +63,9 @@ export default function Verify() {
   // navigate router
   const navigate = useNavigate();
 
+  // dispatch
+  const dispatch = useDispatch();
+
   const handleRoleSubmit = () => {
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/verify?token=${token}`, {
@@ -68,9 +73,16 @@ export default function Verify() {
       })
       .then((response) => {
         console.log("Response from POST request:", response.data);
-        const splitString = response.data.role.split(" ");
+        const splitString = response.data.updatedUser.role.split(" ");
         const role = splitString[1].toLowerCase();
         console.log(role);
+        console.log(response.data.updatedUser);
+        dispatch(
+          loginSuccess(
+            response.data.updatedUser.role,
+            response.data.updatedUser._id
+          )
+        );
         navigate(`/manage/${role}`);
       })
       .catch((error) => {
