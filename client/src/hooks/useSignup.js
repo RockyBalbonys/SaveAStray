@@ -12,6 +12,7 @@ const UseSignup = () => {
 
   const [isGoogle, setIsGoogle] = useState(false);
   const [googleResponse, setGoogleResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -29,6 +30,8 @@ const UseSignup = () => {
     handleChange,
     userExists,
     setUserExists,
+    loading,
+    setLoading,
   };
 };
 

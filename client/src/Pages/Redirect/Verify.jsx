@@ -68,7 +68,10 @@ export default function Verify() {
       })
       .then((response) => {
         console.log("Response from POST request:", response.data);
-        navigate("/manage");
+        const splitString = response.data.role.split(" ");
+        const role = splitString[1].toLowerCase();
+        console.log(role);
+        navigate(`/manage/${role}`);
       })
       .catch((error) => {
         console.error("Error in POST request:", error);
