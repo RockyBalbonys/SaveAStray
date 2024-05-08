@@ -10,6 +10,11 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 
 import passive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
@@ -22,11 +27,13 @@ export default function ForgotPassword() {
 
   const [inputError, setInputError] = useState(false);
 
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
   const navigate = useNavigate();
 
   const changeHandler = (e) => {
     setInputData({ ...inputData, email: e.target.value });
-    console.log(inputData)
+    console.log(inputData);
   };
 
   function verifyEmail() {
@@ -42,6 +49,7 @@ export default function ForgotPassword() {
       })
       .then(function (response) {
         console.log(response);
+        setShowConfirmation(true);
       })
       .catch(function (err) {
         console.log(err);
@@ -151,6 +159,32 @@ export default function ForgotPassword() {
                 </Box>
               </Grid>
             </Grid>
+            <Dialog
+              open={showConfirmation}
+              onClose={() => setShowConfirmation(!showConfirmation)}
+              maxWidth={"md"}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              sx={{ p: "16px" }}
+            >
+              <DialogTitle>Password Reset Link Sent</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  A password reset link has been successfully sent to your email
+                  address. Please check your inbox (and spam/junk folder) for
+                  further instructions on how to reset your password. If you
+                  don't receive the email within a few minutes, please try again
+                  or contact support for assistance. Thank you.
+                </DialogContentText>
+                <DialogActions sx={{ p: "16px" }}>
+                  <Button
+                    onClick={() => setShowConfirmation(!showConfirmation)}
+                  >
+                    Close
+                  </Button>
+                </DialogActions>
+              </DialogContent>
+            </Dialog>
           </Paper>
         </Container>
       </Background>

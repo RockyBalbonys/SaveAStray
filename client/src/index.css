@@ -27,6 +27,9 @@
   .input-container {
     @apply flex flex-col sm:flex-row sm:items-center md:flex-row md:items-start lg:flex-row lg:justify-center lg:items-start w-full;
   }
+  .loader-container {
+    @apply fixed top-0 left-0 w-full h-full flex justify-center items-center z-50 bg-gray-900 bg-opacity-50;
+  }
 }
 /* Ito yung error pero hindi naman masama, READ ON this link: https://stackoverflow.com/questions/70665302/getting-the-error-nested-css-was-detected-but-css-nesting-has-not-been-configu */
 .custom-scrollbar {

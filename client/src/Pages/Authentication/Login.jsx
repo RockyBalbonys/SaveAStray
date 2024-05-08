@@ -46,6 +46,7 @@ function Login() {
     loginSubmit,
     passwordError,
     userNotFound,
+    setUserNotFound,
     dispatch,
     navigate,
     setPasswordError,
@@ -89,6 +90,7 @@ function Login() {
           // setLoginAttempted(true);
           // setUserIn(false);
           setLoading(false);
+          setUserNotFound(true);
         }
       })
       .catch(function (err) {
@@ -108,6 +110,9 @@ function Login() {
       size: "large",
     });
   }, []);
+
+  // state for snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   return (
     <>
