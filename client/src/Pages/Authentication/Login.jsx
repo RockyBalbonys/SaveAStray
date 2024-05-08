@@ -29,7 +29,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-import { ClipLoader, ClimbingBoxLoader } from "react-spinners";
+import { ClipLoader, ClimbingBoxLoader, DotLoader } from "react-spinners";
 
 function Login() {
   const location = useLocation();
@@ -126,7 +126,7 @@ function Login() {
           loading={loading}
         />
         {loading && (
-          <ClimbingBoxLoader
+          <DotLoader
             cssOverride={{ position: "absolute", zIndex: 1 }}
             color="orange"
           />

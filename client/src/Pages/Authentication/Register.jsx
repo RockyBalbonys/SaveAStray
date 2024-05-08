@@ -31,7 +31,7 @@ import UseSignup from "../../hooks/useSignup";
 
 // react functions
 import { Link } from "react-router-dom";
-import { ClimbingBoxLoader } from "react-spinners";
+import { ClimbingBoxLoader, DotLoader } from "react-spinners";
 
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
@@ -91,7 +91,7 @@ const Register = () => {
           setLoading={setLoading}
         />
         {loading && (
-          <ClimbingBoxLoader
+          <DotLoader
             cssOverride={{ position: "absolute", zIndex: 10000 }}
             color="orange"
           />

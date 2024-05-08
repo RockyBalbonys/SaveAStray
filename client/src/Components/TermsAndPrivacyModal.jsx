@@ -84,6 +84,9 @@ const TermsAndPrivacyModal = ({
                   console.log(err);
                 });
             } else if (res.data.status == 407) {
+              console.log(res.data);
+              setLoading(false);
+              setOpenSnackbar(true);
             }
           })
           .catch(function (err) {
