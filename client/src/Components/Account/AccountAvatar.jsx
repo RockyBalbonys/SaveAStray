@@ -29,7 +29,15 @@ export const AccountAvatar = ({
   let accountEmail = "";
 
   if (role === "Adoptive Pawrent") {
-    accountName = accountInfo.firstName + " " + accountInfo.lastName;
+    if (
+      accountInfo.firstName === undefined &&
+      accountInfo.lastName === undefined
+    ) {
+      accountName = undefined;
+    } else {
+      accountName = accountInfo.firstName + " " + accountInfo.lastName;
+    }
+    console.log(accountName);
     accountNum = accountInfo.phoneNumber;
     accountEmail = accountInfo.emailAddress;
   }
@@ -61,7 +69,7 @@ export const AccountAvatar = ({
               textAlign={"center"}
               fontWeight={600}
             >
-              {accountName.length < 2 ? "No name" : accountName}
+              {!accountName ? "Set Name" : accountName}
             </Typography>
           </Box>
           <Box
@@ -71,14 +79,14 @@ export const AccountAvatar = ({
               {/* TODO: Phone call icon */}
               <PhoneRoundedIcon />
               <Typography>
-                {!accountNum ? "No phone number" : accountNum}
+                {!accountNum ? "Set Phone Number" : accountNum}
               </Typography>
             </Stack>
             <Stack direction={"row"} sx={{ columnGap: "8px", width: "100%" }}>
               {/* TODO: email icon */}
               <LanguageRoundedIcon />
               <Typography noWrap>
-                {!accountEmail ? "No email" : accountEmail}
+                {!accountEmail ? "Set Email" : accountEmail}
               </Typography>
             </Stack>
           </Box>
