@@ -41,21 +41,21 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/verify", async (req, res) => {
   const token = req.query.token;
   try {
-    const gUser = await GoogleUser.findOne({ verificationToken: token });
-    const user = await User.findOne({ verificationToken: token });
+    const user =
+      (await GoogleUser.findOne({ verificationToken: token })) ||
+      (await User.findOne({ verificationToken: token }));
+
+    console.log(token);
+    console.log("user " + user);
+
     if (user) {
       role = req.body.role;
       user.verified = true;
       user.role = role;
       user.verificationToken = undefined;
       const updatedUser = await user.save();
-      res.send(updatedUser);
-    } else if (gUser) {
-      role = req.body.role;
-      gUser.role = role;
-      gUser.verificationToken = undefined;
-      const updatedUser = await gUser.save();
-      res.send(updatedUser);
+      console.log(updatedUser);
+      res.json({ updatedUser });
     } else {
       res.status(404).send({ message: "User not found" });
     }
@@ -64,24 +64,24 @@ app.post("/verify", async (req, res) => {
   }
 });
 
-app.get(`/verifyRole`, async (req, res) => {
-  const token = req.query.token;
+// app.get(`/verifyRole`, async (req, res) => {
+//   const token = req.query.token;
 
-  try {
-    const user = await User.findOne({ verificationToken: token });
+//   try {
+//     const user = await User.findOne({ verificationToken: token });
 
-    if (user) {
-      user.verified = true;
-      user.verificationToken = undefined;
-      const updatedUser = await user.save();
-      res.send(updatedUser);
-    } else {
-      res.status(404).send({ message: "User not found" });
-    }
-  } catch (err) {
-    console.log(err);
-  }
-});
+//     if (user) {
+//       user.verified = true;
+//       user.verificationToken = undefined;
+//       const updatedUser = await user.save();
+//       res.send(updatedUser);
+//     } else {
+//       res.status(404).send({ message: "User not found" });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
 
 app.post("/api/register", async (req, res) => {
   function generateVerificationToken() {
@@ -875,7 +875,6 @@ app.post("/api/notifPawrent", async (req, res) => {
 
 // Pawrent Info API
 app.post("/api/updatePawrentInfo", async (req, res) => {
-  const userId = req.body.userId;
   const {
     firstName,
     lastName,
@@ -885,10 +884,14 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
     birthdate,
     emailAddress,
     phoneNumber,
-  } = req.body;
+  } = req.body.pawrentInfo;
 
+  const userId = req.body.user;
+
+  console.log("update paw info " + userId);
   try {
     let pawrentInfo = await PawrentInfo.findOne({ userId });
+    console.log("update pawrent info " + pawrentInfo);
 
     if (!pawrentInfo) {
       pawrentInfo = new PawrentInfo({
@@ -902,7 +905,9 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
         emailAddress,
         phoneNumber,
       });
+      console.log("new pawrent info");
     } else {
+      pawrentInfo.userId = userId;
       pawrentInfo.firstName = firstName;
       pawrentInfo.lastName = lastName;
       pawrentInfo.homeAddress = homeAddress;
@@ -927,17 +932,18 @@ app.post("/api/updatePawrentInfo", async (req, res) => {
 //Fetch Pawrent Info API
 app.get("/api/pawrentInfo/:userId", async (req, res) => {
   const { userId } = req.params; // Use req.params instead of req.query
+  console.log("pawrent userid " + userId);
 
   if (userId) {
     try {
       const pawrentInfo = await PawrentInfo.findOne({ userId });
-      console.log(pawrentInfo);
-      if (pawrentInfo) {
-        let user = await GoogleUser.findById(userId);
+      console.log("pawrent info " + pawrentInfo);
 
-        if (!user) {
-          user = await User.findById(userId);
-        }
+      if (pawrentInfo) {
+        let user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
+        console.log("user email" + user.email);
 
         res.json({
           status: 200,
@@ -946,6 +952,7 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
           isGoogleUser: user instanceof GoogleUser, // This will be true if the user is from GoogleUser collection
         });
       } else {
+        console.log("pawrent info status 400");
         res.json({
           status: 400,
         });
@@ -1102,9 +1109,6 @@ app.post("/api/forgotPassword", async (req, res) => {
   }
 });
 
-
-
-
 app.post("/api/repassword", async (req, res) => {
   const { password, rePassword, user } = req.body;
   const userToChange = await User.findOne({ _id: user });
@@ -1126,24 +1130,28 @@ app.get("/api/forgot/changePass", async (req, res) => {
 });
 
 app.post("/api/updatePass", async (req, res) => {
-  const { inputData, token } = req.body
-  const user = await User.findOne({resetPasswordToken: token})
-  const hashedPassword = await bcrypt.hash(inputData, 12);
+  const { inputData, token } = req.body;
+  console.log(inputData.password);
+  const user = await User.findOne({ resetPasswordToken: token });
+  const hashedPassword = await bcrypt.hash(inputData.password, 12);
 
-  user.password = hashedPassword
-  const newUser = await user.save()
-  if(newUser){
+  user.password = hashedPassword;
+  const newUser = await user.save();
+  if (newUser) {
+    newUser.resetPasswordExpires = undefined;
+    newUser.resetPasswordToken = undefined;
+    newUser.save();
     res.json({
       status: 200,
-      message: "password change success"
-    })
-  }else{
+      message: "password change success",
+    });
+  } else {
     res.json({
       status: 400,
-      message: "password change unsuccessful"
-    })
+      message: "password change unsuccessful",
+    });
   }
-})
+});
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -1174,20 +1182,22 @@ app.get("/api/fetchContacts/:userId", async (req, res) => {
 });
 
 app.post("/api/createChat", async (req, res) => {
-  const { chatId, user, respondent } = req.body
-  const isContactExisting = await Contact.findOne({chatId})
-  let shelter
-  let pawrent
-  const recipient = await User.findOne({_id: user}) || await GoogleUser.findOne({_id: user}) 
+  const { chatId, user, respondent } = req.body;
+  const isContactExisting = await Contact.findOne({ chatId });
+  let shelter;
+  let pawrent;
+  const recipient =
+    (await User.findOne({ _id: user })) ||
+    (await GoogleUser.findOne({ _id: user }));
   //const recipientGoogleOne = await GoogleUser.findOne({_id: user})
-console.log("req.body: ", req.body)
-console.log("recipient: ", recipient.role)
+  console.log("req.body: ", req.body);
+  console.log("recipient: ", recipient.role);
   if (recipient.role === "Rescue Shelter") {
-    shelter = user
-    pawrent = respondent
-  } else if(recipient.role === "Adoptive Pawrent"){
-    pawrent = user
-    shelter = respondent
+    shelter = user;
+    pawrent = respondent;
+  } else if (recipient.role === "Adoptive Pawrent") {
+    pawrent = user;
+    shelter = respondent;
   }
 
   console.log("pawrent: ", pawrent);
