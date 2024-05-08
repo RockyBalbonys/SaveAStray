@@ -107,6 +107,8 @@ const AccountForm = () => {
     representativePhoneNumber: "",
   });
 
+  console.log(shelterInfo);
+
   const fetchShelterInfo = async (userId) => {
     try {
       const response = await axios.get(
@@ -137,12 +139,13 @@ const AccountForm = () => {
 
   const handleSaveChanges = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
-        shelterInfo
-      )
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`, {
+        shelterInfo,
+        user,
+      })
       .then(function (response) {
         console.log(response);
+        fetchShelterInfo(user);
       })
       .catch(function (error) {
         console.log(error);
