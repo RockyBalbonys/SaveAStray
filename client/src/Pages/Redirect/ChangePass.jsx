@@ -14,7 +14,6 @@ import Stack from "@mui/material/Stack";
 import passive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import catCover from "../../assets/images/change-pass-image.webp";
-import { useNavigate } from "react-router-dom";
 
 export default function ChangePass() {
   const searchParams = new URLSearchParams(window.location.search);
