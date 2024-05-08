@@ -9,7 +9,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
 // icons image imports
-import aboutHero from "../assets/images/aboutHero.png";
+import aboutHero from "../assets/images/aboutHero.webp";
 import pawBG from "../assets/images/Paw.png";
 
 // data text imports

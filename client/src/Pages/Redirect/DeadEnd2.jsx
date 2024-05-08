@@ -12,7 +12,7 @@ import Background from "../../Components/Background";
 // icons and images
 import passive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
-import dogCover from "../../assets/images/DeadEnd2.png";
+import dogCover from "../../assets/images/DeadEnd2.webp";
 
 // react router
 import { Link as RouterLink } from "react-router-dom";
