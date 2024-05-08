@@ -29,6 +29,8 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
 
+  console.log(typeof animalInfo.price);
+
   useEffect(() => {
     if (!open) {
       setAnimalInfo(animal);
@@ -65,27 +67,33 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
     try {
       setLoadingButton(true);
       // Update the pet information
-      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/updatePet`, {
-        _id,
-        name,
-        description,
-        species,
-        breed,
-        sex,
-        age,
-        color,
-        size,
-        price,
-        status,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/api/updatePet`,
+        {
+          _id,
+          name,
+          description,
+          species,
+          breed,
+          sex,
+          age,
+          color,
+          size,
+          price,
+          status,
+        }
+      );
       console.log(res);
 
       // After successfully updating the pet, fetch the updated list of pets
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
-        params: {
-          user: user
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,
+        {
+          params: {
+            user: user,
+          },
         }
-      });
+      );
       const allPets = response.data.allPets;
       setAnimals(allPets);
 

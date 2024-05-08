@@ -23,6 +23,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 
 // Custom Components
 import { FormPaper } from "../../Components/Paper/FormPaper";
@@ -486,6 +491,16 @@ const ResetPass = () => {
 const DeleteAcc = ({ forcedLogout }) => {
   const { user } = useAuth();
 
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const deleteUser = async () => {
     try {
       await axios.delete(
@@ -525,10 +540,32 @@ const DeleteAcc = ({ forcedLogout }) => {
             md: "216px",
           },
         }}
-        onClick={deleteUser}
+        onClick={handleClickOpen}
       >
         Delete Account
       </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Use Google's location service?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Let Google help apps determine location. This means sending
+            anonymous location data to Google, even when no apps are running.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FormPaper>
   );
 };

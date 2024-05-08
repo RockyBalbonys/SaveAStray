@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { format } from "date-fns";
 import { useState, memo, useEffect } from "react";
+import { resizer } from "../../tools/resizer";
 
 const QSection6 = () => {
   const { section6, updateSection6 } = useQuestionnaireContext();
@@ -33,24 +34,31 @@ const QSection6 = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
       // Check if the file is an image
       if (file.type.startsWith("image/")) {
-        // Check if the file size is within the limit (5MB)
-        if (file.size <= 5 * 1024 * 1024) {
-          // Convert the file to a data URL
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const imageBase64 = e.target.result;
-            setValidId(e.target.result);
-            setError(null);
-
-            updateSection6({ validID: imageBase64 });
-          };
-          reader.readAsDataURL(file);
-        } else {
-          setError("File size exceeds the limit of 5MB.");
-        }
+        // Resize the image
+        resizer(file)
+          .then((resizedImage) => {
+            // Check if the resized image size is within the limit (5MB)
+            if (resizedImage.size <= 5 * 1024 * 1024) {
+              // Convert the resized image to a data URL
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const imageBase64 = e.target.result;
+                setValidId(e.target.result);
+                setError(null);
+                updateSection6({ validID: imageBase64 });
+              };
+              reader.readAsDataURL(resizedImage);
+            } else {
+              setError("Resized file size exceeds the limit of 5MB.");
+            }
+          })
+          .catch((error) => {
+            setError("Error resizing image: " + error.message);
+          });
       } else {
         setError("Please upload an image file.");
       }
