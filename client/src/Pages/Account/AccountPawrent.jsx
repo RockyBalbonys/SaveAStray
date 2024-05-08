@@ -23,6 +23,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
 // Custom Components
 import { FormPaper } from "../../Components/Paper/FormPaper";
@@ -32,10 +40,15 @@ import Footer from "../../Components/PageComponent/Footer";
 // Icons
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 // Avatar Component
 import { AccountAvatar } from "../../Components/Account/AccountAvatar";
 import AccountDrawer from "../../Components/Account/AccountDrawer";
+
+// loader
+import { DotLoader } from "react-spinners";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
@@ -50,19 +63,30 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 function AccountPawrent() {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <>
-      <AccountHeader />
-      <AccountForm />
+      <div className="relative">
+        {isLoading && (
+          <div className="loader-container">
+            <DotLoader
+              color="orange"
+              cssOverride={{ position: "absolute", zIndex: 1000 }}
+            />
+          </div>
+        )}
+        <AccountHeader />
+        <AccountForm isLoading={isLoading} setIsLoading={setIsLoading} />
+        <AccountDrawer />
+      </div>
       <Footer />
-      <AccountDrawer />
     </>
   );
 }
 
 export default AccountPawrent;
 
-const AccountForm = () => {
+const AccountForm = ({ isLoading, setIsLoading }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -85,7 +109,11 @@ const AccountForm = () => {
   // profile picture
   const [profilePic, setProfilePic] = useState("");
 
+  // state for snackbar feedback
+  const [isSaveSuccess, setIsSaveSuccess] = useState(false);
+
   const fetchPawrentInfo = async (userId) => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/pawrentInfo/${userId}`,
@@ -96,8 +124,6 @@ const AccountForm = () => {
         }
       );
 
-      if (response.data.status === 400) {
-      }
       console.log(response);
       const { pawrentInfo, email, isGoogleUser } = response.data;
       setPawrentInfo({
@@ -106,6 +132,7 @@ const AccountForm = () => {
         isGoogleUser,
       });
       setProfilePic(pawrentInfo.dp);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -147,14 +174,20 @@ const AccountForm = () => {
   };
 
   const handleLogout = () => {
-    console.log("initial State: ", store.getState());
-    const unsubscribe = store.subscribe(() =>
-      console.log("Updated state: ", store.getState())
-    );
-    console.log("401");
-    store.dispatch(logout());
-    unsubscribe();
-    navigate("/login");
+    setIsLoading(true);
+    try {
+      console.log("initial State: ", store.getState());
+      const unsubscribe = store.subscribe(() =>
+        console.log("Updated state: ", store.getState())
+      );
+      console.log("401");
+      store.dispatch(logout());
+      unsubscribe();
+      setIsLoading(false);
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleFileChange = (event) => {
@@ -201,7 +234,7 @@ const AccountForm = () => {
   return (
     <>
       <Container sx={{ py: "64px" }}>
-        <Grid container>
+        <Grid container sx={{ filter: isLoading ? "blur(4px)" : undefined }}>
           <Grid
             item
             md={4}
@@ -240,7 +273,7 @@ const AccountForm = () => {
               {pawrentInfo &&
                 !pawrentInfo.isGoogleUser && ( // Check for shelterInfo and isGoogleUser
                   <Grid item sx={{ width: "100%" }}>
-                    <ResetPass />
+                    <ResetPass forcedLogout={handleLogout} />
                   </Grid>
                 )}
               <Grid item sx={{ width: "100%" }}>
@@ -410,12 +443,35 @@ const ContactInfoCard = ({ formData, onChange }) => {
   );
 };
 
-const ResetPass = () => {
+const ResetPass = ({ forcedLogout }) => {
   const { user } = useAuth();
   const [inputValue, setInputValue] = useState({
     password: "",
     rePassword: "",
   });
+
+  // state for showing password
+  const [showPass, setShowPass] = useState(false);
+  const [newPass, setNewPass] = useState(false);
+
+  // state for password is less than 8
+  const [isInvalid, setIsInvalid] = useState(false);
+
+  // state for dialog box
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleConfirmRePass = () => {
+    handleRepassword();
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleChangePass = (e) => {
     setInputValue({
@@ -433,11 +489,17 @@ const ResetPass = () => {
       })
       .then(function (response) {
         console.log(response);
+        console.log("etitis");
+        forcedLogout();
       })
       .catch(function (error) {
         console.log(error);
       });
   };
+
+  // check if both inputs are empty then disabled confirm pass button
+  const isInputEmpty =
+    inputValue.password.length === 0 || inputValue.rePassword.length === 0;
 
   return (
     <FormPaper className="py-6 px-4">
@@ -454,37 +516,119 @@ const ResetPass = () => {
             value={inputValue.password}
             name="password"
             label="Enter Current Password"
+            type={showPass ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPass(!showPass)}
+                  >
+                    {showPass ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
         <Grid item sm={6}>
           <TextField
-            type="password"
             onChange={handleChangePass}
             value={inputValue.rePassword}
             name="rePassword"
             fullWidth
             label="Enter New Password"
+            type={newPass ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setNewPass(!newPass)}
+                  >
+                    {newPass ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+          {isInvalid && (
+            <FormHelperText sx={{ color: "red" }}>
+              Password must be at least 8 characters long
+            </FormHelperText>
+          )}
         </Grid>
       </Grid>
       <Button
         variant="contained"
-        onClick={handleRepassword}
+        onClick={handleClickOpen}
         sx={{
           color: "white",
           textTransform: "none",
           width: "216px",
           borderRadius: "7px",
         }}
+        disabled={isInputEmpty}
       >
         Confirm Repassword
       </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth={"md"}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{ p: "16px" }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Confirm Password Change"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to change your password?
+            <br />
+            <br />
+            This action will update your{" "}
+            <span className="font-bold">account's login credentials.</span>{" "}
+            Please ensure that you{" "}
+            <span className="font-bold">remember your new password</span>, as
+            you will need it to access your account in the future. If you
+            proceed, your current password will be replaced with the new one.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: "16px" }}>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleConfirmRePass}
+            variant="contained"
+            autoFocus
+            sx={{ color: "white" }}
+          >
+            Change Password
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FormPaper>
   );
 };
 
 const DeleteAcc = ({ forcedLogout }) => {
   const { user } = useAuth();
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDelete = () => {
+    deleteUser();
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const deleteUser = async () => {
     try {
@@ -525,10 +669,45 @@ const DeleteAcc = ({ forcedLogout }) => {
             md: "216px",
           },
         }}
-        onClick={deleteUser}
+        onClick={handleClickOpen}
       >
         Delete Account
       </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth={"md"}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Confirm Account Deletion"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete your account?
+            <br />
+            <br />
+            This action is <span className="font-bold">irreversible</span> and
+            will result in the{" "}
+            <span className="font-bold">permanent loss of your account</span>{" "}
+            data. Please note that once your account is deleted, you will no
+            longer have access to your saved information, settings, and any
+            associated content. Proceed with caution.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleDelete}
+            color="error"
+            variant="contained"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FormPaper>
   );
 };

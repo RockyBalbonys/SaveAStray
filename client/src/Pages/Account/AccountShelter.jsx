@@ -22,6 +22,14 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
 import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 
 //Custom Components
 import { FormPaper } from "../../Components/Paper/FormPaper";
@@ -30,6 +38,8 @@ import Footer from "../../Components/PageComponent/Footer";
 // Icons
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import PhoneRoundedIcon from "@mui/icons-material/PhoneRounded";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 // Avatar Placeholder
 import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
@@ -107,6 +117,8 @@ const AccountForm = () => {
     representativePhoneNumber: "",
   });
 
+  console.log(shelterInfo);
+
   const fetchShelterInfo = async (userId) => {
     try {
       const response = await axios.get(
@@ -137,12 +149,13 @@ const AccountForm = () => {
 
   const handleSaveChanges = () => {
     axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`,
-        shelterInfo
-      )
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`, {
+        shelterInfo,
+        user,
+      })
       .then(function (response) {
         console.log(response);
+        fetchShelterInfo(user);
       })
       .catch(function (error) {
         console.log(error);
@@ -572,6 +585,29 @@ const ResetPass = () => {
     rePassword: "",
   });
 
+  // state for showing password
+  const [showPass, setShowPass] = useState(false);
+  const [newPass, setNewPass] = useState(false);
+
+  // state for password is less than 8
+  const [isInvalid, setIsInvalid] = useState(false);
+
+  // state for dialog box
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleConfirmRePass = () => {
+    handleRepassword();
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleChangePass = (e) => {
     setInputValue({
       ...inputValue,
@@ -594,6 +630,10 @@ const ResetPass = () => {
       });
   };
 
+  // check if both inputs are empty then disabled confirm pass button
+  const isInputEmpty =
+    inputValue.password.length === 0 || inputValue.rePassword.length === 0;
+
   return (
     <FormPaper className="py-6 px-4">
       <FormHeader color={"#EE7200"} header={"Reset Password"} />
@@ -609,17 +649,47 @@ const ResetPass = () => {
             value={inputValue.password}
             name="password"
             label="Enter Current Password"
+            type={showPass ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPass(!showPass)}
+                  >
+                    {showPass ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </Grid>
         <Grid item sm={6}>
           <TextField
-            type="password"
             onChange={handleChangePass}
             value={inputValue.rePassword}
             name="rePassword"
             fullWidth
             label="Enter New Password"
+            type={newPass ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setNewPass(!newPass)}
+                  >
+                    {newPass ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
+          {isInvalid && (
+            <FormHelperText sx={{ color: "red" }}>
+              Password must be at least 8 characters long
+            </FormHelperText>
+          )}
         </Grid>
       </Grid>
       <Button
@@ -634,12 +704,63 @@ const ResetPass = () => {
       >
         Confirm Repassword
       </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth={"md"}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{ p: "16px" }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Confirm Password Change"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to change your password?
+            <br />
+            <br />
+            This action will update your{" "}
+            <span className="font-bold">account's login credentials.</span>{" "}
+            Please ensure that you{" "}
+            <span className="font-bold">remember your new password</span>, as
+            you will need it to access your account in the future. If you
+            proceed, your current password will be replaced with the new one.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: "16px" }}>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleConfirmRePass}
+            variant="contained"
+            autoFocus
+            sx={{ color: "white" }}
+          >
+            Change Password
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FormPaper>
   );
 };
 
 const DeleteAcc = ({ forcedLogout }) => {
   const { user } = useAuth();
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDelete = () => {
+    deleteUser();
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const deleteUser = async () => {
     try {
@@ -677,10 +798,46 @@ const DeleteAcc = ({ forcedLogout }) => {
           width: "216px",
           borderRadius: "7px",
         }}
-        onClick={deleteUser}
+        onClick={handleClickOpen}
       >
         Delete Account
       </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth={"md"}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{ p: "16px" }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Confirm Account Deletion"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete your account?
+            <br />
+            <br />
+            This action is <span className="font-bold">irreversible</span> and
+            will result in the{" "}
+            <span className="font-bold">permanent loss of your account</span>{" "}
+            data. Please note that once your account is deleted, you will no
+            longer have access to your saved information, settings, and any
+            associated content. Proceed with caution.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ p: "16px" }}>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={handleDelete}
+            color="error"
+            variant="contained"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </FormPaper>
   );
 };

@@ -61,9 +61,9 @@ const useLogin = (selectedRole) => {
         dispatch(loginFailed());
         // setLoginAttempted(true);
         // setUserIn(false);
-        setUserNotFound(true);
         setPasswordError(false);
         setLoading(false);
+        setUserNotFound(true);
       } else if (
         response.data.status === 401 &&
         response.data.checked === true
@@ -86,6 +86,7 @@ const useLogin = (selectedRole) => {
     // handleCallbackResponse,
     passwordError,
     userNotFound,
+    setUserNotFound,
     dispatch,
     navigate,
     loading,

@@ -727,7 +727,8 @@ app.get(`/api/filteredShelterPets/:user`, async (req, res) => {
 
 // Shelter Info API
 app.post("/api/updateShelterInfo", async (req, res) => {
-  const userId = req.body.userId;
+  const userId = req.body.user;
+  console.log("update shel info " + userId);
   const {
     shelterName,
     shelterAddress,
@@ -744,7 +745,7 @@ app.post("/api/updateShelterInfo", async (req, res) => {
     representativeZipCode,
     representativeBirthdate,
     representativePhoneNumber,
-  } = req.body;
+  } = req.body.shelterInfo;
 
   try {
     let shelterInfo = await ShelterInfo.findOne({ userId });
@@ -769,6 +770,7 @@ app.post("/api/updateShelterInfo", async (req, res) => {
         representativePhoneNumber,
       });
     } else {
+      shelterInfo.userId = userId;
       shelterInfo.shelterName = shelterName;
       shelterInfo.shelterAddress = shelterAddress;
       shelterInfo.cityAddress = cityAddress;
@@ -785,6 +787,8 @@ app.post("/api/updateShelterInfo", async (req, res) => {
       shelterInfo.representativeBirthdate = representativeBirthdate;
       shelterInfo.representativePhoneNumber = representativePhoneNumber;
     }
+
+    console.log(shelterInfo);
 
     await shelterInfo.save();
 

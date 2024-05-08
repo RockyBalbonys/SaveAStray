@@ -4,7 +4,7 @@ import useLogin from "../../hooks/useLogin";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { store } from "../../tools/store";
-import { loginSuccess } from "../../tools/authActions";
+import { loginFailed, loginSuccess } from "../../tools/authActions";
 
 // icons and images
 import myPassive from "../../assets/images/top.png";
@@ -46,6 +46,7 @@ function Login() {
     loginSubmit,
     passwordError,
     userNotFound,
+    setUserNotFound,
     dispatch,
     navigate,
     setPasswordError,
@@ -86,9 +87,10 @@ function Login() {
           console.log("401");
           store.dispatch(loginFailed());
           unsubscribe();
-          setLoginAttempted(true);
-          setUserIn(false);
+          // setLoginAttempted(true);
+          // setUserIn(false);
           setLoading(false);
+          setUserNotFound(true);
         }
       })
       .catch(function (err) {
@@ -108,6 +110,9 @@ function Login() {
       size: "large",
     });
   }, []);
+
+  // state for snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   return (
     <>
