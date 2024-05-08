@@ -28,6 +28,8 @@ const TermsAndPrivacyModal = ({
   setUserExists,
   googleResponse,
   isGoogle,
+  loading,
+  setLoading,
 }) => {
   const navigate = useNavigate();
 
@@ -44,6 +46,7 @@ const TermsAndPrivacyModal = ({
   const handleContinueClick = async () => {
     // Redirect the user to another page if the checkbox is checked
     if (isChecked) {
+      setLoading(true);
       // google sign up
       if (isGoogle) {
         const response = googleResponse;
@@ -56,6 +59,7 @@ const TermsAndPrivacyModal = ({
           .then(function (res) {
             const data = res.data;
             console.log(data);
+
             if (res.data.status == 200) {
               axios
                 .post(`${process.env.REACT_APP_SERVER_URL}/api/googleSignup`, {
@@ -63,16 +67,23 @@ const TermsAndPrivacyModal = ({
                 })
                 .then(function (res) {
                   console.log(res);
+
+                  if (res.data.status == 200) {
+                    onClose();
+                    console.log("Dapat hindi ka nandito ");
+                    setLoading(false);
+                    navigate("/deadend");
+                  } else if (res.data.status == 407) {
+                    console.log(res.data);
+                    console.log("Dapat nandito ka");
+                    setLoading(false);
+                    setOpenSnackbar(true);
+                  }
                 })
                 .catch(function (err) {
                   console.log(err);
                 });
-              onClose();
-              navigate("/deadend");
-              console.log("Noooooooooo!");
-            } else if (res.data.status == 409) {
-              console.log(res.data);
-              setOpenSnackbar(true);
+            } else if (res.data.status == 407) {
             }
           })
           .catch(function (err) {
@@ -93,11 +104,13 @@ const TermsAndPrivacyModal = ({
           );
           if (response.data.status === 409) {
             setUserExists(true);
+            setLoading(false);
             console.log("Open snackbar: " + openSnackbar);
             setOpenSnackbar(true);
           } else {
             console.log("Response:", response.data);
             onClose();
+            setLoading(false);
             navigate("/deadend");
           }
         } catch (error) {
@@ -124,22 +137,18 @@ const TermsAndPrivacyModal = ({
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        "& .MuiPaper-root": {
-          width: {
-            xs: "90%",
-            sm: "80%",
-            md: "50%",
-          },
-          maxHeight: "80vh", // Set the maximum height to 80% of the viewport height
-          overflowY: "auto", // Enable vertical scrolling if the content exceeds the height
-        },
+        filter: loading ? "blur(4px)" : undefined,
       }}
       onClick={handleBackdropClick}
     >
       <Paper
         className="custom-scrollbar "
         sx={{
-          width: "50%",
+          width: {
+            xs: "90%",
+            sm: "80%",
+            md: "50%",
+          },
           bgcolor: "background.paper",
           px: {
             xs: "18px",
@@ -151,6 +160,8 @@ const TermsAndPrivacyModal = ({
             sm: "22px",
             md: "32px",
           },
+          maxHeight: "80%",
+          overflowY: "auto",
         }}
       >
         <Typography variant="h6" gutterBottom>
@@ -281,10 +292,11 @@ const TermsAndPrivacyModal = ({
         <Snackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(!openSnackbar)}
-          message="User already exists"
           autoHideDuration={6000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        ></Snackbar>
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert severity="error">User already exists</Alert>
+        </Snackbar>
       </Paper>
     </Modal>
   );

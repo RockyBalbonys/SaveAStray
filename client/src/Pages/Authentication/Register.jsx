@@ -31,6 +31,7 @@ import UseSignup from "../../hooks/useSignup";
 
 // react functions
 import { Link } from "react-router-dom";
+import { ClimbingBoxLoader } from "react-spinners";
 
 const Register = () => {
   const [showPass, setShowPass] = useState(false);
@@ -45,6 +46,8 @@ const Register = () => {
     setGoogleResponse,
     setUserExists,
     handleChange,
+    loading,
+    setLoading,
   } = UseSignup();
 
   function handleCallbackResponse(response) {
@@ -69,7 +72,7 @@ const Register = () => {
 
   return (
     <>
-      <div className="bgLogin h-screen w-screen">
+      <div className="bgLogin h-screen w-screen relative flex justify-center items-center">
         <SignupCard
           showPass={showPass}
           setShowPass={setShowPass}
@@ -84,7 +87,15 @@ const Register = () => {
           setGoogleResponse={setGoogleResponse}
           handleChange={handleChange}
           setUserExists={setUserExists}
+          loading={loading}
+          setLoading={setLoading}
         />
+        {loading && (
+          <ClimbingBoxLoader
+            cssOverride={{ position: "absolute", zIndex: 10000 }}
+            color="orange"
+          />
+        )}
       </div>
     </>
   );
@@ -106,6 +117,8 @@ function SignupCard({
   setGoogleResponse,
   handleChange,
   setUserExists,
+  loading,
+  setLoading,
 }) {
   const showPassIcon = showPass ? <VisibilityIcon /> : <VisibilityOffIcon />;
   const showPassText = showPass ? "text" : "password";
@@ -156,14 +169,11 @@ function SignupCard({
             sm: "80%",
             md: "70%",
           },
-          height: {
-            xs: "90%",
-            sm: "80%",
-            md: "80%",
-          },
+          height: "fit-content",
           borderRadius: "12px",
           boxShadow: "0px 0px 16px 0px rgba(0, 0, 0, 0.25)",
           overflow: "auto",
+          filter: loading || modalOpen ? "blur(4px)" : undefined,
         }}
       >
         <Grid container sx={{ width: "100%", height: "100%" }}>
@@ -176,9 +186,7 @@ function SignupCard({
                   </Link>
                 </IconButton>
               </Tooltip>
-              <p className="text-[24px] text-[#FF7A00] mb-9">
-                Create an Account
-              </p>
+              <p className="text-[24px] text-[#FF7A00]">Create an Account</p>
 
               {/* Email input */}
               <FormControl
@@ -339,6 +347,8 @@ function SignupCard({
                 setUserExists={setUserExists}
                 googleResponse={googleResponse}
                 isGoogle={isGoogle}
+                loading={loading}
+                setLoading={setLoading}
               />
 
               <div className="my-2 ml-8">

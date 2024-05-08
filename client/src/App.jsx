@@ -41,6 +41,7 @@ import Chat from "./Pages/Chat";
 import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
 import { AnimatePresence } from "framer-motion";
 import AnimalsPawrent from "./Pages/Dashboard/AnimalsPawrent";
+import Loader from "./Pages/Loader";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -61,6 +62,18 @@ function App() {
               <Route path="/forgot" element={<ForgotPassword />} />
               <Route path="/forgot/changePass" element={<ChangePass />} />
               {/* Route for manage account page */}
+              <Route
+                path="/manage"
+                element={
+                  (isLoggedIn &&
+                    (role === "Adoptive Pawrent" ? (
+                      <AccountPawrent />
+                    ) : (
+                      <AccountShelter />
+                    ))) || <Navigate to="/login" />
+                }
+              />
+
               <Route
                 path="/manage/pawrent"
                 element={
@@ -118,6 +131,7 @@ function App() {
               <Route path="/messages/t/:chatId" element={<Chat />} />
               <Route path="/terms of services" element={<TermsOfServices />} />
               <Route path="*" element={<NotFound />} />
+              <Route path="/loader" element={<Loader />} />
             </Routes>
           </AnimatePresence>
         </ThemeProvider>

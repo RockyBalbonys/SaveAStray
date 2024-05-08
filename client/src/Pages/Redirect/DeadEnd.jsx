@@ -12,7 +12,7 @@ import Background from "../../Components/Background";
 // icons and images
 import passive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
-import dogCover from "../../assets/images/dogCoverSmall.png";
+import dogCover from "../../assets/images/dogCoverSmall.webp";
 
 function DeadEnd() {
   return (
