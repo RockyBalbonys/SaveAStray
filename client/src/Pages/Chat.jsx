@@ -227,7 +227,6 @@ function Chatbox({ contacts }) {
 function Messages({ contactInfo, inputMessage /* , loading */ }) {
   const { user } = useAuth(); // Assuming useAuth provides user info
   const { name, online, chatId, conversation, dp, timestamp } = contactInfo;
-  console.log("contactInfo: " + contactInfo);
   // Ensure convo state updates when conversation changes
   const [convo, setConvo] = useState(conversation);
   const [userMessage, setUserMessage] = useState({

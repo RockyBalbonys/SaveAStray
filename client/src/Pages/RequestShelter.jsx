@@ -72,13 +72,15 @@ function RequestShelter() {
           respondent: request.respondent,
         }
       );
-
       // Navigate if success
       navigate(`/messages/t/${chatId}`);
     } catch (error) {
       // Handle errors if any
       console.error("Error creating chat:", error);
+      // Navigate if success
+      navigate(`/messages/t/${chatId}`);
     }
+
   };
 
   function generateChatId(senderId, receiverId) {

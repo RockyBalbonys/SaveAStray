@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import Background from "../../Components/Background";
 import Container from "@mui/material/Container";
@@ -23,7 +24,7 @@ export default function ChangePass() {
     rePassword: "",
   });
   const [newPassword, setNewPassword] = useState();
-
+  const navigate = useNavigate();
   const [inputError, setInputError] = useState(false);
 
   axios
@@ -32,10 +33,11 @@ export default function ChangePass() {
     )
     .then(function (response) {
       console.log(response);
-      if (response.status === 200) {
+      if (response.data.status === 200) {
         setTokenStatus(true);
       } else {
         setTokenStatus(false);
+        navigate("*")
       }
     })
     .catch(function (error) {

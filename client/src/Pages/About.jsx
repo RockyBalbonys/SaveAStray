@@ -18,7 +18,7 @@ import Donate from "../Components/PageComponent/Donate";
 import Footer from "../Components/PageComponent/Footer";
 
 // framer motion
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import OddIndexContent from "../Components/OddIndexContent";
 import EvenIndexContent from "../Components/EvenIndexContent";
 

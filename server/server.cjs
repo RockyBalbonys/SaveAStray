@@ -993,55 +993,76 @@ app.get("/api/changePassword", async (req, res) => {
 });
 
 app.post("/api/forgotPassword", async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.body.email;
   console.log("email: ", email);
+
   function changePassToken() {
     return crypto.randomBytes(16).toString("hex");
   }
 
-  const existingAcc = await User.findOne({ email });
+  const generatedChangePassToken = changePassToken();
 
-  console.log(existingAcc);
-  if (existingAcc) {
-    generatedChangePassToken = changePassToken()
-    existingAcc.resetPasswordToken = generatedChangePassToken
-    existingAcc.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiry
-    await existingAcc.save();
-    async function sendChangePassEmail(existingAcc) {
+  async function sendChangePassEmail(existingAcc) {
+    try {
+      // Create a Nodemailer transporter using SMTP
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.USER_PASSWORD,
+        },
+      });
+
+      let info = await transporter.sendMail({
+        from: process.env.USER_EMAIL,
+        to: existingAcc.email,
+        subject: "Change Password",
+        html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass?token=${generatedChangePassToken}" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
+      });
+      console.log("Change pass sent: ", info);
+    } catch (error) {
+      console.error("Error sending Change pass email:", error);
+      throw error; // Rethrow the error to be handled by the caller
+    }
+  }
+
+  try {
+    const existingAcc = await User.findOne({ email });
+    console.log("acc existing");
+
+    if (existingAcc) {
+      existingAcc.resetPasswordToken = generatedChangePassToken;
+      existingAcc.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiry
+      await existingAcc.save();
       try {
-        // Create a Nodemailer transporter using SMTP
-        let transporter = nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            user: process.env.USER_EMAIL,
-            pass: process.env.USER_PASSWORD,
-          },
+        await sendChangePassEmail(existingAcc);
+        res.json({
+          message: "check your email",
         });
-
-        let info = await transporter.sendMail({
-          from: process.env.USER_EMAIL,
-          to: existingAcc.email,
-          subject: "Change Password",
-          html: `Change pass here: <p><a href="${process.env.CLIENT_URL}/forgot/changePass?token=${generatedChangePassToken}" style="text-decoration: none; background-color: #FF8210; color: white; padding: 12px 25px; border-radius: 100px;"><strong>Change Pass</strong></a></p>`,
-        });
-        console.log("Change pass sent: ", info);
       } catch (error) {
         console.error("Error sending Change pass email:", error);
-        throw error; // Rethrow the error to be handled by the caller
+        res.status(500).json({
+          message: "Error sending Change pass email",
+          error: error.message,
+        });
       }
+    } else {
+      console.log("no acc");
+      res.status(404).json({
+        message: `no ${email} found!`,
+      });
     }
-    sendChangePassEmail(existingAcc);
-    res.json({
-      message: "check your email",
-    });
-  } else {
-    console.log("no acc");
-    res.json({
-      status: 200,
-      message: `no ${email} found!`,
+  } catch (error) {
+    console.error("Error finding user:", error);
+    res.status(500).json({
+      message: "Error finding user",
+      error: error.message,
     });
   }
 });
+
+
+
 
 app.post("/api/repassword", async (req, res) => {
   const { password, rePassword, user } = req.body
@@ -1057,7 +1078,7 @@ app.get("/api/forgot/changePass", async (req, res) => {
   const user = await User.findOne({ resetPasswordToken: token });
 
   if (!user || user.resetPasswordExpires < Date.now()) {
-    return res.status(400).json({ status: 400, message: "Token not found or expired" });
+    return res.json({ status: 400, message: "Token not found or expired" });
   }
 
   res.status(200).json({ status: 200 });
@@ -1066,11 +1087,21 @@ app.get("/api/forgot/changePass", async (req, res) => {
 app.post("/api/updatePass", async (req, res) => {
   const { inputData, token } = req.body
   const user = await User.findOne({resetPasswordToken: token})
-  const hashedPassword = await bcrypt.hash(inputData, 12);
+  const hashedPassword = await bcrypt.hash(inputData.password, 12);
 
   user.password = hashedPassword
-  await user.save()
-  console.log(user)
+  const newUser = await user.save()
+  if(newUser){
+    res.json({
+      status: 200,
+      message: "password change success"
+    })
+  }else{
+    res.json({
+      status: 400,
+      message: "password change unsuccessful"
+    })
+  }
 })
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
@@ -1106,13 +1137,14 @@ app.post("/api/createChat", async (req, res) => {
   const isContactExisting = await Contact.findOne({chatId})
   let shelter
   let pawrent
-  const recipientOne = await User.findOne({_id: user})
-  const recipientGoogleOne = await GoogleUser.findOne({_id: user})
-
-  if (recipientOne.role === "Rescue Shelter" || recipientGoogleOne.role === "Rescue Shelter" ) {
+  const recipient = await User.findOne({_id: user}) || await GoogleUser.findOne({_id: user}) 
+  //const recipientGoogleOne = await GoogleUser.findOne({_id: user})
+console.log("req.body: ", req.body)
+console.log("recipient: ", recipient.role)
+  if (recipient.role === "Rescue Shelter") {
     shelter = user
     pawrent = respondent
-  } else if(recipientOne.role === "Adoptive Pawrent" || recipientGoogleOne.role === "Adoptive Pawrent"){
+  } else if(recipient.role === "Adoptive Pawrent"){
     pawrent = user
     shelter = respondent
   }
@@ -1128,7 +1160,7 @@ console.log("shelter: ", shelter)
       shelter
     })
     const savedNewContact = await newContact.save();
-    console.log(savedNewContact);
+    console.log("savedNewContact: ", savedNewContact);
     res.json({
       status: 200,
       savedNewContact

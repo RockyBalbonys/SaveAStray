@@ -26,6 +26,7 @@ export default function ForgotPassword() {
 
   const changeHandler = (e) => {
     setInputData({ ...inputData, email: e.target.value });
+    console.log(inputData)
   };
 
   function verifyEmail() {

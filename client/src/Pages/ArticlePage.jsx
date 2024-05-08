@@ -22,20 +22,20 @@ const ArticlePage = () => {
   const limitedOtherArticles = otherArticles.slice(0, 4);
 
   // framer motion
-  const { scrollYProgress } = useScroll();
+  /* const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
     initial: 0.5,
-  });
+  }); */
 
   return (
     <>
-      <motion.div
+      {/* <motion.div
         className="w-screen bg-orange-600 h-[8px] fixed"
         style={{ scaleX, transformOrigin: "left" }}
-      />
+      /> */}
       <Button
         startIcon={<ArrowBackIcon />}
         sx={{ m: "34px 0 0 34px" }}
