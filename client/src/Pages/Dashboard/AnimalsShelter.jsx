@@ -79,9 +79,7 @@ const AnimalsShelter = () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/filteredShelterPets/${user}`, // Update to use user as a route parameter
       {
-        params: {
-          filters: filters,
-        },
+        params: filters
       }
     );
 
