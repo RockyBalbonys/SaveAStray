@@ -4,7 +4,7 @@ import useLogin from "../../hooks/useLogin";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { store } from "../../tools/store";
-import { loginSuccess } from "../../tools/authActions";
+import { loginFailed, loginSuccess } from "../../tools/authActions";
 
 // icons and images
 import myPassive from "../../assets/images/top.png";
@@ -86,8 +86,8 @@ function Login() {
           console.log("401");
           store.dispatch(loginFailed());
           unsubscribe();
-          setLoginAttempted(true);
-          setUserIn(false);
+          // setLoginAttempted(true);
+          // setUserIn(false);
           setLoading(false);
         }
       })
