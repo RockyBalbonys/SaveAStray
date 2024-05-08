@@ -10,10 +10,18 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
 
 import passive from "../../assets/images/top.png";
 import logo from "../../assets/icons/SAS_Logo4.png";
 import catCover from "../../assets/images/change-pass-image.webp";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import { IconButton } from "@mui/material";
 
 export default function ChangePass() {
   const searchParams = new URLSearchParams(window.location.search);
@@ -26,6 +34,16 @@ export default function ChangePass() {
   const [newPassword, setNewPassword] = useState();
   const [inputError, setInputError] = useState(false);
   const navigate = useNavigate();
+
+  const [showPass, setShowPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  const handleCloseDialog = () => {
+    setShowConfirmation(!showConfirmation);
+    navigate("/login");
+  };
 
   axios
     .get(
@@ -61,6 +79,7 @@ export default function ChangePass() {
       })
       .then(function (response) {
         console.log("Password Change Successfuly: ", response);
+        setShowConfirmation(true);
       })
       .catch(function (error) {
         console.log(error);
@@ -139,13 +158,20 @@ export default function ChangePass() {
                     >
                       New Password
                     </label>
-                    <input
-                      id="password"
-                      type="text"
-                      onChange={changeHandler}
-                      value={inputData.password}
-                      className="border-[#FF7A00] border-[0.882px] rounded-[7px] py-2 px-2"
-                    />
+                    <div className="relative">
+                      <input
+                        id="password"
+                        type={showPass ? "text" : "password"}
+                        onChange={changeHandler}
+                        value={inputData.password}
+                        className="border-[#FF7A00] border-[0.882px] rounded-[7px] py-2 px-2 w-full pr-14"
+                      />
+                      <span className="absolute right-4 top-0">
+                        <IconButton onClick={() => setShowPass(!showPass)}>
+                          {showPass ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </span>
+                    </div>
                     <div className="text-sm">
                       {inputError ? (
                         <span className="text-red-600">
@@ -163,13 +189,22 @@ export default function ChangePass() {
                     >
                       Confirm New Password
                     </label>
-                    <input
-                      id="rePassword"
-                      type="text"
-                      onChange={changeHandler}
-                      value={inputData.rePassword}
-                      className="border-[#FF7A00] border-[0.882px] rounded-[7px] py-2 px-2"
-                    />
+                    <div className="relative">
+                      <input
+                        id="rePassword"
+                        type={showNewPass ? "text" : "password"}
+                        onChange={changeHandler}
+                        value={inputData.rePassword}
+                        className="border-[#FF7A00] border-[0.882px] rounded-[7px] py-2 px-2 w-full pr-14"
+                      />
+                      <span className="absolute right-4 top-0">
+                        <IconButton
+                          onClick={() => setShowNewPass(!showNewPass)}
+                        >
+                          {showNewPass ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </span>
+                    </div>
                     <div className="text-sm">
                       {inputError ? (
                         <span className="text-red-600">
@@ -195,25 +230,39 @@ export default function ChangePass() {
                 </Box>
               </Grid>
             </Grid>
+            <Dialog
+              open={showConfirmation}
+              onClose={() => setShowConfirmation(!showConfirmation)}
+              maxWidth={"md"}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              sx={{ p: "16px" }}
+            >
+              <DialogTitle>Password Changed Successfully</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Your password has been successfully changed. <br />
+                  <br />
+                  You can now log in to your account using your new password.
+                  Please keep your new password secure and do not share it with
+                  anyone. If you have any concerns or questions, feel free to
+                  reach out to our support team for assistance. Thank you for
+                  using our services.
+                </DialogContentText>
+                <DialogActions sx={{ p: "16px" }}>
+                  <Button
+                    onClick={handleCloseDialog}
+                    variant="contained"
+                    sx={{ color: "white" }}
+                  >
+                    Go to login
+                  </Button>
+                </DialogActions>
+              </DialogContent>
+            </Dialog>
           </Paper>
         </Container>
       </Background>
-
-      {/* <div>
-        <input
-          type="password"
-          onChange={changeHandler}
-          value={inputData.password}
-          placeholder="Enter new password..."
-        />
-        <input
-          type="password"
-          onChange={changeHandler}
-          value={inputData.rePassword}
-          placeholder="Re-Enter new password..."
-        />
-        <button onClick={changePassword}>Change Password</button>
-      </div> */}
     </>
   );
 }
