@@ -360,7 +360,7 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
               flexGrow: 1,
               pr: "8px",
               overflowY: "auto",
-              mb: "18px",
+              mb: "12px",
             }}
           >
             <Box
