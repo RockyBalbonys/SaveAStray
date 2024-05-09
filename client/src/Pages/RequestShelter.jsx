@@ -20,6 +20,7 @@ import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { Link as RouterLink } from "react-router-dom";
+import { DotLoader } from "react-spinners";
 
 const headerStyles = {
   display: "flex",
@@ -58,12 +59,13 @@ function RequestShelter() {
   const { user } = useAuth();
   const [adoptionRequests, setAdoptionRequests] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSendMessage = async (request) => {
     const chatId = generateChatId(user, request.respondent);
     console.log("chatId " + chatId);
 
     try {
-      // TODO: api for createChat
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/createChat`,
         {
@@ -91,6 +93,7 @@ function RequestShelter() {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
         user,
@@ -101,6 +104,7 @@ function RequestShelter() {
           setAdoptionRequests(0); // Update state with transformed data
           console.log(adoptionRequests);
           console.log("No requests at the moment");
+          setIsLoading(false);
         } else {
           const transformedRequests = allAnswers.map(function (answer) {
             console.log(answer);
@@ -120,6 +124,7 @@ function RequestShelter() {
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
           console.log(transformedRequests);
+          setIsLoading(false);
         }
       })
       .catch(function (err) {
@@ -133,6 +138,7 @@ function RequestShelter() {
 
   const handleAcceptButton = (request) => {
     const { requestId, approvalStatus } = request;
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
         requestId,
@@ -150,6 +156,7 @@ function RequestShelter() {
           .catch(function (error) {
             console.log(error);
           });
+        setIsLoading(false);
       })
       .catch(function (err) {
         console.log(err);
@@ -190,7 +197,7 @@ function RequestShelter() {
       style={{
         overflowY: "auto",
         width: "100vw",
-        height: "100vh",
+        height: "auto",
         display: "flex",
         flexDirection: "column",
       }}
@@ -217,7 +224,15 @@ function RequestShelter() {
           furry companion!
         </Typography>
       </div>
-      <div className="bg-[#FAFAFB] h-full flex-grow">
+      <div className="bg-[#FAFAFB] h-[60vh] flex w-full">
+        {isLoading && (
+          <div className="loader-container">
+            <DotLoader
+              color="orange"
+              cssOverride={{ position: "absolute", zIndex: 1000 }}
+            />
+          </div>
+        )}
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
           {adoptionRequests.length > 0 ? (
             adoptionRequests.map((request, index) => (
@@ -359,7 +374,9 @@ function RequestShelter() {
             ))
           ) : (
             <>
-              <p>No adoption requests found.</p>
+              <Typography textAlign={"center"} variant="h6">
+                No Request Found
+              </Typography>
             </>
           )}
         </Container>
