@@ -24,6 +24,13 @@ import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
+import { useTheme } from "@mui/material";
+
+// loader
+import { DotLoader } from "react-spinners";
+
+// framer motion
+import { motion } from "framer-motion";
 
 const Chat = () => {
   const [contacts, setContacts] = useState([]);
@@ -71,7 +78,22 @@ const Chat = () => {
       <Navbar />
       <div className="bgLogin h-screen w-screen mt-[-64px]">
         {loading ? (
-          <div>Loading...</div>
+          <>
+            <div className="flex flex-col items-center space-y-2">
+              <DotLoader color="orange" />
+              <Typography
+                component={motion.div}
+                variant="subtitle2"
+                color={"white"}
+                animate={{
+                  x: [0, -10, 10, 0], // Animation sequence for x position
+                  transition: { duration: 2, repeat: Infinity }, // Animation duration and repetition
+                }}
+              >
+                Setting up the Chat Room...
+              </Typography>
+            </div>
+          </>
         ) : (
           <Container sx={{ height: "70%" }}>
             <Grid
@@ -100,6 +122,8 @@ export default Chat;
 
 // Create component for showing list of contacts
 function ContactListContainer({ contacts }) {
+  const theme = useTheme();
+
   return (
     <>
       <Box
@@ -111,6 +135,7 @@ function ContactListContainer({ contacts }) {
           flexDirection: "column",
           alignItems: "center",
           paddingY: "16px",
+          bgcolor: theme.palette.common.dirtyWhite,
         }}
       >
         <p className="mb-6 text-lg font-bold text-[#FF8210]">
@@ -297,6 +322,8 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
     }
   }
 
+  const theme = useTheme();
+
   return (
     <>
       <Box
@@ -334,14 +361,56 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
               width: "100%",
               height: "90%",
               overflow: "auto",
+              justifyContent: "flex-end",
+              py: "18px",
             }}
           >
             {convo.map((message, idx) => (
               <React.Fragment key={idx}>
                 {message.messageSender === user ? (
-                  <Box sx={{ textAlign: "end" }}>{message.content}</Box>
+                  <Box
+                    sx={{
+                      alignSelf: "flex-end",
+                      my: "6px",
+                      width: "60%",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: "fit-content",
+                        background: theme.palette.primary.main,
+                        color: theme.palette.common.white,
+                        p: "4px 6px",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      {message.content}
+                    </Box>
+                  </Box>
                 ) : (
-                  <Box sx={{ textAlign: "start" }}>{message.content}</Box>
+                  <Box
+                    sx={{
+                      alignSelf: "flex-start",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      my: "6px",
+                      width: "50%",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: "fit-content",
+                        background: "#fcfafa",
+                        p: "4px 6px",
+                        borderRadius: "12px",
+                        border: "0.7px solid #e7e7e7",
+                      }}
+                    >
+                      {message.content}
+                    </Box>
+                  </Box>
                 )}
               </React.Fragment>
             ))}

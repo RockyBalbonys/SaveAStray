@@ -80,7 +80,6 @@ function RequestShelter() {
       // Navigate if success
       navigate(`/messages/t/${chatId}`);
     }
-
   };
 
   function generateChatId(senderId, receiverId) {
@@ -104,6 +103,7 @@ function RequestShelter() {
           console.log("No requests at the moment");
         } else {
           const transformedRequests = allAnswers.map(function (answer) {
+            console.log(answer);
             const notificationCreatedAt = new Date(answer.timestamp);
             const formattedTime = formatDistanceToNow(notificationCreatedAt, {
               addSuffix: true,
