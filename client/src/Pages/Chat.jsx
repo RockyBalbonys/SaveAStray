@@ -110,7 +110,7 @@ console.log(sortedMessages);
             <Grid
               container
               component={Paper}
-              sx={{ height: "100%", borderRadius: "7px" }}
+              sx={{ height: "100%", borderRadius: "7px", overflow: "hidden" }}
             >
               {/* Contact List */}
               <Grid item xs={4} sx={{ height: "100%", width: "100%" }}>
@@ -243,22 +243,16 @@ function Chatbox({ contacts }) {
 
   return (
     <>
-      <Box sx={{ height: "100%" }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          {!chatId ? (
-            "No chat selected"
-          ) : (
-            <Messages contactInfo={contactInfo} />
-          )}
-        </Box>
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        {!chatId ? "No chat selected" : <Messages contactInfo={contactInfo} />}
       </Box>
     </>
   );
@@ -343,7 +337,14 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
         }}
       >
         {/* Chatbox messages content container */}
-        <Box sx={{ flexGrow: 1, height: "90%" }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            height: "90%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {/* Chatbox header */}
           <Box
             sx={{ display: "flex", alignItems: "center", columnGap: "16px" }}
@@ -363,64 +364,70 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
           {/* Chatbox messages content */}
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              height: "90%",
-              overflow: "auto",
-              justifyContent: "flex-end",
-              py: "18px",
+              flexGrow: 1,
+              pr: "8px",
+              overflowY: "auto",
+              mb: "12px",
             }}
           >
-            {convo.map((message, idx) => (
-              <React.Fragment key={idx}>
-                {message.messageSender === user ? (
-                  <Box
-                    sx={{
-                      alignSelf: "flex-end",
-                      my: "6px",
-                      width: "60%",
-                      display: "flex",
-                      justifyContent: "flex-end",
-                    }}
-                  >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              {convo.map((message, idx) => (
+                <React.Fragment key={idx}>
+                  {message.messageSender === user ? (
                     <Box
                       sx={{
-                        width: "fit-content",
-                        background: theme.palette.primary.main,
-                        color: theme.palette.common.white,
-                        p: "4px 6px",
-                        borderRadius: "12px",
+                        alignSelf: "flex-end",
+                        my: "6px",
+                        width: "60%",
+                        display: "flex",
+                        justifyContent: "flex-end",
                       }}
                     >
-                      {message.content}
+                      <Box
+                        sx={{
+                          width: "fit-content",
+                          background: theme.palette.primary.main,
+                          color: theme.palette.common.white,
+                          p: "4px 6px",
+                          borderRadius: "12px",
+                        }}
+                      >
+                        {message.content}
+                      </Box>
                     </Box>
-                  </Box>
-                ) : (
-                  <Box
-                    sx={{
-                      alignSelf: "flex-start",
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      my: "6px",
-                      width: "50%",
-                    }}
-                  >
+                  ) : (
                     <Box
                       sx={{
-                        width: "fit-content",
-                        background: "#fcfafa",
-                        p: "4px 6px",
-                        borderRadius: "12px",
-                        border: "0.7px solid #e7e7e7",
+                        alignSelf: "flex-start",
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        my: "6px",
+                        width: "50%",
                       }}
                     >
-                      {message.content}
+                      <Box
+                        sx={{
+                          width: "fit-content",
+                          background: "#fcfafa",
+                          p: "4px 6px",
+                          borderRadius: "12px",
+                          border: "0.7px solid #e7e7e7",
+                        }}
+                      >
+                        {message.content}
+                      </Box>
                     </Box>
-                  </Box>
-                )}
-              </React.Fragment>
-            ))}
+                  )}
+                </React.Fragment>
+              ))}
+            </Box>
           </Box>
         </Box>
 
