@@ -44,6 +44,17 @@ const Chat = () => {
     })
     .then(function (response) {
       const { messages } = response.data;
+const sortedMessages = messages.sort((a, b) => {
+  // Get the last chat of each conversation
+  const lastChatA = a.conversation[a.conversation.length - 1];
+  const lastChatB = b.conversation[b.conversation.length - 1];
+
+  // Compare the timestamps of the last chats
+  return new Date(lastChatB.timestamp) - new Date(lastChatA.timestamp);
+});
+
+console.log(sortedMessages);
+
       function setTimestamp(timestamp) {
         const notificationReceivedAt = new Date(timestamp);
         const formattedTime = formatDistanceToNow(notificationReceivedAt, {
@@ -124,6 +135,9 @@ export default Chat;
 function ContactListContainer({ contacts }) {
   const theme = useTheme();
 
+  // Sort contacts by timestamp in descending order
+  let sortedContact = contacts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  console.log(sortedContact)
   return (
     <>
       <Box
@@ -207,6 +221,7 @@ function ContactListContainer({ contacts }) {
     </>
   );
 }
+
 
 // Create component for chat based system
 function Chatbox({ contacts }) {
@@ -312,14 +327,6 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
     // Send the updated message to the server using the socketRef.current object
     socketRef.current.emit("send-message", userMessage);
     setUserMessage({ ...userMessage, content: "" });
-  }
-
-  function generateChatId(senderId, receiverId) {
-    if (senderId < receiverId) {
-      return `${senderId}_${receiverId}`;
-    } else {
-      return `${receiverId}_${senderId}`;
-    }
   }
 
   const theme = useTheme();

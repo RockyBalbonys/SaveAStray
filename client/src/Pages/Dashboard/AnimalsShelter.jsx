@@ -42,14 +42,12 @@ const AnimalsShelter = () => {
   const { isLoggedIn, user, role } = useAuth();
   const [loadingCards, setLoadingCards] = useState(false);
 
-  console.log({ animals });
-
   const isShelter = role === "Rescue Shelter";
 
   console.table(role);
 
   const [filters, setFilters] = useState({
-    type: null,
+    species: null,
     sex: null,
     age: null,
     size: null,
