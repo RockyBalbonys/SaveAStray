@@ -35,9 +35,6 @@ export const SelectShelter = ({ value, onChange, shelters }) => {
         <MenuItem value="" sx={{ fontSize: "14px" }} disabled>
           Select A Shelter
         </MenuItem>
-        {/* TODO:  1. Display menu items of shelters using map method
-        2. Show shelter icons or color
-        */}
         {shelters.map((shelter) => (
           <MenuItem
             key={shelter.userId}
