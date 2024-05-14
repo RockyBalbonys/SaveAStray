@@ -10,6 +10,7 @@ import axios from "axios";
 import useAuth from "../hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { useState, useEffect } from "react";
+import { DotLoader } from "react-spinners";
 
 const headerStyles = {
   display: "flex",
@@ -35,7 +36,10 @@ function RequestPawrent() {
   const [pawrentNotifs, setPawrentNotifs] = useState([]);
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchNotifs`, {
         user,
@@ -47,6 +51,7 @@ function RequestPawrent() {
           setPawrentNotifs(0); // Update state with transformed data
           console.log(pawrentNotifs);
           console.log("No requests at the moment");
+          setIsLoading(false);
         } else {
           const mappedPawrentNotifs = mappedNotifs.map((notif) => {
             const notificationReceivedAt = new Date(notif.timestamp); // Replace with actual timestamp or function to get it
@@ -61,6 +66,7 @@ function RequestPawrent() {
             };
           });
           setPawrentNotifs(mappedPawrentNotifs);
+          setIsLoading(false);
         }
       })
       .catch(function (err) {
@@ -104,7 +110,15 @@ function RequestPawrent() {
           furry companion!
         </Typography>
       </div>
-      <div className="bg-[#FAFAFB] flex-grow">
+      <div className="bg-[#FAFAFB] h-[60vh] flex w-full h-full">
+        {isLoading && (
+          <div className="loader-container">
+            <DotLoader
+              color="orange"
+              cssOverride={{ position: "absolute", zIndex: 1000 }}
+            />
+          </div>
+        )}
         <Container
           sx={{
             paddingY: "5rem",
@@ -155,7 +169,9 @@ function RequestPawrent() {
               </div>
             ))
           ) : (
-            <p>No adoption requests found.</p>
+            <Typography textAlign={"center"} variant="h6">
+              No Response Found
+            </Typography>
           )}
         </Container>
       </div>

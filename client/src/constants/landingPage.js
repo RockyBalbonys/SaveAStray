@@ -25,23 +25,23 @@ const pages = ["About", "Animals", "Learn", "Donate", "Contact"];
 const pages2 = [
   {
     name: "About",
-    path: "about",
+    path: "/about",
   },
   {
     name: "Animals",
-    path: "animals",
+    path: "/animals",
   },
   {
     name: "Learn",
-    path: "articles",
+    path: "/articles",
   },
   {
     name: "Donate",
-    path: "donate",
+    path: "/donate",
   },
   {
     name: "Contact",
-    path: "contact",
+    path: "/contact",
   },
 ];
 

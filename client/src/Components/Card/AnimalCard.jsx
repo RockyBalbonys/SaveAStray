@@ -19,6 +19,8 @@ const AnimalCard = ({ animals, height, width, setAnimals }) => {
   const [open, setOpen] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
 
+  console.log(animals);
+
   const handleClose = () => {
     setOpen(false);
     setOpenUpdate(false);

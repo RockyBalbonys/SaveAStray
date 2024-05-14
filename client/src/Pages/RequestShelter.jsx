@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Button,
   Typography,
@@ -20,6 +20,7 @@ import { useState, useEffect } from "react";
 import useAuth from "../hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { Link as RouterLink } from "react-router-dom";
+import { DotLoader } from "react-spinners";
 
 const headerStyles = {
   display: "flex",
@@ -58,12 +59,15 @@ function RequestShelter() {
   const { user } = useAuth();
   const [adoptionRequests, setAdoptionRequests] = useState([]);
 
+  console.log(adoptionRequests);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSendMessage = async (request) => {
     const chatId = generateChatId(user, request.respondent);
     console.log("chatId " + chatId);
 
     try {
-      // TODO: api for createChat
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/createChat`,
         {
@@ -80,7 +84,6 @@ function RequestShelter() {
       // Navigate if success
       navigate(`/messages/t/${chatId}`);
     }
-
   };
 
   function generateChatId(senderId, receiverId) {
@@ -91,16 +94,24 @@ function RequestShelter() {
     }
   }
 
+  // Compute a dependency value based on approval statuses
+  const approvalStatuses = useMemo(
+    () => adoptionRequests.map((request) => request.approvalStatus).join(","),
+    [adoptionRequests]
+  );
+
   useEffect(() => {
+    fetchRequests();
+  }, [approvalStatuses]);
+
+  const fetchRequests = () => {
+    setIsLoading(true);
     axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
-        user,
-      })
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, { user })
       .then(function (response) {
         const { allAnswers, respondent } = response.data;
         if (!respondent) {
           setAdoptionRequests(0); // Update state with transformed data
-          console.log(adoptionRequests);
           console.log("No requests at the moment");
         } else {
           const transformedRequests = allAnswers.map(function (answer) {
@@ -121,11 +132,13 @@ function RequestShelter() {
           setAdoptionRequests(transformedRequests); // Update state with transformed data
           console.log(transformedRequests);
         }
+        setIsLoading(false);
       })
       .catch(function (err) {
         console.log(err);
+        setIsLoading(false);
       });
-  }, []);
+  };
 
   /*   const handleClick = (redirectTo) => {
     navigate(redirectTo);
@@ -133,6 +146,7 @@ function RequestShelter() {
 
   const handleAcceptButton = (request) => {
     const { requestId, approvalStatus } = request;
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
         requestId,
@@ -150,6 +164,8 @@ function RequestShelter() {
           .catch(function (error) {
             console.log(error);
           });
+        fetchRequests();
+        setIsLoading(false);
       })
       .catch(function (err) {
         console.log(err);
@@ -159,6 +175,7 @@ function RequestShelter() {
 
   const handleRejectButton = (request) => {
     const { requestId, approvalStatus } = request;
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
         requestId,
@@ -176,6 +193,8 @@ function RequestShelter() {
           .catch(function (error) {
             console.log(error);
           });
+        fetchRequests();
+        setIsLoading(false);
       })
       .catch(function (err) {
         console.log(err);
@@ -190,7 +209,7 @@ function RequestShelter() {
       style={{
         overflowY: "auto",
         width: "100vw",
-        height: "100vh",
+        height: "auto",
         display: "flex",
         flexDirection: "column",
       }}
@@ -217,7 +236,15 @@ function RequestShelter() {
           furry companion!
         </Typography>
       </div>
-      <div className="bg-[#FAFAFB] h-full flex-grow">
+      <div className="bg-[#FAFAFB] h-[60vh] flex w-full">
+        {isLoading && (
+          <div className="loader-container">
+            <DotLoader
+              color="orange"
+              cssOverride={{ position: "absolute", zIndex: 1000 }}
+            />
+          </div>
+        )}
         <Container sx={{ padding: "1rem", paddingY: "5rem" }}>
           {adoptionRequests.length > 0 ? (
             adoptionRequests.map((request, index) => (
@@ -228,7 +255,12 @@ function RequestShelter() {
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
-                  background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
+                  background:
+                    index % 2 === 0
+                      ? request.approvalStatus !== "pending"
+                        ? "#cfcfcf"
+                        : "#FFF"
+                      : "#FFF0DE",
                   padding: "16px",
                   borderBottom: "1px solid #EE7200",
                   borderRadius: "7px",
@@ -246,9 +278,24 @@ function RequestShelter() {
                 >
                   <img src={request.imageURL} alt="" style={imageStyle} />
                   <div>
-                    <Typography>
-                      <strong>{request.name}</strong> requested an adoption
-                    </Typography>
+                    {request.approvalStatus === "pending" && (
+                      <Typography>
+                        <strong>{request.name}</strong> requested an adoption
+                      </Typography>
+                    )}
+                    {request.approvalStatus === "approved" && (
+                      <Typography>
+                        <strong>{request.name}</strong> adoption request has
+                        been approved
+                      </Typography>
+                    )}
+                    {request.approvalStatus === "rejected" && (
+                      <Typography>
+                        <strong>{request.name}</strong> adoption request has
+                        been rejected
+                      </Typography>
+                    )}
+
                     <Typography variant="caption" color="#2F4858">
                       {request.time}
                     </Typography>
@@ -276,8 +323,13 @@ function RequestShelter() {
                     <Tooltip title="Accept">
                       <Button
                         variant="contained"
-                        style={buttonStyle}
                         onClick={() => handleAcceptButton(request)}
+                        sx={{
+                          padding: "10px",
+                          minWidth: "auto",
+                          height: "100%",
+                          backgroundColor: "#EE7200",
+                        }}
                       >
                         <CheckIcon style={{ color: "#FFFFFF" }} />
                       </Button>
@@ -286,8 +338,13 @@ function RequestShelter() {
                     <Tooltip title="Reject">
                       <Button
                         variant="contained"
-                        style={buttonStyle}
                         onClick={() => handleRejectButton(request)}
+                        sx={{
+                          padding: "10px",
+                          minWidth: "auto",
+                          height: "100%",
+                          backgroundColor: "#EE7200",
+                        }}
                       >
                         <ClearIcon style={{ color: "#FFFFFF" }} />
                       </Button>
@@ -359,7 +416,9 @@ function RequestShelter() {
             ))
           ) : (
             <>
-              <p>No adoption requests found.</p>
+              <Typography textAlign={"center"} variant="h6">
+                No Request Found
+              </Typography>
             </>
           )}
         </Container>

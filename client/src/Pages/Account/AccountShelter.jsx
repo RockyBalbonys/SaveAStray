@@ -1,5 +1,5 @@
 // import react and other components
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { store, persistor } from "../../tools/store";
 import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
@@ -7,6 +7,7 @@ import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { format } from "date-fns";
 
 // import mui components
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -46,7 +47,9 @@ import avatar_placeholder from "../../assets/images/avatar_placeholder.png";
 import { AccountHeader } from "../../Components/Account/AccountHeader";
 import { AccountAvatar } from "../../Components/Account/AccountAvatar";
 import AccountDrawer from "../../Components/Account/AccountDrawer";
-import { format } from "date-fns";
+
+// loader
+import { DotLoader } from "react-spinners";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOyv2nyCcsDK0avw1qurZW1dapftwz5TA",
@@ -61,29 +64,39 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 function AccountShelter() {
-  const [isLoading, setIsLoading] = useState(true); // Initial loading state
+  const [isLoading, setIsLoading] = useState(false); // Initial loading state
 
-  useEffect(() => {
-    // Simulate asynchronous data fetching (replace with your actual logic)
-    setTimeout(() => {
-      const fetchedData = {
-        // ... your actual data
-        isGoogleUser: true, // Example value
-      };
-      setIsLoading(false);
-      // Update inputData state with fetchedData
-    }, 1000); // Simulate delay (adjust as needed)
-  }, []);
+  // useEffect(() => {
+  //   // Simulate asynchronous data fetching (replace with your actual logic)
+  //   setTimeout(() => {
+  //     const fetchedData = {
+  //       // ... your actual data
+  //       isGoogleUser: true, // Example value
+  //     };
+  //     setIsLoading(false);
+  //     // Update inputData state with fetchedData
+  //   }, 1000); // Simulate delay (adjust as needed)
+  // }, []);
 
-  if (isLoading) {
-    return <Typography>Loading...</Typography>;
-  }
+  // if (isLoading) {
+  //   return <Typography>Loading...</Typography>;
+  // }
 
   return (
     <>
-      <AccountHeader />
-      <AccountForm />
-      <AccountDrawer />
+      <div className="relative">
+        {isLoading && (
+          <div className="loader-container">
+            <DotLoader
+              color="orange"
+              cssOverride={{ position: "absolute", zIndex: 1000 }}
+            />
+          </div>
+        )}
+        <AccountHeader />
+        <AccountForm isLoading={isLoading} setIsLoading={setIsLoading} />
+        <AccountDrawer />
+      </div>
       <Footer />
     </>
   );
@@ -91,7 +104,7 @@ function AccountShelter() {
 
 export default AccountShelter;
 
-const AccountForm = () => {
+const AccountForm = ({ isLoading, setIsLoading }) => {
   const navigate = useNavigate();
 
   const { user } = useAuth();
@@ -117,9 +130,13 @@ const AccountForm = () => {
     representativePhoneNumber: "",
   });
 
+  const timerRef = useRef(null);
+
   console.log(shelterInfo);
 
   const fetchShelterInfo = async (userId) => {
+    setIsLoading(true);
+
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`,
@@ -131,6 +148,12 @@ const AccountForm = () => {
       );
       console.log(response);
       const { shelterInfo, email, isGoogleUser } = response.data;
+
+      if (response.data.status == 400) {
+        setShelterInfo({ ...shelterInfo, shelterAddress: email });
+        setIsLoading(false);
+      }
+
       setShelterInfo({
         ...shelterInfo,
         shelterEmailAddress: email,
@@ -138,6 +161,7 @@ const AccountForm = () => {
       });
 
       setProfilePic(shelterInfo.dp);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -148,6 +172,7 @@ const AccountForm = () => {
   }, [user]);
 
   const handleSaveChanges = () => {
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/updateShelterInfo`, {
         shelterInfo,
@@ -178,13 +203,19 @@ const AccountForm = () => {
   };
 
   const handleLogout = () => {
-    console.log("initial State: ", store.getState());
-    const unsubscribe = store.subscribe(() =>
-      console.log("Updated state: ", store.getState())
-    );
-    console.log("401");
-    store.dispatch(logout());
-    unsubscribe();
+    setIsLoading(true);
+    try {
+      console.log("initial State: ", store.getState());
+      const unsubscribe = store.subscribe(() =>
+        console.log("Updated state: ", store.getState())
+      );
+      console.log("401");
+      setIsLoading(false);
+      store.dispatch(logout());
+      unsubscribe();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // profile picture
@@ -200,11 +231,14 @@ const AccountForm = () => {
           console.log("file: ", file);
           const storageRef = ref(storage, `user/dp/${file.name}`);
           try {
+            setIsLoading(true);
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
             console.log("download url: ", downloadURL);
             console.log("Uploaded a blob or file!", snapshot);
             console.log("Success");
+            setIsLoading(false);
+            setProfilePic(downloadURL);
 
             if (downloadURL) {
               axios

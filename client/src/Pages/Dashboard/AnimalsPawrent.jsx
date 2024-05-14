@@ -40,8 +40,9 @@ import { motion } from "framer-motion";
 const AnimalsPawrent = () => {
   const [animals, setAnimals] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
-
   const isShelter = role === "Rescue Shelter";
+
+  console.log(animals);
 
   console.table(role);
 
@@ -50,6 +51,7 @@ const AnimalsPawrent = () => {
     sex: null,
     age: null,
     size: null,
+    shelter: null,
   });
 
   useEffect(() => {
@@ -159,6 +161,7 @@ const AnimalsPawrent = () => {
 
     // TODO: Shelter change logic
     setShelter(selectedShelter);
+    console.log(selectedShelter);
   };
 
   useEffect(() => {
@@ -269,6 +272,16 @@ const OptionSection = ({
   shelter,
   handleChangeShelter,
 }) => {
+  const [allShelterOption, setAllShelterOption] = useState([]);
+  const shelters = axios
+    .get(`${process.env.REACT_APP_SERVER_URL}/getShelterFilter`)
+    .then(function (response) {
+      const allShelter = response.data.allShelter;
+      setAllShelterOption(allShelter);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
   return (
     <Grid
       container
@@ -294,7 +307,11 @@ const OptionSection = ({
         <SearchInput value={searchValue} onChange={handleSearchInputChange} />
       </Grid>
       <Grid item order={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
-        <SelectShelter value={shelter} onChange={handleChangeShelter} />
+        <SelectShelter
+          shelters={allShelterOption}
+          value={shelter}
+          onChange={handleChangeShelter}
+        />
       </Grid>
     </Grid>
   );

@@ -64,6 +64,7 @@ const storage = getStorage(app);
 
 function AccountPawrent() {
   const [isLoading, setIsLoading] = useState(false);
+
   return (
     <>
       <div className="relative">
@@ -126,6 +127,13 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
 
       console.log(response);
       const { pawrentInfo, email, isGoogleUser } = response.data;
+      console.log(email);
+
+      if (response.data.status == 400) {
+        setPawrentInfo({ ...pawrentInfo, emailAddress: email });
+        setIsLoading(false);
+      }
+
       setPawrentInfo({
         ...pawrentInfo,
         emailAddress: email,
@@ -143,6 +151,7 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
   }, [user]);
 
   const handleSaveChanges = () => {
+    setIsLoading(true);
     console.log(user);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/updatePawrentInfo`, {
@@ -181,9 +190,9 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
         console.log("Updated state: ", store.getState())
       );
       console.log("401");
+      setIsLoading(false);
       store.dispatch(logout());
       unsubscribe();
-      setIsLoading(false);
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -200,11 +209,14 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
           console.log("file: ", file);
           const storageRef = ref(storage, `user/dp/${file.name}`);
           try {
+            setIsLoading(true);
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
             console.log("download url: ", downloadURL);
             console.log("Uploaded a blob or file!", snapshot);
             console.log("Success");
+            setIsLoading(false);
+            setProfilePic(downloadURL);
 
             if (downloadURL) {
               axios

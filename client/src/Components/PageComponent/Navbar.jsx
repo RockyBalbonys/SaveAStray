@@ -32,8 +32,11 @@ import { CustomButton } from "../Button/CustomButton";
 import IconLinks from "../IconLinks";
 
 import useAuth from "../../hooks/useAuth";
+import axios from "axios";
 
 const Navbar = () => {
+  const [profilePicture, setProfilePicture] = useState(null);
+  const { user } = useAuth();
   const location = useLocation();
   const isRoot = location.pathname === "/";
   const [isHero, setIsHero] = useState(true);
@@ -52,6 +55,29 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const fetchDp = async (userId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/getDp/${userId}`,
+        {
+          params: {
+            userId,
+          },
+        }
+      );
+
+      console.log(response);
+      const { profilePicture } = response.data;
+      setProfilePicture(profilePicture);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDp(user);
+  }, [user]);
 
   // drawer
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -80,6 +106,7 @@ const Navbar = () => {
             isRoot={isRoot}
             isHero={isHero}
             onClick={handleDrawerOpen}
+            profilePicture={profilePicture}
           />
         </Toolbar>
 
@@ -91,7 +118,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-function NavbarContent({ isRoot, isHero, onClick }) {
+function NavbarContent({ isRoot, isHero, onClick, profilePicture }) {
   const { isLoggedIn, user, role } = useAuth();
 
   // menu
@@ -179,7 +206,7 @@ function NavbarContent({ isRoot, isHero, onClick }) {
         <LearnMenu onClose={handleClose} anchorEl={anchorEl} open={open} />
 
         {isLoggedIn ? (
-          <DisplayUserComponents />
+          <DisplayUserComponents profilePicture={profilePicture} />
         ) : (
           <CustomButton
             variant="contained"
@@ -237,7 +264,7 @@ function LearnMenu({ onClose, anchorEl, open }) {
   );
 }
 
-function DisplayUserComponents() {
+function DisplayUserComponents({ profilePicture }) {
   const { isLoggedIn, user, role } = useAuth();
 
   let requestLink = "/login"; // Default link to login page
@@ -274,13 +301,13 @@ function DisplayUserComponents() {
             />
           </RouterLink>
         </Tooltip>
-        <AvatarRing />
+        <AvatarRing profilePicture={profilePicture} />
       </Box>
     </>
   );
 }
 
-const AvatarRing = () => {
+const AvatarRing = ({ profilePicture }) => {
   const { isLoggedIn, user, role } = useAuth();
 
   let manageAccountLink = "/login"; // Default link to login page
@@ -301,10 +328,10 @@ const AvatarRing = () => {
           component={RouterLink}
           to={manageAccountLink}
           alt={SAS_Logo}
-          src={SAS_Logo}
+          src={!profilePicture ? SAS_Logo : profilePicture}
           sx={{
             boxShadow: "0px 0px 6.548px 3.274px rgba(255, 161, 52, 0.30)",
-            border: "5px solid #EE7200",
+            border: "3px solid #EE7200",
           }}
         />
       </Tooltip>
