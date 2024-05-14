@@ -1,5 +1,5 @@
 // import react and other components
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { store, persistor } from "../../tools/store";
 import { loginFailed, loginSuccess, logout } from "../../tools/authActions";
@@ -130,10 +130,13 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
     representativePhoneNumber: "",
   });
 
+  const timerRef = useRef(null);
+
   console.log(shelterInfo);
 
   const fetchShelterInfo = async (userId) => {
     setIsLoading(true);
+
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`,
@@ -145,6 +148,12 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
       );
       console.log(response);
       const { shelterInfo, email, isGoogleUser } = response.data;
+
+      if (response.data.status == 400) {
+        setShelterInfo({ ...shelterInfo, shelterAddress: email });
+        setIsLoading(false);
+      }
+
       setShelterInfo({
         ...shelterInfo,
         shelterEmailAddress: email,

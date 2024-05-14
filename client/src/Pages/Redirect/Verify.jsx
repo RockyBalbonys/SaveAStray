@@ -83,6 +83,7 @@ export default function Verify() {
             response.data.updatedUser._id
           )
         );
+        console.log("login success");
         navigate(`/manage/${role}`);
       })
       .catch((error) => {

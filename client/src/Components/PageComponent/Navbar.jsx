@@ -41,8 +41,6 @@ const Navbar = () => {
   const isRoot = location.pathname === "/";
   const [isHero, setIsHero] = useState(true);
 
-  console.log(user);
-
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;

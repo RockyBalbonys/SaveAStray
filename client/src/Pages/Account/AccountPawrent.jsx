@@ -127,6 +127,13 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
 
       console.log(response);
       const { pawrentInfo, email, isGoogleUser } = response.data;
+      console.log(email);
+
+      if (response.data.status == 400) {
+        setPawrentInfo({ ...pawrentInfo, emailAddress: email });
+        setIsLoading(false);
+      }
+
       setPawrentInfo({
         ...pawrentInfo,
         emailAddress: email,

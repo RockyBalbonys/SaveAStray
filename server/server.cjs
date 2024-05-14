@@ -865,6 +865,7 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
       } else {
         res.json({
           status: 400,
+          email: user.email,
         });
       }
     } catch (error) {
@@ -975,9 +976,15 @@ app.get("/api/pawrentInfo/:userId", async (req, res) => {
           isGoogleUser: user instanceof GoogleUser, // This will be true if the user is from GoogleUser collection
         });
       } else {
+        let user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
+        console.log("user else: " + user);
+
         console.log("pawrent info status 400");
         res.json({
           status: 400,
+          email: user.email,
         });
       }
     } catch (error) {

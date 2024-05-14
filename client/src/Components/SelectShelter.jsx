@@ -1,8 +1,10 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 export const SelectShelter = ({ value, onChange, shelters }) => {
-  console.log("shelters: ",shelters);
+  useEffect(() => {
+    console.log("shelters: ", shelters);
+  }, []);
   return (
     <FormControl>
       <Select
@@ -36,13 +38,15 @@ export const SelectShelter = ({ value, onChange, shelters }) => {
         {/* TODO:  1. Display menu items of shelters using map method
         2. Show shelter icons or color
         */}
-        {
-            shelters.map((shelter) => (
-              <MenuItem key={shelter.userId} value={shelter.shelterName} sx={{ fontSize: "14px" }}>
-                {shelter.shelterName}
-              </MenuItem>
-            ))
-        }
+        {shelters.map((shelter) => (
+          <MenuItem
+            key={shelter.userId}
+            value={shelter.shelterName}
+            sx={{ fontSize: "14px" }}
+          >
+            {shelter.shelterName}
+          </MenuItem>
+        ))}
       </Select>
     </FormControl>
   );
