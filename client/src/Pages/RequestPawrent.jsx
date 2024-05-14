@@ -110,7 +110,7 @@ function RequestPawrent() {
           furry companion!
         </Typography>
       </div>
-      <div className="bg-[#FAFAFB] h-[60vh] flex w-full">
+      <div className="bg-[#FAFAFB] h-[60vh] flex w-full h-full">
         {isLoading && (
           <div className="loader-container">
             <DotLoader

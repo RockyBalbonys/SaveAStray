@@ -29,8 +29,6 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
 
-  console.log(typeof animalInfo.price);
-
   useEffect(() => {
     if (!open) {
       setAnimalInfo(animal);

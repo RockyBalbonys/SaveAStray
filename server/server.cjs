@@ -676,17 +676,19 @@ app.get("/getShelter", async (req, res) => {
   }
 });
 
-app.get("/getShelterFilter", async(req, res) => {
+app.get("/getShelterFilter", async (req, res) => {
   try {
-    const allShelter = await ShelterInfo.find({ shelterName: { $exists: true } });
+    const allShelter = await ShelterInfo.find({
+      shelterName: { $exists: true },
+    });
     res.send({
       status: 200,
-      allShelter
-    })
+      allShelter,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 app.get("/api/filteredPets", async (req, res) => {
   try {
@@ -709,9 +711,9 @@ app.get("/api/filteredPets", async (req, res) => {
   }
 });
 
-app.get(`/api/filterederPets/:user`, async (req, res) => {
-  console.log("req.params: ", req.params)
-  console.log("req.query: ", req.query)
+app.get(`/api/filteredShelterPets/:user`, async (req, res) => {
+  console.log("req.params: ", req.params);
+  console.log("req.query: ", req.query);
   try {
     const { species, sex, age, size, status } = req.query;
     const userId = req.params.user;
@@ -727,9 +729,9 @@ app.get(`/api/filterederPets/:user`, async (req, res) => {
     if (size) filter.size = size;
     if (status) filter.status = status;
 
-    let filteredPets = await Pet.find( filter );
+    let filteredPets = await Pet.find(filter);
     console.log(filter);
-    console.log("filtered pets: ",filteredPets);
+    console.log("filtered pets: ", filteredPets);
 
     res.status(200).json({ filteredPets });
   } catch (error) {
@@ -1052,6 +1054,44 @@ app.post("/api/updateDp", async (req, res) => {
     }
   } else {
     console.log("no req.body");
+  }
+});
+
+// get DP
+app.get("/api/getDp/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  console.log("user: " + userId);
+
+  if (!userId) {
+    return res.status(400).json({ message: "Missing userId in request" });
+  }
+
+  try {
+    const pawrentDb = await PawrentInfo.findOne({ userId: userId });
+    const shelterDb = await ShelterInfo.findOne({ userId: userId });
+
+    if (pawrentDb) {
+      console.log("pawrentDb");
+      return res.json({
+        profilePicture: pawrentDb.dp,
+        message: "success getting profile pic",
+      });
+    } else if (shelterDb) {
+      console.log("shelterDb");
+      return res.json({
+        profilePicture: shelterDb.dp,
+        message: "success getting profile pic",
+      });
+    } else {
+      console.log("error");
+      return res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
 });
 

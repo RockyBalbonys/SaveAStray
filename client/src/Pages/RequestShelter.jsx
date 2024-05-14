@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Button,
   Typography,
@@ -59,6 +59,8 @@ function RequestShelter() {
   const { user } = useAuth();
   const [adoptionRequests, setAdoptionRequests] = useState([]);
 
+  console.log(adoptionRequests);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendMessage = async (request) => {
@@ -92,22 +94,27 @@ function RequestShelter() {
     }
   }
 
+  // Compute a dependency value based on approval statuses
+  const approvalStatuses = useMemo(
+    () => adoptionRequests.map((request) => request.approvalStatus).join(","),
+    [adoptionRequests]
+  );
+
   useEffect(() => {
+    fetchRequests();
+  }, [approvalStatuses]);
+
+  const fetchRequests = () => {
     setIsLoading(true);
     axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, {
-        user,
-      })
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, { user })
       .then(function (response) {
         const { allAnswers, respondent } = response.data;
         if (!respondent) {
           setAdoptionRequests(0); // Update state with transformed data
-          console.log(adoptionRequests);
           console.log("No requests at the moment");
-          setIsLoading(false);
         } else {
           const transformedRequests = allAnswers.map(function (answer) {
-            console.log(answer);
             const notificationCreatedAt = new Date(answer.timestamp);
             const formattedTime = formatDistanceToNow(notificationCreatedAt, {
               addSuffix: true,
@@ -124,13 +131,14 @@ function RequestShelter() {
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
           console.log(transformedRequests);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       })
       .catch(function (err) {
         console.log(err);
+        setIsLoading(false);
       });
-  }, []);
+  };
 
   /*   const handleClick = (redirectTo) => {
     navigate(redirectTo);
@@ -156,6 +164,7 @@ function RequestShelter() {
           .catch(function (error) {
             console.log(error);
           });
+        fetchRequests();
         setIsLoading(false);
       })
       .catch(function (err) {
@@ -166,6 +175,7 @@ function RequestShelter() {
 
   const handleRejectButton = (request) => {
     const { requestId, approvalStatus } = request;
+    setIsLoading(true);
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/updateApproval`, {
         requestId,
@@ -183,6 +193,8 @@ function RequestShelter() {
           .catch(function (error) {
             console.log(error);
           });
+        fetchRequests();
+        setIsLoading(false);
       })
       .catch(function (err) {
         console.log(err);
@@ -243,7 +255,12 @@ function RequestShelter() {
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
-                  background: index % 2 === 0 ? "#FFF" : "#FFF0DE",
+                  background:
+                    index % 2 === 0
+                      ? request.approvalStatus !== "pending"
+                        ? "#cfcfcf"
+                        : "#FFF"
+                      : "#FFF0DE",
                   padding: "16px",
                   borderBottom: "1px solid #EE7200",
                   borderRadius: "7px",
@@ -261,9 +278,24 @@ function RequestShelter() {
                 >
                   <img src={request.imageURL} alt="" style={imageStyle} />
                   <div>
-                    <Typography>
-                      <strong>{request.name}</strong> requested an adoption
-                    </Typography>
+                    {request.approvalStatus === "pending" && (
+                      <Typography>
+                        <strong>{request.name}</strong> requested an adoption
+                      </Typography>
+                    )}
+                    {request.approvalStatus === "approved" && (
+                      <Typography>
+                        <strong>{request.name}</strong> adoption request has
+                        been approved
+                      </Typography>
+                    )}
+                    {request.approvalStatus === "rejected" && (
+                      <Typography>
+                        <strong>{request.name}</strong> adoption request has
+                        been rejected
+                      </Typography>
+                    )}
+
                     <Typography variant="caption" color="#2F4858">
                       {request.time}
                     </Typography>
@@ -291,8 +323,13 @@ function RequestShelter() {
                     <Tooltip title="Accept">
                       <Button
                         variant="contained"
-                        style={buttonStyle}
                         onClick={() => handleAcceptButton(request)}
+                        sx={{
+                          padding: "10px",
+                          minWidth: "auto",
+                          height: "100%",
+                          backgroundColor: "#EE7200",
+                        }}
                       >
                         <CheckIcon style={{ color: "#FFFFFF" }} />
                       </Button>
@@ -301,8 +338,13 @@ function RequestShelter() {
                     <Tooltip title="Reject">
                       <Button
                         variant="contained"
-                        style={buttonStyle}
                         onClick={() => handleRejectButton(request)}
+                        sx={{
+                          padding: "10px",
+                          minWidth: "auto",
+                          height: "100%",
+                          backgroundColor: "#EE7200",
+                        }}
                       >
                         <ClearIcon style={{ color: "#FFFFFF" }} />
                       </Button>

@@ -360,11 +360,15 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
 
           {/* Chatbox messages content */}
           <Box
+            x
             sx={{
               flexGrow: 1,
               pr: "8px",
               overflowY: "auto",
               mb: "12px",
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
             }}
           >
             <Box
@@ -373,57 +377,66 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
                 flexDirection: "column",
                 width: "100%",
                 height: "100%",
+                justifyContent: "flex-end",
               }}
             >
-              {convo.map((message, idx) => (
-                <React.Fragment key={idx}>
-                  {message.messageSender === user ? (
-                    <Box
-                      sx={{
-                        alignSelf: "flex-end",
-                        my: "6px",
-                        width: "60%",
-                        display: "flex",
-                        justifyContent: "flex-end",
-                      }}
-                    >
+              <Box
+                sx={{
+                  overflowY: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {convo.map((message, idx) => (
+                  <React.Fragment key={idx}>
+                    {message.messageSender === user ? (
                       <Box
                         sx={{
-                          width: "fit-content",
-                          background: theme.palette.primary.main,
-                          color: theme.palette.common.white,
-                          p: "4px 6px",
-                          borderRadius: "12px",
+                          alignSelf: "flex-end",
+                          my: "6px",
+                          width: "60%",
+                          display: "flex",
+                          justifyContent: "flex-end",
                         }}
                       >
-                        {message.content}
+                        <Box
+                          sx={{
+                            width: "fit-content",
+                            background: theme.palette.primary.main,
+                            color: theme.palette.common.white,
+                            p: "4px 6px",
+                            borderRadius: "12px",
+                          }}
+                        >
+                          {message.content}
+                        </Box>
                       </Box>
-                    </Box>
-                  ) : (
-                    <Box
-                      sx={{
-                        alignSelf: "flex-start",
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        my: "6px",
-                        width: "50%",
-                      }}
-                    >
+                    ) : (
                       <Box
                         sx={{
-                          width: "fit-content",
-                          background: "#fcfafa",
-                          p: "4px 6px",
-                          borderRadius: "12px",
-                          border: "0.7px solid #e7e7e7",
+                          alignSelf: "flex-start",
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          my: "6px",
+                          width: "50%",
                         }}
                       >
-                        {message.content}
+                        <Box
+                          sx={{
+                            width: "fit-content",
+                            background: "#fcfafa",
+                            p: "4px 6px",
+                            borderRadius: "12px",
+                            border: "0.7px solid #e7e7e7",
+                          }}
+                        >
+                          {message.content}
+                        </Box>
                       </Box>
-                    </Box>
-                  )}
-                </React.Fragment>
-              ))}
+                    )}
+                  </React.Fragment>
+                ))}
+              </Box>
             </Box>
           </Box>
         </Box>
