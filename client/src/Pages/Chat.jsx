@@ -53,8 +53,6 @@ const sortedMessages = messages.sort((a, b) => {
   return new Date(lastChatB.timestamp) - new Date(lastChatA.timestamp);
 });
 
-console.log(sortedMessages);
-
       function setTimestamp(timestamp) {
         const notificationReceivedAt = new Date(timestamp);
         const formattedTime = formatDistanceToNow(notificationReceivedAt, {
@@ -137,7 +135,6 @@ function ContactListContainer({ contacts }) {
 
   // Sort contacts by timestamp in descending order
   let sortedContact = contacts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  console.log(sortedContact)
   return (
     <>
       <Box

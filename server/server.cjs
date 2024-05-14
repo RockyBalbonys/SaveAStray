@@ -676,9 +676,21 @@ app.get("/getShelter", async (req, res) => {
   }
 });
 
+app.get("/getShelterFilter", async(req, res) => {
+  try {
+    const allShelter = await ShelterInfo.find({ shelterName: { $exists: true } });
+    res.send({
+      status: 200,
+      allShelter
+    })
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 app.get("/api/filteredPets", async (req, res) => {
   try {
-    const { species, sex, age, size, status } = req.query;
+    const { species, sex, age, size, status, shelter } = req.query;
     let filter = {};
 
     if (species) filter.species = species;
@@ -686,6 +698,7 @@ app.get("/api/filteredPets", async (req, res) => {
     if (age) filter.age = age;
     if (size) filter.size = size;
     if (status) filter.status = status;
+    if (shelter) filter.shelter = shelter;
 
     const filteredPets = await Pet.find(filter);
 
@@ -696,7 +709,7 @@ app.get("/api/filteredPets", async (req, res) => {
   }
 });
 
-app.get(`/api/filteredShelterPets/:user`, async (req, res) => {
+app.get(`/api/filterederPets/:user`, async (req, res) => {
   console.log("req.params: ", req.params)
   console.log("req.query: ", req.query)
   try {
