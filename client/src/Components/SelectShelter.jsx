@@ -38,12 +38,15 @@ export const SelectShelter = ({ value, onChange, shelters }) => {
         {shelters.map((shelter) => (
           <MenuItem
             key={shelter.userId}
-            value={shelter.shelterName}
+            value={shelter.userId}
             sx={{ fontSize: "14px" }}
           >
             {shelter.shelterName}
           </MenuItem>
         ))}
+        <MenuItem value="" sx={{ fontSize: "14px", fontWeight: "600" }}>
+          All Animals
+        </MenuItem>
       </Select>
     </FormControl>
   );
