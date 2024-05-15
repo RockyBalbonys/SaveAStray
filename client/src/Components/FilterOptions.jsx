@@ -21,10 +21,6 @@ export function FilterOptions({
     filters.map(() => null)
   );
 
-  console.log(selectedOptions);
-
-  console.log(filters);
-
   const [filtersApplied, setFiltersApplied] = useState(false);
 
   useEffect(() => {

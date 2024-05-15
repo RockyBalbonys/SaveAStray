@@ -39,6 +39,7 @@ import { motion } from "framer-motion";
 
 const AnimalsPawrent = () => {
   const [animals, setAnimals] = useState([]);
+  const [allAnimals, setAllAnimals] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
   const isShelter = role === "Rescue Shelter";
 
@@ -65,6 +66,7 @@ const AnimalsPawrent = () => {
       .then(function (response) {
         const allPets = response.data.allPets;
         setAnimals(allPets);
+        setAllAnimals(allPets);
         console.log(allPets);
       })
       .catch(function (error) {
@@ -163,6 +165,17 @@ const AnimalsPawrent = () => {
     setShelter(selectedShelter);
     console.log(selectedShelter);
   };
+
+  useEffect(() => {
+    if (shelter) {
+      const filteredAnimals = allAnimals.filter(
+        (animal) => animal.shelter === shelter
+      );
+      setAnimals(filteredAnimals);
+    } else {
+      setAnimals(allAnimals); // Show all animals when no shelter is selected
+    }
+  }, [shelter, allAnimals]);
 
   useEffect(() => {
     window.scrollTo(150, 1300);
@@ -273,15 +286,22 @@ const OptionSection = ({
   handleChangeShelter,
 }) => {
   const [allShelterOption, setAllShelterOption] = useState([]);
-  const shelters = axios
-    .get(`${process.env.REACT_APP_SERVER_URL}/getShelterFilter`)
-    .then(function (response) {
-      const allShelter = response.data.allShelter;
-      setAllShelterOption(allShelter);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
+
+  useEffect(() => {
+    const fetchShelters = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_SERVER_URL}/getShelterFilter`
+        );
+        setAllShelterOption(response.data.allShelter);
+      } catch (error) {
+        console.error("Error fetching shelters:", error);
+      }
+    };
+
+    fetchShelters();
+  }, []);
+
   return (
     <Grid
       container
