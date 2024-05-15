@@ -41,8 +41,11 @@ const AnimalsPawrent = () => {
   const [animals, setAnimals] = useState([]);
   const { isLoggedIn, user, role } = useAuth();
   const isShelter = role === "Rescue Shelter";
-
+  const [shelter, setShelter] = useState("");
+  // Sorting by names
+  const [sortBy, setSortBy] = useState("");
   console.log(animals);
+  console.log(shelter);
 
   console.table(role);
 
@@ -51,7 +54,7 @@ const AnimalsPawrent = () => {
     sex: null,
     age: null,
     size: null,
-    shelter: null,
+    status: null
   });
 
   useEffect(() => {
@@ -77,7 +80,10 @@ const AnimalsPawrent = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/filteredPets`,
         {
-          params: filters,
+          params: {
+            filters,
+            shelterId: shelter,
+          }
         }
       );
 
@@ -109,12 +115,15 @@ const AnimalsPawrent = () => {
     }));
   };
 
+  useEffect(() => {
+    fetchFilteredPets();
+  }, [shelter, sortBy]);
+
   const handleApplyFilters = () => {
     fetchFilteredPets();
   };
 
-  // Sorting by names
-  const [sortBy, setSortBy] = useState("");
+
 
   const handleChangeSortBy = (e) => {
     const selectedSortBy = e.target.value;
@@ -153,8 +162,7 @@ const AnimalsPawrent = () => {
     setCurrentPage(value);
   };
 
-  // Select shelter
-  const [shelter, setShelter] = useState("");
+
 
   const handleChangeShelter = (e) => {
     const selectedShelter = e.target.value;

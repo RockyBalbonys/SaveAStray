@@ -510,6 +510,7 @@ app.post("/api/sendAnswers", async (req, res) => {
 app.get("/getPet/:user", async (req, res) => {
   try {
     const userId = req.params.user;
+    
     console.log("params", req.params);
     console.log("user id: " + userId);
 
@@ -691,17 +692,23 @@ app.get("/getShelterFilter", async (req, res) => {
 });
 
 app.get("/api/filteredPets", async (req, res) => {
+  console.log("req.query: ", req.query);
   try {
-    const { species, sex, age, size, status, shelter } = req.query;
+    const { filters, shelterId } = req.query;
     let filter = {};
 
-    if (species) filter.species = species;
-    if (sex) filter.sex = sex;
-    if (age) filter.age = age;
-    if (size) filter.size = size;
-    if (status) filter.status = status;
-    if (shelter) filter.shelter = shelter;
+    if (filters) {
+      const { species, sex, age, size, status } = filters;
+      if (species) filter.species = species;
+      if (sex) filter.sex = sex;
+      if (age) filter.age = age;
+      if (size) filter.size = size;
+      if (status) filter.status = status;
+    }
 
+    if (shelterId) filter.shelter = shelterId;
+
+    console.log("filter: ", filter);
     const filteredPets = await Pet.find(filter);
 
     res.status(200).json({ filteredPets });
@@ -710,6 +717,8 @@ app.get("/api/filteredPets", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 app.get(`/api/filteredShelterPets/:user`, async (req, res) => {
   console.log("req.params: ", req.params);

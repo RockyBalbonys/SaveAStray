@@ -35,13 +35,13 @@ export const SelectShelter = ({ value, onChange, shelters }) => {
         <MenuItem value="" sx={{ fontSize: "14px" }} disabled>
           Select A Shelter
         </MenuItem>
-        {shelters.map((shelter) => (
+        {shelters.map((shelter, index) => (
           <MenuItem
-            key={shelter.userId}
-            value={shelter.shelterName}
+            key={index}
+            value={shelter.userId}
             sx={{ fontSize: "14px" }}
           >
-            {shelter.shelterName}
+            {shelter.shelterName} 
           </MenuItem>
         ))}
       </Select>
