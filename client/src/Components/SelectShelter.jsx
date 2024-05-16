@@ -44,6 +44,9 @@ export const SelectShelter = ({ value, onChange, shelters }) => {
             {shelter.shelterName} 
           </MenuItem>
         ))}
+        <MenuItem value="" sx={{ fontSize: "14px", fontWeight: "600" }}>
+          All Animals
+        </MenuItem>
       </Select>
     </FormControl>
   );

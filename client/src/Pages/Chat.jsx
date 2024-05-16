@@ -19,6 +19,7 @@ import AnnouncementRoundedIcon from "@mui/icons-material/AnnouncementRounded";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import avatar_placeholder from "../assets/images/avatar_placeholder.png";
 import Navbar from "../Components/PageComponent/OldNavbar";
+import AddIcon from "@mui/icons-material/Add";
 
 import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
@@ -33,9 +34,32 @@ import { DotLoader } from "react-spinners";
 import { motion } from "framer-motion";
 
 const Chat = () => {
+  // state for contacts
   const [contacts, setContacts] = useState([]);
+
   const { isLoggedIn, user, role } = useAuth();
-  const [loading, setLoading] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
+  // state for adding events
+  const [event, setEvent] = useState({
+    date: "",
+    time: "",
+    petName: "",
+    pawrent: "",
+  });
+
+  // handle onChange for event inputs
+  const handleEventInputChange = (e) => {
+    const { name, value } = e.target;
+    setEvent((prevEvent) => ({
+      ...prevEvent,
+      [name]: value,
+    }));
+  };
+
+  console.log(event);
+
   axios
     .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
       params: {
@@ -44,14 +68,14 @@ const Chat = () => {
     })
     .then(function (response) {
       const { messages } = response.data;
-const sortedMessages = messages.sort((a, b) => {
-  // Get the last chat of each conversation
-  const lastChatA = a.conversation[a.conversation.length - 1];
-  const lastChatB = b.conversation[b.conversation.length - 1];
+      const sortedMessages = messages.sort((a, b) => {
+        // Get the last chat of each conversation
+        const lastChatA = a.conversation[a.conversation.length - 1];
+        const lastChatB = b.conversation[b.conversation.length - 1];
 
-  // Compare the timestamps of the last chats
-  return new Date(lastChatB.timestamp) - new Date(lastChatA.timestamp);
-});
+        // Compare the timestamps of the last chats
+        return new Date(lastChatB.timestamp) - new Date(lastChatA.timestamp);
+      });
 
       function setTimestamp(timestamp) {
         const notificationReceivedAt = new Date(timestamp);
@@ -104,23 +128,34 @@ const sortedMessages = messages.sort((a, b) => {
             </div>
           </>
         ) : (
-          <Container sx={{ height: "70%" }}>
+          <Box sx={{ height: "70%", width: "90%", display: "flex" }}>
             <Grid
               container
               component={Paper}
-              sx={{ height: "100%", borderRadius: "7px", overflow: "hidden" }}
+              sx={{
+                height: "100%",
+                borderRadius: "7px",
+                overflow: "hidden",
+                width: "70%",
+              }}
             >
               {/* Contact List */}
-              <Grid item xs={4} sx={{ height: "100%", width: "100%" }}>
+              <Grid item xs={3} sx={{ height: "100%", width: "100%" }}>
                 <ContactListContainer contacts={contacts} />
               </Grid>
 
               {/* Chatbox */}
-              <Grid item xs={8} sx={{ height: "100%" }}>
+              <Grid item xs={6} sx={{ height: "100%" }}>
                 <Chatbox contacts={contacts} loading={loading} />
               </Grid>
+              {/* Event Viewer */}
             </Grid>
-          </Container>
+            <Events
+              eventData={event}
+              onChange={handleEventInputChange}
+              setEventData={setEvent}
+            />
+          </Box>
         )}
       </div>
     </>
@@ -134,7 +169,9 @@ function ContactListContainer({ contacts }) {
   const theme = useTheme();
 
   // Sort contacts by timestamp in descending order
-  let sortedContact = contacts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  let sortedContact = contacts.sort(
+    (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+  );
   return (
     <>
       <Box
@@ -218,7 +255,6 @@ function ContactListContainer({ contacts }) {
     </>
   );
 }
-
 
 // Create component for chat based system
 function Chatbox({ contacts }) {
@@ -459,3 +495,225 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
     </>
   );
 }
+
+const sampleEvents = [
+  {
+    date: "Thu May 16 2024",
+    time: "1:17 PM",
+    petName: "Bakharwal dog",
+    pawrent: "Whitney Nader",
+  },
+  {
+    date: "Fri May 17 2024",
+    time: "3:00 PM",
+    petName: "Small Biggie",
+    pawrent: "Prince Jericho Mabini",
+  },
+  {
+    date: "Thu May 16 2024",
+    time: "1:17 PM",
+    petName: "Bakharwal dog",
+    pawrent: "Whitney Nader",
+  },
+  {
+    date: "Thu May 16 2024",
+    time: "1:17 PM",
+    petName: "Bakharwal dog",
+    pawrent: "Whitney Nader",
+  },
+  {
+    date: "Thu May 16 2024",
+    time: "1:17 PM",
+    petName: "Bakharwal dog",
+    pawrent: "Whitney Nader",
+  },
+];
+
+function Events({ eventData, onChange, setEventData }) {
+  const theme = useTheme();
+
+  const [isAddEvent, setIsAddEvent] = useState(false);
+
+  // handle save event
+  const handleSaveEvent = () => {
+    // TODO: send event to server and save it to database
+  };
+
+  // handle cancel event
+  const handleCancelEvent = () => {
+    setEventData({
+      date: "",
+      time: "",
+      petName: "",
+      pawrent: "",
+    });
+    setIsAddEvent(!isAddEvent);
+  };
+
+  return (
+    <>
+      <Box
+        sx={{
+          width: "30%",
+          height: "100%",
+          ml: "16px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          borderRadius: "7px",
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "sticky",
+            top: 0,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            color={theme.palette.common.white}
+          >
+            ADOPTION SCHEDULE
+          </Typography>
+
+          <Button
+            variant="contained"
+            endIcon={<AddIcon />}
+            sx={{
+              width: "100%",
+              bgcolor: theme.palette.common.white,
+              fontWeight: 700,
+              textTransform: "none",
+              "&:hover": {
+                color: theme.palette.common.white,
+              },
+              my: "16px",
+            }}
+            onClick={() => setIsAddEvent(!isAddEvent)}
+          >
+            Add Event
+          </Button>
+        </Box>
+
+        <Box
+          sx={{
+            width: "100%",
+            overflowY: "auto",
+            scrollbarWidth: "none", // Hide the scrollbar for firefox
+            "&::-webkit-scrollbar": {
+              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+            },
+            "&-ms-overflow-style:": {
+              display: "none", // Hide the scrollbar for IE
+            },
+            rowGap: "16px",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* Open this input form if the user click the add event button */}
+
+          <Paper
+            sx={paperStyle}
+            component={motion.div}
+            animate={isAddEvent ? "open" : "closed"}
+            variants={variants}
+            hidden={isAddEvent ? undefined : "true"}
+          >
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <label htmlFor="">
+                Date:
+                <input
+                  value={eventData.date}
+                  name="date"
+                  onChange={onChange}
+                  type="date"
+                />
+              </label>
+              <label htmlFor="">
+                Time:
+                <input
+                  value={eventData.time}
+                  name="time"
+                  onChange={onChange}
+                  type="time"
+                />
+              </label>
+              <label htmlFor="">
+                Pet Name:
+                <input
+                  value={eventData.petName}
+                  name="petName"
+                  onChange={onChange}
+                  type="text"
+                />
+              </label>
+              <label htmlFor="">
+                Pawrent:
+                <input
+                  value={eventData.pawrent}
+                  name="pawrent"
+                  onChange={onChange}
+                  type="text"
+                />
+              </label>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                columnGap: "8px",
+              }}
+            >
+              <Button onClick={handleCancelEvent}>Cancel</Button>
+              <Button
+                variant="contained"
+                sx={{ color: theme.palette.common.white }}
+                onClick={handleSaveEvent}
+              >
+                Save Event
+              </Button>
+            </Box>
+          </Paper>
+
+          {/* Display events */}
+          {sampleEvents.map((event, idx) => (
+            <Paper sx={paperStyle} key={idx}>
+              <Typography>
+                <span className="font-black">Date:</span> {event.date}
+              </Typography>
+              <Typography>
+                <span className="font-black">Time:</span> {event.time}
+              </Typography>
+              <Typography>
+                <span className="font-black">Pet Name:</span> {event.petName}
+              </Typography>
+              <Typography>
+                <span className="font-black">Pawrent:</span> {event.pawrent}
+              </Typography>
+            </Paper>
+          ))}
+        </Box>
+      </Box>
+    </>
+  );
+}
+
+const variants = {
+  open: { opacity: 1, y: 0 },
+  closed: { opacity: 0, y: "-100%" },
+};
+
+const paperStyle = {
+  width: "100%",
+  p: "10px",
+  boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.07);",
+  borderRadius: "0px",
+  color: "#2F4858",
+};
