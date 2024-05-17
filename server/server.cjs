@@ -610,6 +610,7 @@ app.post("/api/fetchRequests", async (req, res) => {
       id,
       approvalStatus, */
         allAnswers: mappedAnswers,
+        answerKeys: allAnswers
       });
     }
   } catch (err) {
