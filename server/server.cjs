@@ -38,6 +38,12 @@ app.use(cors());
 app.use(express.json()); // Parse JSON data from the request body
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", async (req, res) => {
+  res.send({
+    message: "hello world"
+  })
+})
+
 app.post("/verify", async (req, res) => {
   const token = req.query.token;
   try {
