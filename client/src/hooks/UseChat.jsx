@@ -17,6 +17,9 @@ export const ChatProvider = ({ children }) => {
         const response = await axios.get(
           `${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`,
           {
+            headers: {
+              "ngrok-skip-browser-warning": "8888",
+            },
             params: { user },
           }
         );

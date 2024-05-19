@@ -79,6 +79,11 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
           size,
           price,
           status,
+        },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
         }
       );
       console.log(res);
@@ -87,6 +92,9 @@ const ModalUpdatePet = ({ open, onClose, animal, setAnimals }) => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,
         {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
           params: {
             user: user,
           },

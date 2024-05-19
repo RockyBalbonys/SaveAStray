@@ -58,6 +58,9 @@ const AnimalsShelter = () => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
         // Use nullish coalescing for user ID
+        headers: {
+          "ngrok-skip-browser-warning": "8888",
+        },
         params: {
           user: user, // Include user ID for potential filtering on server-side
         },
@@ -79,7 +82,10 @@ const AnimalsShelter = () => {
     const response = await axios.get(
       `${process.env.REACT_APP_SERVER_URL}/api/filteredShelterPets/${user}`, // Update to use user as a route parameter
       {
-        params: filters
+        headers: {
+          "ngrok-skip-browser-warning": "8888",
+        },
+        params: filters,
       }
     );
 

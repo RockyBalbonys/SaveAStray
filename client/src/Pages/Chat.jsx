@@ -58,7 +58,9 @@ const Chat = () => {
     }));
   };
 
-  console.log(event);
+  useEffect(() => {
+    console.log(event);
+  }, [event]);
 
   axios
     .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
@@ -145,7 +147,7 @@ const Chat = () => {
               </Grid>
 
               {/* Chatbox */}
-              <Grid item xs={6} sx={{ height: "100%" }}>
+              <Grid item xs={9} sx={{ height: "100%" }}>
                 <Chatbox contacts={contacts} loading={loading} />
               </Grid>
               {/* Event Viewer */}
@@ -624,7 +626,7 @@ function Events({ eventData, onChange, setEventData }) {
             component={motion.div}
             animate={isAddEvent ? "open" : "closed"}
             variants={variants}
-            hidden={isAddEvent ? undefined : "true"}
+            hidden={isAddEvent ? undefined : true}
           >
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               <label htmlFor="">

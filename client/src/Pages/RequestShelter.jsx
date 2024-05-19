@@ -74,6 +74,11 @@ function RequestShelter() {
           chatId: chatId,
           user: user,
           respondent: request.respondent,
+        },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
         }
       );
       // Navigate if success
