@@ -59,6 +59,9 @@ const OldAnimalsPawrent = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/filteredPets`,
         {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
           params: filters,
         }
       );

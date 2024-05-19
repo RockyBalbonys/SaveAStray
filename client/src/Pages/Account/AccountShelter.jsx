@@ -141,6 +141,9 @@ const AccountForm = ({ isLoading, setIsLoading }) => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/shelterInfo/${userId}`,
         {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
           params: {
             userId,
           },
