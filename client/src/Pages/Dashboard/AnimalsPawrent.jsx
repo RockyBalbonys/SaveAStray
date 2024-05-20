@@ -283,19 +283,23 @@ const OptionSection = ({
   handleChangeShelter,
 }) => {
   const [allShelterOption, setAllShelterOption] = useState([]);
-  const shelters = axios
-    .get(`${process.env.REACT_APP_SERVER_URL}/getShelterFilter`, {
-      headers: {
-        "ngrok-skip-browser-warning": "8888",
-      },
-    })
-    .then(function (response) {
-      const allShelter = response.data.allShelter;
-      setAllShelterOption(allShelter);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/getShelterFilter`, {
+        headers: {
+          "ngrok-skip-browser-warning": "8888",
+        },
+      })
+      .then(function (response) {
+        const allShelter = response.data.allShelter;
+        setAllShelterOption(allShelter);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <Grid
       container

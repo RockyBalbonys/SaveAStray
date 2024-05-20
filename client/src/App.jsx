@@ -46,8 +46,6 @@ import Loader from "./Pages/Loader";
 function App() {
   const { isLoggedIn, role, user } = useAuth();
 
-  console.log(role);
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
