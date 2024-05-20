@@ -97,13 +97,16 @@ const Chat = () => {
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
+        headers: {
+          "ngrok-skip-browser-warning": "8888",
+        },
         params: {
           user,
         },
       })
       .then(function (response) {
         const { messages } = response.data;
-        const sortedMessages = messages.sort((a, b) => {
+        const sortedMessages = messages?.sort((a, b) => {
           // Get the last chat of each conversation
           const lastChatA = a.conversation[a.conversation.length - 1];
           const lastChatB = b.conversation[b.conversation.length - 1];
@@ -214,7 +217,7 @@ function ContactListContainer({ contacts }) {
   const theme = useTheme();
 
   // Sort contacts by timestamp in descending order
-  let sortedContact = contacts.sort(
+  let sortedContact = contacts?.sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
   );
   return (
@@ -243,7 +246,7 @@ function ContactListContainer({ contacts }) {
         />
 
         {/* List of Contacts */}
-        {contacts.map((contact, idx) => (
+        {contacts?.map((contact, idx) => (
           <React.Fragment key={idx}>
             <Box
               sx={{
