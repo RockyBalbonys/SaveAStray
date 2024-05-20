@@ -54,13 +54,16 @@ const AnimalsPawrent = () => {
     sex: null,
     age: null,
     size: null,
-    status: null
+    status: null,
   });
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user ?? ""}`, {
         // Use nullish coalescing for user ID
+        headers: {
+          "ngrok-skip-browser-warning": "8888",
+        },
         params: {
           user: user, // Include user ID for potential filtering on server-side
         },
@@ -74,16 +77,19 @@ const AnimalsPawrent = () => {
         console.log(error);
       });
   }, []);
-
+  //etits
   const fetchFilteredPets = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/filteredPets`,
         {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
           params: {
             filters,
             shelterId: shelter,
-          }
+          },
         }
       );
 
@@ -123,8 +129,6 @@ const AnimalsPawrent = () => {
     fetchFilteredPets();
   };
 
-
-
   const handleChangeSortBy = (e) => {
     const selectedSortBy = e.target.value;
     setSortBy((prevSortBy) => {
@@ -161,8 +165,6 @@ const AnimalsPawrent = () => {
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
-
-
 
   const handleChangeShelter = (e) => {
     const selectedShelter = e.target.value;
@@ -282,7 +284,11 @@ const OptionSection = ({
 }) => {
   const [allShelterOption, setAllShelterOption] = useState([]);
   const shelters = axios
-    .get(`${process.env.REACT_APP_SERVER_URL}/getShelterFilter`)
+    .get(`${process.env.REACT_APP_SERVER_URL}/getShelterFilter`, {
+      headers: {
+        "ngrok-skip-browser-warning": "8888",
+      },
+    })
     .then(function (response) {
       const allShelter = response.data.allShelter;
       setAllShelterOption(allShelter);

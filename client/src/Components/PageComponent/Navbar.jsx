@@ -61,6 +61,10 @@ const Navbar = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_URL}/api/getDp/${userId}`,
         {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
+
           params: {
             userId,
           },

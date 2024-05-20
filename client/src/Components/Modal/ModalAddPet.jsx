@@ -59,7 +59,7 @@ const ModalAddPet = ({
 
     const { name, description, species, breed, sex, age, color, size } =
       animalData;
-    const shelter = user
+    const shelter = user;
     try {
       setLoadingButton(true);
       const animalDataWithImages = {
@@ -72,7 +72,7 @@ const ModalAddPet = ({
         color,
         size,
         photos: [],
-        shelter
+        shelter,
       };
 
       // Upload images and get download URLs
@@ -95,15 +95,26 @@ const ModalAddPet = ({
       // Send data and images in a single request
       await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/api/addAnimal`,
-          animalDataWithImages
+        animalDataWithImages,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
+        }
       );
 
       // After successfully adding the new pet, fetch the updated list of pets
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,{
-        params: {
-          user: user
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/getPet/${user}`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "8888",
+          },
+          params: {
+            user: user,
+          },
         }
-      });
+      );
       const allPets = response.data.allPets;
       setAnimals(allPets);
 

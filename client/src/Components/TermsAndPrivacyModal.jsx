@@ -103,6 +103,11 @@ const TermsAndPrivacyModal = ({
               pass: formData.regPass,
               role: formData.regRole,
               verified: false,
+            },
+            {
+              headers: {
+                "ngrok-skip-browser-warning": "8888",
+              },
             }
           );
           if (response.data.status === 409) {
