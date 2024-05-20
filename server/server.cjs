@@ -1237,6 +1237,10 @@ app.post("/api/updatePass", async (req, res) => {
   }
 });
 
+app.get("/api/getEvents", async (req, res) => {
+  console.log("params: ", req.query.user)
+})
+
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;
   let messages;

@@ -498,6 +498,19 @@ function Messages({ contactInfo, inputMessage /* , loading */ }) {
   );
 }
 
+
+function Events({ eventData, onChange, setEventData }) {
+  
+const { user } = useAuth();
+
+axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEvents`, {
+  headers: {
+    "ngrok-skip-browser-warning": "8888",
+  },
+  params: {
+    user
+  }
+})
 const sampleEvents = [
   {
     date: "Thu May 16 2024",
@@ -530,8 +543,6 @@ const sampleEvents = [
     pawrent: "Whitney Nader",
   },
 ];
-
-function Events({ eventData, onChange, setEventData }) {
   const theme = useTheme();
 
   const [isAddEvent, setIsAddEvent] = useState(false);
