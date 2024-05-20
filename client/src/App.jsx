@@ -42,6 +42,7 @@ import TermsOfServices from "./Pages/UnusedPage/TermsOfServices";
 import { AnimatePresence } from "framer-motion";
 import AnimalsPawrent from "./Pages/Dashboard/AnimalsPawrent";
 import Loader from "./Pages/Loader";
+import QsAnswer from "./Pages/QsAnswer";
 
 function App() {
   const { isLoggedIn, role, user } = useAuth();
@@ -125,6 +126,11 @@ function App() {
               <Route path="/deadend" element={<DeadEnd />} />
               <Route path="/adoptionSubmitted" element={<DeadEnd2 />} />
               <Route path="/socketPractice" element={<SocketPractice />} />
+              <Route path="/questionnaireAnswers" element={<QsAnswer />} />
+              <Route
+                path="/questionnaireAnswers/:answerId"
+                element={<QsAnswer />}
+              />
               <Route path="/messages/t/" element={<Chat />} />
               <Route path="/messages/t/:chatId" element={<Chat />} />
               <Route path="/terms of services" element={<TermsOfServices />} />

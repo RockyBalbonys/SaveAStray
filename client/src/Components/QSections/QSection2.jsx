@@ -8,7 +8,7 @@ import { CheckboxSmall, paperStyle } from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { memo, useEffect } from "react";
 
-const QSection2 = () => {
+const QSection2 = ({ isAnswer }) => {
   const { section2, updateSection2 } = useQuestionnaireContext();
   const { awareAdoptionFee } = section2;
 
@@ -26,7 +26,11 @@ const QSection2 = () => {
       <div className="paper-format font-light">
         <p className="q-section-text">SECTION 2 : ADOPTION FEE</p>
         <Introduction />
-        <Awareness value={awareAdoptionFee} onChange={handleCheckboxChange} />
+        <Awareness
+          value={awareAdoptionFee}
+          onChange={handleCheckboxChange}
+          isAnswer={isAnswer}
+        />
       </div>
     </Paper>
   );
@@ -46,7 +50,7 @@ const Introduction = () => {
   );
 };
 
-const Awareness = ({ value, onChange }) => {
+const Awareness = ({ value, onChange, isAnswer }) => {
   return (
     <>
       <p className="font-bold">
@@ -59,11 +63,21 @@ const Awareness = ({ value, onChange }) => {
           onChange={onChange}
           sx={{ color: "#FF8210" }}
           label="Yes, I am fully aware about adoption fee and willing to pay it."
-          control={<CheckboxSmall />}
+          disabled={isAnswer}
+          control={
+            <CheckboxSmall
+              inputProps={{
+                "aria-label":
+                  "Yes, I am fully aware about adoption fee and willing to pay it.",
+              }}
+            />
+          }
         />
-        <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
-          Required*
-        </FormHelperText>
+        {!isAnswer && (
+          <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
+            Required*
+          </FormHelperText>
+        )}
       </FormControl>
     </>
   );

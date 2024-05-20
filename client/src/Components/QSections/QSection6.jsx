@@ -19,7 +19,7 @@ import { format } from "date-fns";
 import { useState, memo, useEffect } from "react";
 import { resizer } from "../../tools/resizer";
 
-const QSection6 = () => {
+const QSection6 = ({ isAnswer }) => {
   const { section6, updateSection6 } = useQuestionnaireContext();
   const { prompted, considerToAdopt, preferInterview, preferTime, validID } =
     section6;
@@ -87,12 +87,14 @@ const QSection6 = () => {
           onChange={handleValueChange}
           label="1. What prompted you to adopt from our website - SaveAStray?"
           options={["Friends", "Family", "Internet", "Social Media", "Other"]}
+          isAnswer={isAnswer}
         />
         <InputField
           id={"considerToAdopt"}
           value={considerToAdopt}
           onChange={handleValueChange}
           label="2. What made you consider adopting a rescue?"
+          isAnswer={isAnswer}
         />
         <RadioGroupQuestion
           id={"preferInterview"}
@@ -100,12 +102,14 @@ const QSection6 = () => {
           onChange={handleValueChange}
           label="3. Select your preferred interview platform"
           options={["Zoom", "Google Meet", "Facebook Messenger"]}
+          isAnswer={isAnswer}
         />
         <DateTimePickerWithLabel
           id={"preferTime"}
           value={preferTime}
           handleValueChange={handleValueChange}
           label="4. Preferred Date and Time of 1-hour interview. Provide at least 3 options."
+          isAnswer={isAnswer}
         />
         <div className="input-container sm:flex-col space-y-6">
           <Snackbar
@@ -131,37 +135,55 @@ const QSection6 = () => {
             application form matches the name on your ID. The maximum file size
             is 5mb only.
           </label>
-          <Button
-            id={validID}
-            component="label"
-            role={undefined}
-            tabIndex={-1}
-            sx={{ textTransform: "none", width: "163px", alignSelf: "center" }}
-            variant="outlined"
-            startIcon={<FileUploadIcon />}
-          >
-            Add File
-            <VisuallyHiddenInput
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-          </Button>
-          <FormHelperText
-            sx={{
-              color: "red",
-              ml: ".1rem",
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            Required*
-          </FormHelperText>
+
+          {!isAnswer && (
+            <Button
+              id={validID}
+              component="label"
+              role={undefined}
+              tabIndex={-1}
+              sx={{
+                textTransform: "none",
+                width: "163px",
+                alignSelf: "center",
+              }}
+              variant="outlined"
+              startIcon={<FileUploadIcon />}
+            >
+              Add File
+              <VisuallyHiddenInput
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </Button>
+          )}
+          {!isAnswer && (
+            <FormHelperText
+              sx={{
+                color: "red",
+                ml: ".1rem",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              Required*
+            </FormHelperText>
+          )}
           {validId && (
             <div className="mt-2  items-center w-full flex justify-center">
               <img
                 src={validId}
+                alt="Valid ID"
+                className="max-w-96 max-h-96 object-contain"
+              />
+            </div>
+          )}
+          {isAnswer && (
+            <div className="mt-2  items-center w-full flex justify-center">
+              <img
+                src={validID}
                 alt="Valid ID"
                 className="max-w-96 max-h-96 object-contain"
               />
@@ -173,7 +195,14 @@ const QSection6 = () => {
   );
 };
 
-const RadioGroupQuestion = ({ id, value, onChange, label, options }) => {
+const RadioGroupQuestion = ({
+  id,
+  value,
+  onChange,
+  label,
+  options,
+  isAnswer,
+}) => {
   return (
     <div className="input-container w-full sm:flex-col sm:items-start">
       <label htmlFor={label} className="font-bold">
@@ -184,12 +213,19 @@ const RadioGroupQuestion = ({ id, value, onChange, label, options }) => {
         value={value}
         onChange={onChange}
         options={options}
+        isAnswer={isAnswer}
       />
     </div>
   );
 };
 
-const DateTimePickerWithLabel = ({ id, value, handleValueChange, label }) => {
+const DateTimePickerWithLabel = ({
+  id,
+  value,
+  handleValueChange,
+  label,
+  isAnswer,
+}) => {
   const handleDateChange = (date, index) => {
     const dateString = format(date, "MM/dd/yyyy hh:mm aa");
     const newValues = [...value];
@@ -207,20 +243,52 @@ const DateTimePickerWithLabel = ({ id, value, handleValueChange, label }) => {
           value={value[0] ? new Date(value[0]) : null}
           onChange={(date) => handleDateChange(date, 0)}
           sx={{ width: "50%" }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+                readOnly: isAnswer,
+              }}
+            />
+          )}
+          disabled={isAnswer}
         />
         <DateTimePicker
           value={value[1] ? new Date(value[1]) : null}
           onChange={(date) => handleDateChange(date, 1)}
           sx={{ width: "50%" }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+                readOnly: isAnswer,
+              }}
+            />
+          )}
+          disabled={isAnswer}
         />
         <DateTimePicker
           value={value[2] ? new Date(value[2]) : null}
           onChange={(date) => handleDateChange(date, 2)}
           sx={{ width: "50%" }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              InputProps={{
+                ...params.InputProps,
+                readOnly: isAnswer,
+              }}
+            />
+          )}
+          disabled={isAnswer}
         />
-        <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
-          Required*
-        </FormHelperText>
+        {!isAnswer && (
+          <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
+            Required*
+          </FormHelperText>
+        )}
       </div>
     </div>
   );

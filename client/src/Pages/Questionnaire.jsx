@@ -29,6 +29,8 @@ const Questionnaire = () => {
   const { shelterId } = useParams();
   const { toShelter, handleShelterId } = useQuestionnaireContext();
 
+  const readOnly = false;
+
   useEffect(() => {
     handleShelterId(shelterId);
     console.log("toShelter: " + toShelter);
@@ -48,12 +50,12 @@ const Questionnaire = () => {
         <Container maxWidth="lg" className="space-y-6">
           <QHeader />
           <QWelcome />
-          <QSection1 />
-          <QSection2 />
-          <QSection3 />
-          <QSection4 />
-          <QSection5 />
-          <QSection6 />
+          <QSection1 isAnswer={readOnly} />
+          <QSection2 isAnswer={readOnly} />
+          <QSection3 isAnswer={readOnly} />
+          <QSection4 isAnswer={readOnly} />
+          <QSection5 isAnswer={readOnly} />
+          <QSection6 isAnswer={readOnly} />
           <SubmitButton />
           {/* Button to go back to the top */}
           {showButton && (
@@ -107,7 +109,28 @@ export function CheckboxSmall(props) {
   return <Checkbox {...props} size="small" sx={{ color: "#EE7200" }} />;
 }
 
-function QHeader() {
+export function RadioSmallReadOnly(props) {
+  return (
+    <Radio
+      {...props}
+      inputProps={{ readOnly: true }}
+      size="small"
+      sx={{ color: "#EE7200" }}
+    />
+  );
+}
+export function CheckboxSmallReadOnly(props) {
+  return (
+    <Checkbox
+      {...props}
+      inputProps={{ readOnly: true }}
+      size="small"
+      sx={{ color: "#EE7200" }}
+    />
+  );
+}
+
+export function QHeader() {
   return (
     <>
       <div
@@ -132,7 +155,7 @@ function QHeader() {
   );
 }
 
-function QWelcome() {
+export function QWelcome() {
   return (
     <>
       <Paper sx={paperStyle}>
@@ -196,7 +219,7 @@ function QWelcome() {
   );
 }
 
-function SubmitButton() {
+export function SubmitButton() {
   const { submitAnswers } = useQuestionnaireContext();
   return (
     <Button

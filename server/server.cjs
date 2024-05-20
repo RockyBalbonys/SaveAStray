@@ -40,9 +40,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/", async (req, res) => {
   res.send({
-    message: "hello world"
-  })
-})
+    message: "hello world",
+  });
+});
 
 app.post("/verify", async (req, res) => {
   const token = req.query.token;
@@ -516,7 +516,7 @@ app.post("/api/sendAnswers", async (req, res) => {
 app.get("/getPet/:user", async (req, res) => {
   try {
     const userId = req.params.user;
-    
+
     console.log("params", req.params);
     console.log("user id: " + userId);
 
@@ -616,12 +616,26 @@ app.post("/api/fetchRequests", async (req, res) => {
       id,
       approvalStatus, */
         allAnswers: mappedAnswers,
-        answerKeys: allAnswers
+        answerKeys: allAnswers,
       });
     }
   } catch (err) {
     console.error("Error:", err);
     res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+// API endpoint to fetch answers by ID
+app.get("/api/answers/:id", async (req, res) => {
+  try {
+    const answerId = req.params.id;
+    const answer = await QuestRes.findById(answerId);
+    if (!answer) {
+      return res.status(404).send({ message: "Answer not found" });
+    }
+    res.send(answer);
+  } catch (err) {
+    res.status(500).send({ message: "Server error", error: err.message });
   }
 });
 
@@ -724,8 +738,6 @@ app.get("/api/filteredPets", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
 
 app.get(`/api/filteredShelterPets/:user`, async (req, res) => {
   console.log("req.params: ", req.params);

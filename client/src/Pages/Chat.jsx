@@ -91,10 +91,6 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    console.log(event);
-  }, [event]);
-
-  useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
         headers: {
@@ -143,7 +139,7 @@ const Chat = () => {
         console.log(error);
         setLoading(false);
       });
-  });
+  }, []);
 
   return (
     <>
@@ -239,11 +235,11 @@ function ContactListContainer({ contacts }) {
         </p>
 
         {/* Search Bar for contacts */}
-        <input
+        {/* <input
           className="w-[90%] rounded-lg border-gray-100 border-2 p-1.5 mb-2"
           type="text"
           placeholder="Search Contact"
-        />
+        /> */}
 
         {/* List of Contacts */}
         {contacts?.map((contact, idx) => (
