@@ -44,8 +44,6 @@ const AnimalsShelter = () => {
 
   const isShelter = role === "Rescue Shelter";
 
-  console.table(role);
-
   const [filters, setFilters] = useState({
     species: null,
     sex: null,
@@ -57,7 +55,6 @@ const AnimalsShelter = () => {
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/getPet/${user}`, {
-        // Use nullish coalescing for user ID
         headers: {
           "ngrok-skip-browser-warning": "8888",
         },
@@ -164,7 +161,6 @@ const AnimalsShelter = () => {
   const handleChangeShelter = (e) => {
     const selectedShelter = e.target.value;
 
-    // TODO: Shelter change logic
     setShelter(selectedShelter);
   };
 
