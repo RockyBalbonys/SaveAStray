@@ -394,7 +394,6 @@ function NavbarDrawer({ open, onClose }) {
           {pages2.map((page, index) => (
             <div key={index}>
               <ListItemButton
-                button
                 component={RouterLink}
                 to={page.path}
                 onClick={onClose}
