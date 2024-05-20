@@ -24,15 +24,8 @@ import AddIcon from "@mui/icons-material/Add";
 import { io } from "socket.io-client";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
-import { format, formatDistanceToNow } from "date-fns";
-import {
-  FormControl,
-  FormLabel,
-  Modal,
-  useTheme,
-  TextField,
-} from "@mui/material";
-import { DatePicker, TimePicker } from "@mui/x-date-pickers";
+import { formatDistanceToNow } from "date-fns";
+import { useTheme } from "@mui/material";
 
 // loader
 import { DotLoader } from "react-spinners";
@@ -54,96 +47,66 @@ const Chat = () => {
     time: "",
     petName: "",
     pawrent: "",
-    pawrent_id: "",
   });
 
   // handle onChange for event inputs
-  const handleEventInputChange = (field, value) => {
-    if (field === "date") {
-      const formattedDate = format(value, "eee MMM d yyyy");
-      setEvent((prevEvent) => ({
-        ...prevEvent,
-        [field]: formattedDate,
-      }));
-    } else if (field === "time") {
-      const formattedTime = format(value, "h:mm a");
-      setEvent((prevEvent) => ({
-        ...prevEvent,
-        [field]: formattedTime,
-      }));
-    } else {
-      setEvent((prevEvent) => ({
-        ...prevEvent,
-        [field]: value,
-      }));
-    }
-  };
-
-  // modal state and functions
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  // TODO: handle submit / add event
-  const handleSubmitEvent = () => {
-    console.log("event submit");
-    handleClose();
+  const handleEventInputChange = (e) => {
+    const { name, value } = e.target;
+    setEvent((prevEvent) => ({
+      ...prevEvent,
+      [name]: value,
+    }));
   };
 
   useEffect(() => {
     console.log(event);
   }, [event]);
 
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "8888",
-        },
-        params: {
-          user,
-        },
-      })
-      .then(function (response) {
-        const { messages } = response.data;
-        const sortedMessages = messages?.sort((a, b) => {
-          // Get the last chat of each conversation
-          const lastChatA = a.conversation[a.conversation.length - 1];
-          const lastChatB = b.conversation[b.conversation.length - 1];
+  axios
+    .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
+      params: {
+        user,
+      },
+    })
+    .then(function (response) {
+      const { messages } = response.data;
+      const sortedMessages = messages.sort((a, b) => {
+        // Get the last chat of each conversation
+        const lastChatA = a.conversation[a.conversation.length - 1];
+        const lastChatB = b.conversation[b.conversation.length - 1];
 
-          // Compare the timestamps of the last chats
-          return new Date(lastChatB.timestamp) - new Date(lastChatA.timestamp);
-        });
-
-        function setTimestamp(timestamp) {
-          const notificationReceivedAt = new Date(timestamp);
-          const formattedTime = formatDistanceToNow(notificationReceivedAt, {
-            addSuffix: true,
-          });
-          return formattedTime;
-        }
-
-        const mappedMessages = messages.map((message) => {
-          const lastMessage = message.conversation
-            ? message.conversation[message.conversation.length - 1]
-            : null;
-          return {
-            name: message.receiverName,
-            chatId: message.chatId,
-            timestamp: lastMessage ? setTimestamp(lastMessage.timestamp) : null,
-            conversation: message.conversation,
-            dp: message.dp,
-          };
-        });
-
-        setContacts(mappedMessages);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setLoading(false);
+        // Compare the timestamps of the last chats
+        return new Date(lastChatB.timestamp) - new Date(lastChatA.timestamp);
       });
-  });
+
+      function setTimestamp(timestamp) {
+        const notificationReceivedAt = new Date(timestamp);
+        const formattedTime = formatDistanceToNow(notificationReceivedAt, {
+          addSuffix: true,
+        });
+        return formattedTime;
+      }
+
+      const mappedMessages = messages.map((message) => {
+        const lastMessage = message.conversation
+          ? message.conversation[message.conversation.length - 1]
+          : null;
+        return {
+          name: message.receiverName,
+          chatId: message.chatId,
+          timestamp: lastMessage ? setTimestamp(lastMessage.timestamp) : null,
+          conversation: message.conversation,
+          dp: message.dp,
+        };
+      });
+
+      setContacts(mappedMessages);
+      setLoading(false);
+    })
+    .catch(function (error) {
+      console.log(error);
+      setLoading(false);
+    });
 
   return (
     <>
@@ -185,16 +148,7 @@ const Chat = () => {
 
               {/* Chatbox */}
               <Grid item xs={9} sx={{ height: "100%" }}>
-                <Chatbox
-                  contacts={contacts}
-                  loading={loading}
-                  eventData={event}
-                  onChange={handleEventInputChange}
-                  handleSubmitEvent={handleSubmitEvent}
-                  open={open}
-                  handleClose={handleClose}
-                  handleOpen={handleOpen}
-                />
+                <Chatbox contacts={contacts} loading={loading} />
               </Grid>
               {/* Event Viewer */}
             </Grid>
@@ -217,7 +171,7 @@ function ContactListContainer({ contacts }) {
   const theme = useTheme();
 
   // Sort contacts by timestamp in descending order
-  let sortedContact = contacts?.sort(
+  let sortedContact = contacts.sort(
     (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
   );
   return (
@@ -246,7 +200,7 @@ function ContactListContainer({ contacts }) {
         />
 
         {/* List of Contacts */}
-        {contacts?.map((contact, idx) => (
+        {contacts.map((contact, idx) => (
           <React.Fragment key={idx}>
             <Box
               sx={{
@@ -305,17 +259,22 @@ function ContactListContainer({ contacts }) {
 }
 
 // Create component for chat based system
-function Chatbox({
-  contacts,
-  eventData,
-  onChange,
-  handleSubmitEvent,
-  open,
-  handleOpen,
-  handleClose,
-}) {
+function Chatbox({ contacts }) {
   const { chatId } = useParams();
   const contactInfo = contacts.find((contact) => contact.chatId === chatId);
+
+  /*  useEffect(() => {
+    async function fetchContactInfo() {
+      console.log("chatId " + chatId);
+      const foundContact = contacts.find(
+        (contact) => contact?.chatId === chatId
+      );
+      console.log("contact info", foundContact);
+      setContactInfo(foundContact);
+    }
+
+    fetchContactInfo();
+  }, []); */
 
   return (
     <>
@@ -328,34 +287,13 @@ function Chatbox({
           width: "100%",
         }}
       >
-        {!chatId ? (
-          "No chat selected"
-        ) : (
-          <Messages
-            contactInfo={contactInfo}
-            eventData={eventData}
-            onChange={onChange}
-            handleSubmitEvent={handleSubmitEvent}
-            open={open}
-            handleOpen={handleOpen}
-            handleClose={handleClose}
-          />
-        )}
+        {!chatId ? "No chat selected" : <Messages contactInfo={contactInfo} />}
       </Box>
     </>
   );
 }
 
-function Messages({
-  contactInfo,
-  inputMessage,
-  eventData,
-  onChange,
-  handleSubmitEvent,
-  open,
-  handleOpen,
-  handleClose,
-}) {
+function Messages({ contactInfo, inputMessage /* , loading */ }) {
   const { user } = useAuth(); // Assuming useAuth provides user info
   const { name, online, chatId, conversation, dp, timestamp } = contactInfo;
   // Ensure convo state updates when conversation changes
@@ -449,33 +387,12 @@ function Messages({
             <Badge variant="dot" color={"success"}>
               <Avatar src={dp} />
             </Badge>
-            <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
               <p className="text-2xl font-bold text-[#FF8210]">{name}</p>
               <p className="text-sm mb-2">
                 {online ? "Active Right Now" : "Active Before"}
               </p>
             </Box>
-
-            {/* Add event button */}
-            <Button
-              sx={{
-                textTransform: "none",
-                color: theme.palette.common.white,
-                borderRadius: "7px",
-              }}
-              variant="contained"
-              endIcon={<AddIcon />}
-              onClick={handleOpen}
-            >
-              Add Event
-            </Button>
-            <AppointmentForm
-              open={open}
-              handleClose={handleClose}
-              eventData={eventData}
-              handleChange={onChange}
-              handleSubmitEvent={handleSubmitEvent}
-            />
           </Box>
           <Divider />
 
@@ -628,6 +545,24 @@ const sampleEvents = [
 ];
   const theme = useTheme();
 
+  const [isAddEvent, setIsAddEvent] = useState(false);
+
+  // handle save event
+  const handleSaveEvent = () => {
+    // TODO: send event to server and save it to database
+  };
+
+  // handle cancel event
+  const handleCancelEvent = () => {
+    setEventData({
+      date: "",
+      time: "",
+      petName: "",
+      pawrent: "",
+    });
+    setIsAddEvent(!isAddEvent);
+  };
+
   return (
     <>
       <Box
@@ -656,10 +591,27 @@ const sampleEvents = [
             variant="h6"
             fontWeight={700}
             color={theme.palette.common.white}
-            mb={"16px"}
           >
             ADOPTION SCHEDULE
           </Typography>
+
+          <Button
+            variant="contained"
+            endIcon={<AddIcon />}
+            sx={{
+              width: "100%",
+              bgcolor: theme.palette.common.white,
+              fontWeight: 700,
+              textTransform: "none",
+              "&:hover": {
+                color: theme.palette.common.white,
+              },
+              my: "16px",
+            }}
+            onClick={() => setIsAddEvent(!isAddEvent)}
+          >
+            Add Event
+          </Button>
         </Box>
 
         <Box
@@ -678,6 +630,71 @@ const sampleEvents = [
             flexDirection: "column",
           }}
         >
+          {/* Open this input form if the user click the add event button */}
+
+          <Paper
+            sx={paperStyle}
+            component={motion.div}
+            animate={isAddEvent ? "open" : "closed"}
+            variants={variants}
+            hidden={isAddEvent ? undefined : true}
+          >
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <label htmlFor="">
+                Date:
+                <input
+                  value={eventData.date}
+                  name="date"
+                  onChange={onChange}
+                  type="date"
+                />
+              </label>
+              <label htmlFor="">
+                Time:
+                <input
+                  value={eventData.time}
+                  name="time"
+                  onChange={onChange}
+                  type="time"
+                />
+              </label>
+              <label htmlFor="">
+                Pet Name:
+                <input
+                  value={eventData.petName}
+                  name="petName"
+                  onChange={onChange}
+                  type="text"
+                />
+              </label>
+              <label htmlFor="">
+                Pawrent:
+                <input
+                  value={eventData.pawrent}
+                  name="pawrent"
+                  onChange={onChange}
+                  type="text"
+                />
+              </label>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                columnGap: "8px",
+              }}
+            >
+              <Button onClick={handleCancelEvent}>Cancel</Button>
+              <Button
+                variant="contained"
+                sx={{ color: theme.palette.common.white }}
+                onClick={handleSaveEvent}
+              >
+                Save Event
+              </Button>
+            </Box>
+          </Paper>
+
           {/* Display events */}
           {sampleEvents.map((event, idx) => (
             <Paper sx={paperStyle} key={idx}>
@@ -697,123 +714,6 @@ const sampleEvents = [
           ))}
         </Box>
       </Box>
-    </>
-  );
-}
-
-function AppointmentForm({
-  open,
-  handleClose,
-  eventData,
-  handleChange,
-  handleSubmitEvent,
-}) {
-  const { date, time, petName, pawrent } = eventData;
-
-  return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-        }}
-      >
-        <Paper
-          sx={{
-            p: "32px",
-            width: {
-              xs: "90%",
-              sm: "80%",
-              md: "70%",
-              lg: "50%",
-            },
-            position: "relative",
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            Schedule a Pet Appointment
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ my: 2 }}>
-            Please fill out the form below to schedule an appointment for your
-            pet. Ensure all details are accurate to help us provide the best
-            care for your furry friend.
-          </Typography>
-
-          <Box
-            sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-          >
-            <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-            >
-              <Typography>Appointment Details:</Typography>
-              <FormControl>
-                <DatePicker
-                  label="Set Date"
-                  value={date ? new Date(date) : null}
-                  onChange={(newValue) => handleChange("date", newValue)}
-                />
-              </FormControl>
-              <FormControl>
-                <TimePicker
-                  label="Set Time"
-                  value={time ? new Date(`1970-01-01T${time}`) : null}
-                  onChange={(newValue) => handleChange("time", newValue)}
-                />
-              </FormControl>
-            </Box>
-
-            <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-            >
-              <Typography>Pet Information:</Typography>
-              <FormControl>
-                <TextField
-                  label="Pet Name"
-                  value={petName}
-                  onChange={(e) => handleChange("petName", e.target.value)}
-                />
-              </FormControl>
-            </Box>
-
-            <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-            >
-              <Typography>Owner Information:</Typography>
-              <FormControl>
-                <TextField
-                  label="Pawrent Name"
-                  value={pawrent}
-                  onChange={(e) => handleChange("pawrent", e.target.value)}
-                />
-              </FormControl>
-            </Box>
-            <Typography>
-              Once you have completed the form, click "Submit" to confirm your
-              appointment. We look forward to seeing you and your pet!
-            </Typography>
-          </Box>
-
-          <Button
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              color: "white",
-              mt: "32px",
-            }}
-            variant="contained"
-            onClick={handleSubmitEvent}
-          >
-            Submit
-          </Button>
-        </Paper>
-      </Modal>
     </>
   );
 }
