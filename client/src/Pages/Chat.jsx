@@ -85,7 +85,8 @@ const Chat = () => {
   const handleClose = () => setOpen(false);
 
   // TODO: handle submit / add event
-  const handleSubmitEvent = () => {
+  const handleSubmitEvent = (e) => {
+    e.preventDefault();
     console.log("event submit");
     handleClose();
   };
@@ -793,7 +794,7 @@ function AppointmentForm({
               mt: "32px",
             }}
             variant="contained"
-            onClick={handleSubmitEvent}
+            onSubmit={handleSubmitEvent}
           >
             Submit
           </Button>
