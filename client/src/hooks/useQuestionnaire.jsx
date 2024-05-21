@@ -193,6 +193,7 @@ const useQuestionnaire = () => {
       .post(`${process.env.REACT_APP_SERVER_URL}/api/sendAnswers`, formData, {
         headers: {
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "8888",
         },
       })
       .then(function (response) {

@@ -389,6 +389,13 @@ function Messages({
       socketRef.current = io(process.env.REACT_APP_SERVER_URL, {
         transports: ["websocket"],
         query: { user },
+        transportOptions: {
+          websocket: {
+            extraHeaders: {
+              "ngrok-skip-browser-warning": "8888",
+            },
+          },
+        },
       });
 
       // Socket event handlers

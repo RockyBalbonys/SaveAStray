@@ -169,7 +169,6 @@ const AnimalsPawrent = () => {
   const handleChangeShelter = (e) => {
     const selectedShelter = e.target.value;
 
-    // TODO: Shelter change logic
     setShelter(selectedShelter);
     console.log(selectedShelter);
   };
