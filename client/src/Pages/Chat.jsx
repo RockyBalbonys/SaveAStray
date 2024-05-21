@@ -87,9 +87,22 @@ const Chat = () => {
   // TODO: handle submit / add event
   const handleSubmitEvent = (e) => {
     e.preventDefault();
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/api/addEvent`, { event })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     console.log("event submit");
     handleClose();
   };
+
+  useEffect(() => {
+    console.log(event);
+  }, [event]);
 
   useEffect(() => {
     axios
@@ -578,40 +591,48 @@ function Messages({
   );
 }
 
-const sampleEvents = [
-  {
-    date: "Thu May 16 2024",
-    time: "1:17 PM",
-    petName: "Bakharwal dog",
-    pawrent: "Whitney Nader",
-  },
-  {
-    date: "Fri May 17 2024",
-    time: "3:00 PM",
-    petName: "Small Biggie",
-    pawrent: "Prince Jericho Mabini",
-  },
-  {
-    date: "Thu May 16 2024",
-    time: "1:17 PM",
-    petName: "Bakharwal dog",
-    pawrent: "Whitney Nader",
-  },
-  {
-    date: "Thu May 16 2024",
-    time: "1:17 PM",
-    petName: "Bakharwal dog",
-    pawrent: "Whitney Nader",
-  },
-  {
-    date: "Thu May 16 2024",
-    time: "1:17 PM",
-    petName: "Bakharwal dog",
-    pawrent: "Whitney Nader",
-  },
-];
-
 function Events({ eventData, onChange, setEventData }) {
+  const { user } = useAuth();
+  axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEvents`, {
+    headers: {
+      "ngrok-skip-browser-warning": "8888",
+    },
+    params: {
+      user: user, // Include user ID for potential filtering on server-side
+    },
+  });
+  const sampleEvents = [
+    {
+      date: "Thu May 16 2024",
+      time: "1:17 PM",
+      petName: "Bakharwal dog",
+      pawrent: "Whitney Nader",
+    },
+    {
+      date: "Fri May 17 2024",
+      time: "3:00 PM",
+      petName: "Small Biggie",
+      pawrent: "Prince Jericho Mabini",
+    },
+    {
+      date: "Thu May 16 2024",
+      time: "1:17 PM",
+      petName: "Bakharwal dog",
+      pawrent: "Whitney Nader",
+    },
+    {
+      date: "Thu May 16 2024",
+      time: "1:17 PM",
+      petName: "Bakharwal dog",
+      pawrent: "Whitney Nader",
+    },
+    {
+      date: "Thu May 16 2024",
+      time: "1:17 PM",
+      petName: "Bakharwal dog",
+      pawrent: "Whitney Nader",
+    },
+  ];
   const theme = useTheme();
 
   return (
