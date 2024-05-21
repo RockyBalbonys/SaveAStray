@@ -321,6 +321,7 @@ function RequestShelter() {
                       alignItems: "center",
                       justifyContent: "flex-end",
                       gap: "10px",
+                      position: "absolute",
                     }}
                   >
                     <Tooltip title="Accept">
