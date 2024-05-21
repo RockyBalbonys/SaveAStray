@@ -49,61 +49,58 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
 
   // state for adding events
-  const [event, setEvent] = useState({
-    date: "",
-    time: "",
-    petName: "",
-    pawrent: "",
-    pawrent_id: "",
-  });
+  // const [event, setEvent] = useState({
+  //   date: "",
+  //   time: "",
+  //   petName: "",
+  //   pawrent: "",
+  //   pawrent_id: "",
+  // });
 
   // handle onChange for event inputs
-  const handleEventInputChange = (field, value) => {
-    if (field === "date") {
-      const formattedDate = format(value, "eee MMM d yyyy");
-      setEvent((prevEvent) => ({
-        ...prevEvent,
-        [field]: formattedDate,
-      }));
-    } else if (field === "time") {
-      const formattedTime = format(value, "h:mm a");
-      setEvent((prevEvent) => ({
-        ...prevEvent,
-        [field]: formattedTime,
-      }));
-    } else {
-      setEvent((prevEvent) => ({
-        ...prevEvent,
-        [field]: value,
-      }));
-    }
-  };
+  // const handleEventInputChange = (field, value) => {
+  //   if (field === "date") {
+  //     const formattedDate = format(value, "eee MMM d yyyy");
+  //     setEvent((prevEvent) => ({
+  //       ...prevEvent,
+  //       [field]: formattedDate,
+  //     }));
+  //   } else if (field === "time") {
+  //     const formattedTime = format(value, "h:mm a");
+  //     setEvent((prevEvent) => ({
+  //       ...prevEvent,
+  //       [field]: formattedTime,
+  //     }));
+  //   } else {
+  //     setEvent((prevEvent) => ({
+  //       ...prevEvent,
+  //       [field]: value,
+  //     }));
+  //   }
+  // };
 
   // modal state and functions
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // const [open, setOpen] = useState(false);
+  // const handleOpen = () => setOpen(true);
+  // const handleClose = () => setOpen(false);
 
   // TODO: handle submit / add event
-  const handleSubmitEvent = (e) => {
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/api/addEvent`, { event })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  // const handleSubmitEvent = (e) => {
+  //   axios
+  //     .post(`${process.env.REACT_APP_SERVER_URL}/api/addEvent`, { event })
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
 
-    console.log("event submit");
-    handleClose();
-  };
-
-  useEffect(() => {
-    console.log(event);
-  }, [event]);
+  //   console.log("event submit");
+  //   handleClose();
+  // };
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_SERVER_URL}/api/fetchContacts/${user}`, {
         headers: {
@@ -184,7 +181,7 @@ const Chat = () => {
                 height: "100%",
                 borderRadius: "7px",
                 overflow: "hidden",
-                width: "70%",
+                width: "100%",
               }}
             >
               {/* Contact List */}
@@ -197,21 +194,21 @@ const Chat = () => {
                 <Chatbox
                   contacts={contacts}
                   loading={loading}
-                  eventData={event}
-                  onChange={handleEventInputChange}
-                  handleSubmitEvent={handleSubmitEvent}
-                  open={open}
-                  handleClose={handleClose}
-                  handleOpen={handleOpen}
+                  // eventData={event}
+                  // onChange={handleEventInputChange}
+                  // handleSubmitEvent={handleSubmitEvent}
+                  // open={open}
+                  // handleClose={handleClose}
+                  // handleOpen={handleOpen}
                 />
               </Grid>
               {/* Event Viewer */}
             </Grid>
-            <Events
+            {/*<Events
               eventData={event}
               onChange={handleEventInputChange}
               setEventData={setEvent}
-            />
+            />*/}
           </Box>
         )}
       </div>
@@ -342,12 +339,12 @@ function Chatbox({
         ) : (
           <Messages
             contactInfo={contactInfo}
-            eventData={eventData}
-            onChange={onChange}
-            handleSubmitEvent={handleSubmitEvent}
-            open={open}
-            handleOpen={handleOpen}
-            handleClose={handleClose}
+            // eventData={eventData}
+            // onChange={onChange}
+            // handleSubmitEvent={handleSubmitEvent}
+            // open={open}
+            // handleOpen={handleOpen}
+            // handleClose={handleClose}
           />
         )}
       </Box>
@@ -468,7 +465,7 @@ function Messages({
             </Box>
 
             {/* Add event button */}
-            {role === "Rescue Shelter" && (
+            {/* {role === "Rescue Shelter" && (
               <Button
                 sx={{
                   textTransform: "none",
@@ -481,14 +478,14 @@ function Messages({
               >
                 Add Event
               </Button>
-            )}
-            <AppointmentForm
+            )} */}
+            {/* <AppointmentForm
               open={open}
               handleClose={handleClose}
               eventData={eventData}
               handleChange={onChange}
               handleSubmitEvent={handleSubmitEvent}
-            />
+            /> */}
           </Box>
           <Divider />
 
@@ -594,239 +591,239 @@ function Messages({
   );
 }
 
-function Events({ eventData, onChange, setEventData }) {
-  const { user } = useAuth();
-  axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEvents`, {
-    headers: {
-      "ngrok-skip-browser-warning": "8888",
-    },
-    params: {
-      user: user, // Include user ID for potential filtering on server-side
-    },
-  });
-  const sampleEvents = [
-    {
-      date: "Thu May 16 2024",
-      time: "1:17 PM",
-      petName: "Bakharwal dog",
-      pawrent: "Whitney Nader",
-    },
-    {
-      date: "Fri May 17 2024",
-      time: "3:00 PM",
-      petName: "Small Biggie",
-      pawrent: "Prince Jericho Mabini",
-    },
-    {
-      date: "Thu May 16 2024",
-      time: "1:17 PM",
-      petName: "Bakharwal dog",
-      pawrent: "Whitney Nader",
-    },
-    {
-      date: "Thu May 16 2024",
-      time: "1:17 PM",
-      petName: "Bakharwal dog",
-      pawrent: "Whitney Nader",
-    },
-    {
-      date: "Thu May 16 2024",
-      time: "1:17 PM",
-      petName: "Bakharwal dog",
-      pawrent: "Whitney Nader",
-    },
-  ];
-  const theme = useTheme();
+// function Events({ eventData, onChange, setEventData }) {
+//   const { user } = useAuth();
+//   axios.get(`${process.env.REACT_APP_SERVER_URL}/api/getEvents`, {
+//     headers: {
+//       "ngrok-skip-browser-warning": "8888",
+//     },
+//     params: {
+//       user: user, // Include user ID for potential filtering on server-side
+//     },
+//   });
+//   const sampleEvents = [
+//     {
+//       date: "Thu May 16 2024",
+//       time: "1:17 PM",
+//       petName: "Bakharwal dog",
+//       pawrent: "Whitney Nader",
+//     },
+//     {
+//       date: "Fri May 17 2024",
+//       time: "3:00 PM",
+//       petName: "Small Biggie",
+//       pawrent: "Prince Jericho Mabini",
+//     },
+//     {
+//       date: "Thu May 16 2024",
+//       time: "1:17 PM",
+//       petName: "Bakharwal dog",
+//       pawrent: "Whitney Nader",
+//     },
+//     {
+//       date: "Thu May 16 2024",
+//       time: "1:17 PM",
+//       petName: "Bakharwal dog",
+//       pawrent: "Whitney Nader",
+//     },
+//     {
+//       date: "Thu May 16 2024",
+//       time: "1:17 PM",
+//       petName: "Bakharwal dog",
+//       pawrent: "Whitney Nader",
+//     },
+//   ];
+//   const theme = useTheme();
 
-  return (
-    <>
-      <Box
-        sx={{
-          width: "30%",
-          height: "100%",
-          ml: "16px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          borderRadius: "7px",
-          overflow: "hidden",
-        }}
-      >
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            position: "sticky",
-            top: 0,
-          }}
-        >
-          <Typography
-            variant="h6"
-            fontWeight={700}
-            color={theme.palette.common.white}
-            mb={"16px"}
-          >
-            ADOPTION SCHEDULE
-          </Typography>
-        </Box>
+//   return (
+//     <>
+//       <Box
+//         sx={{
+//           width: "30%",
+//           height: "100%",
+//           ml: "16px",
+//           display: "flex",
+//           flexDirection: "column",
+//           alignItems: "center",
+//           borderRadius: "7px",
+//           overflow: "hidden",
+//         }}
+//       >
+//         <Box
+//           sx={{
+//             width: "100%",
+//             display: "flex",
+//             flexDirection: "column",
+//             alignItems: "center",
+//             position: "sticky",
+//             top: 0,
+//           }}
+//         >
+//           <Typography
+//             variant="h6"
+//             fontWeight={700}
+//             color={theme.palette.common.white}
+//             mb={"16px"}
+//           >
+//             ADOPTION SCHEDULE
+//           </Typography>
+//         </Box>
 
-        <Box
-          sx={{
-            width: "100%",
-            overflowY: "auto",
-            scrollbarWidth: "none", // Hide the scrollbar for firefox
-            "&::-webkit-scrollbar": {
-              display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
-            },
-            "&-ms-overflow-style:": {
-              display: "none", // Hide the scrollbar for IE
-            },
-            rowGap: "16px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {/* Display events */}
-          {sampleEvents.map((event, idx) => (
-            <Paper sx={paperStyle} key={idx}>
-              <Typography>
-                <span className="font-black">Date:</span> {event.date}
-              </Typography>
-              <Typography>
-                <span className="font-black">Time:</span> {event.time}
-              </Typography>
-              <Typography>
-                <span className="font-black">Pet Name:</span> {event.petName}
-              </Typography>
-              <Typography>
-                <span className="font-black">Pawrent:</span> {event.pawrent}
-              </Typography>
-            </Paper>
-          ))}
-        </Box>
-      </Box>
-    </>
-  );
-}
+//         <Box
+//           sx={{
+//             width: "100%",
+//             overflowY: "auto",
+//             scrollbarWidth: "none", // Hide the scrollbar for firefox
+//             "&::-webkit-scrollbar": {
+//               display: "none", // Hide the scrollbar for WebKit browsers (Chrome, Safari, Edge, etc.)
+//             },
+//             "&-ms-overflow-style:": {
+//               display: "none", // Hide the scrollbar for IE
+//             },
+//             rowGap: "16px",
+//             display: "flex",
+//             flexDirection: "column",
+//           }}
+//         >
+//           {/* Display events */}
+//           {sampleEvents.map((event, idx) => (
+//             <Paper sx={paperStyle} key={idx}>
+//               <Typography>
+//                 <span className="font-black">Date:</span> {event.date}
+//               </Typography>
+//               <Typography>
+//                 <span className="font-black">Time:</span> {event.time}
+//               </Typography>
+//               <Typography>
+//                 <span className="font-black">Pet Name:</span> {event.petName}
+//               </Typography>
+//               <Typography>
+//                 <span className="font-black">Pawrent:</span> {event.pawrent}
+//               </Typography>
+//             </Paper>
+//           ))}
+//         </Box>
+//       </Box>
+//     </>
+//   );
+// }
 
-function AppointmentForm({
-  open,
-  handleClose,
-  eventData,
-  handleChange,
-  handleSubmitEvent,
-}) {
-  const { date, time, petName, pawrent } = eventData;
+// function AppointmentForm({
+//   open,
+//   handleClose,
+//   eventData,
+//   handleChange,
+//   handleSubmitEvent,
+// }) {
+//   const { date, time, petName, pawrent } = eventData;
 
-  return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-        }}
-      >
-        <Paper
-          sx={{
-            p: "32px",
-            width: {
-              xs: "90%",
-              sm: "80%",
-              md: "70%",
-              lg: "50%",
-            },
-            position: "relative",
-          }}
-        >
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            Schedule a Pet Appointment
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ my: 2 }}>
-            Please fill out the form below to schedule an appointment for your
-            pet. Ensure all details are accurate to help us provide the best
-            care for your furry friend.
-          </Typography>
+//   return (
+//     <>
+//       <Modal
+//         open={open}
+//         onClose={handleClose}
+//         aria-labelledby="modal-modal-title"
+//         aria-describedby="modal-modal-description"
+//         sx={{
+//           display: "flex",
+//           alignItems: "center",
+//           justifyContent: "center",
+//           height: "100%",
+//         }}
+//       >
+//         <Paper
+//           sx={{
+//             p: "32px",
+//             width: {
+//               xs: "90%",
+//               sm: "80%",
+//               md: "70%",
+//               lg: "50%",
+//             },
+//             position: "relative",
+//           }}
+//         >
+//           <Typography id="modal-modal-title" variant="h5" component="h2">
+//             Schedule a Pet Appointment
+//           </Typography>
+//           <Typography id="modal-modal-description" sx={{ my: 2 }}>
+//             Please fill out the form below to schedule an appointment for your
+//             pet. Ensure all details are accurate to help us provide the best
+//             care for your furry friend.
+//           </Typography>
 
-          <Box
-            sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-          >
-            <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-            >
-              <Typography>Appointment Details:</Typography>
-              <FormControl>
-                <DatePicker
-                  label="Set Date"
-                  value={date ? new Date(date) : null}
-                  onChange={(newValue) => handleChange("date", newValue)}
-                />
-              </FormControl>
-              <FormControl>
-                <TimePicker
-                  label="Set Time"
-                  value={time ? new Date(`1970-01-01T${time}`) : null}
-                  onChange={(newValue) => handleChange("time", newValue)}
-                />
-              </FormControl>
-            </Box>
+//           <Box
+//             sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
+//           >
+//             <Box
+//               sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
+//             >
+//               <Typography>Appointment Details:</Typography>
+//               <FormControl>
+//                 <DatePicker
+//                   label="Set Date"
+//                   value={date ? new Date(date) : null}
+//                   onChange={(newValue) => handleChange("date", newValue)}
+//                 />
+//               </FormControl>
+//               <FormControl>
+//                 <TimePicker
+//                   label="Set Time"
+//                   value={time ? new Date(`1970-01-01T${time}`) : null}
+//                   onChange={(newValue) => handleChange("time", newValue)}
+//                 />
+//               </FormControl>
+//             </Box>
 
-            <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-            >
-              <Typography>Pet Information:</Typography>
-              <FormControl>
-                <TextField
-                  label="Pet Name"
-                  value={petName}
-                  onChange={(e) => handleChange("petName", e.target.value)}
-                />
-              </FormControl>
-            </Box>
+//             <Box
+//               sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
+//             >
+//               <Typography>Pet Information:</Typography>
+//               <FormControl>
+//                 <TextField
+//                   label="Pet Name"
+//                   value={petName}
+//                   onChange={(e) => handleChange("petName", e.target.value)}
+//                 />
+//               </FormControl>
+//             </Box>
 
-            <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
-            >
-              <Typography>Owner Information:</Typography>
-              <FormControl>
-                <TextField
-                  label="Pawrent Name"
-                  value={pawrent}
-                  onChange={(e) => handleChange("pawrent", e.target.value)}
-                />
-              </FormControl>
-            </Box>
-            <Typography>
-              Once you have completed the form, click "Submit" to confirm your
-              appointment. We look forward to seeing you and your pet!
-            </Typography>
-          </Box>
+//             <Box
+//               sx={{ display: "flex", flexDirection: "column", rowGap: "16px" }}
+//             >
+//               <Typography>Owner Information:</Typography>
+//               <FormControl>
+//                 <TextField
+//                   label="Pawrent Name"
+//                   value={pawrent}
+//                   onChange={(e) => handleChange("pawrent", e.target.value)}
+//                 />
+//               </FormControl>
+//             </Box>
+//             <Typography>
+//               Once you have completed the form, click "Submit" to confirm your
+//               appointment. We look forward to seeing you and your pet!
+//             </Typography>
+//           </Box>
 
-          <Button
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              color: "white",
-              mt: "32px",
-            }}
-            variant="contained"
-            onClick={handleSubmitEvent}
-          >
-            Submit
-          </Button>
-        </Paper>
-      </Modal>
-    </>
-  );
-}
+//           <Button
+//             sx={{
+//               display: "flex",
+//               justifyContent: "center",
+//               width: "100%",
+//               color: "white",
+//               mt: "32px",
+//             }}
+//             variant="contained"
+//             onClick={handleSubmitEvent}
+//           >
+//             Submit
+//           </Button>
+//         </Paper>
+//       </Modal>
+//     </>
+//   );
+// }
 
 const variants = {
   open: { opacity: 1, y: 0 },
