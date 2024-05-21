@@ -270,8 +270,6 @@ function RequestShelter() {
                   width: "100%",
                   marginBottom: "8px",
                 }}
-                component={RouterLink}
-                to={`/questionnaireAnswers/${request.answerId}`}
               >
                 <div
                   style={{
@@ -321,7 +319,6 @@ function RequestShelter() {
                       alignItems: "center",
                       justifyContent: "flex-end",
                       gap: "10px",
-                      position: "absolute",
                     }}
                   >
                     <Tooltip title="Accept">
@@ -369,12 +366,12 @@ function RequestShelter() {
                       </Button>
                     </Tooltip>
 
-                    <Tooltip title="Print">
+                    <Tooltip title="View Questionnaire Answer">
                       <Button
                         variant="contained"
                         style={buttonStyle}
                         component={RouterLink}
-                        to={"/about"}
+                        to={`/questionnaireAnswers/${request.answerId}`}
                       >
                         <GetAppIcon style={{ color: "#FFFFFF" }} />
                       </Button>
