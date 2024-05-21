@@ -1321,10 +1321,18 @@ app.post("/api/createChat", async (req, res) => {
 });
 
 //socket
+io.use((socket, next) => {
+  socket.request.headers["ngrok-skip-browser-warning"] = "8888";
+  next();
+});
+
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.user;
   //console.log("Socket connected:", userId);
-
+  // io.use((socket, next) => {
+  //   socket.request.headers["x-custom-header"] = "my custom header value";
+  //   next();
+  // });
   socket.on("send-message", async (messageInfo) => {
     const { timestamp, messageSender, content, chatId } = messageInfo;
     console.log(timestamp);
