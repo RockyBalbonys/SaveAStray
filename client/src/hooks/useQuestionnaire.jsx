@@ -12,6 +12,26 @@ const useQuestionnaire = () => {
   // State to store user answers
   const navigate = useNavigate();
 
+  const fetchAnswer = async (answerId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/api/answers/${answerId}`
+      );
+      const { answers } = response.data;
+      const { section1, section2, section3, section4, section5, section6 } =
+        answers;
+      console.log(answers);
+      setSection1(section1);
+      setSection2(section2);
+      setSection3(section3);
+      setSection4(section4);
+      setSection5(section5);
+      setSection6(section6);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const [section1, setSection1] = useState({
     email: "",
     bestDescribe: "",
@@ -204,6 +224,7 @@ const useQuestionnaire = () => {
     updateSection6,
     submitAnswers,
     handleShelterId,
+    fetchAnswer,
   };
 };
 

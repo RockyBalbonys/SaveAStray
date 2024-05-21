@@ -11,6 +11,7 @@ export default function CheckboxGroupWithLabels({
   options,
   onChange,
   value,
+  isAnswer,
 }) {
   return (
     <FormGroup
@@ -26,6 +27,7 @@ export default function CheckboxGroupWithLabels({
         <FormControlLabel
           key={idx}
           label={option}
+          disabled={isAnswer}
           control={
             <CheckboxSmall
               checked={value[option]} // Use value[option] to determine the checked state
@@ -34,9 +36,11 @@ export default function CheckboxGroupWithLabels({
           }
         />
       ))}
-      <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
-        Required*
-      </FormHelperText>
+      {!isAnswer && (
+        <FormHelperText sx={{ color: "red", ml: ".1rem" }}>
+          Required*
+        </FormHelperText>
+      )}
     </FormGroup>
   );
 }

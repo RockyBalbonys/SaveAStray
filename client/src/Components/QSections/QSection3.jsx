@@ -12,14 +12,14 @@ import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { format } from "date-fns";
 import { memo, useEffect } from "react";
 
-const QSection3 = () => {
+const QSection3 = ({ isAnswer }) => {
   return (
     <Paper sx={paperStyle}>
       <div className="paper-format font-light">
         <p className="q-section-text">SECTION 3 : PERSONAL INFORMATION</p>
         <Introduction />
-        <PersonalInfoForm />
-        <ReachMethods />
+        <PersonalInfoForm isAnswer={isAnswer} />
+        <ReachMethods isAnswer={isAnswer} />
       </div>
     </Paper>
   );
@@ -37,7 +37,7 @@ const Introduction = () => {
   );
 };
 
-const PersonalInfoForm = () => {
+const PersonalInfoForm = ({ isAnswer }) => {
   const { section3, updateSection3 } = useQuestionnaireContext();
 
   const { fullName, birthdate, phoneNum, fullAddress, fbProfLink, occupation } =
@@ -59,42 +59,55 @@ const PersonalInfoForm = () => {
         label="1. Full Name (First Name, M.I., Last Name):"
         id="fullName"
         width="sm:w-full"
+        isAnswer={isAnswer}
       />
       <InputField
         value={birthdate}
         label="2. Birthdate:"
         id="birthdate"
         handleInputChange={handleInputChange}
+        isAnswer={isAnswer}
       />
       <InputField
         value={phoneNum}
         handleInputChange={handleInputChange}
         label="3. Phone Number:"
         id="phoneNum"
+        isAnswer={isAnswer}
       />
       <InputField
         value={fullAddress}
         handleInputChange={handleInputChange}
         label="4. Full Address:"
         id="fullAddress"
+        isAnswer={isAnswer}
       />
       <InputField
         value={fbProfLink}
         handleInputChange={handleInputChange}
         label="5. Facebook Profile Link:"
         id="fbProfLink"
+        isAnswer={isAnswer}
       />
       <InputField
         value={occupation}
         handleInputChange={handleInputChange}
         label="6. Occupation or Income (Type N/A if unemployed):"
         id="occupation"
+        isAnswer={isAnswer}
       />
     </div>
   );
 };
 
-const InputField = ({ label, id, width, value, handleInputChange }) => {
+const InputField = ({
+  label,
+  id,
+  width,
+  value,
+  handleInputChange,
+  isAnswer,
+}) => {
   const handleDateChange = (date) => {
     console.log(date);
     const dateString = format(date, "MM/dd/yyyy");
@@ -106,7 +119,11 @@ const InputField = ({ label, id, width, value, handleInputChange }) => {
       <label htmlFor={id} className="sm:w-1/2 md:w-1/2 lg:w-1/2">
         {label}
       </label>
-      {id === "birthdate" ? (
+      {isAnswer ? (
+        <div className="lg:w-full border-b-2 border-gray-800 font-bold">
+          <p>{value}</p>
+        </div>
+      ) : id === "birthdate" ? (
         <DatePicker
           value={value}
           fullWidth
@@ -121,12 +138,15 @@ const InputField = ({ label, id, width, value, handleInputChange }) => {
           fullWidth
         />
       )}
-      <FormHelperText sx={{ color: "red" }}>Required*</FormHelperText>
+
+      {!isAnswer && (
+        <FormHelperText sx={{ color: "red" }}>Required*</FormHelperText>
+      )}
     </div>
   );
 };
 
-const ReachMethods = () => {
+const ReachMethods = ({ isAnswer }) => {
   const { section3, updateSection3 } = useQuestionnaireContext();
   const { shelterReach } = section3;
 
@@ -155,6 +175,7 @@ const ReachMethods = () => {
         >
           <FormControlLabel
             label="Call and SMS"
+            disabled={isAnswer}
             control={
               <CheckboxSmall
                 checked={shelterReach.call || false}
@@ -165,6 +186,7 @@ const ReachMethods = () => {
           />
           <FormControlLabel
             label="Email"
+            disabled={isAnswer}
             control={
               <CheckboxSmall
                 checked={shelterReach.email || false}
@@ -175,6 +197,7 @@ const ReachMethods = () => {
           />
           <FormControlLabel
             label="Facebook Messenger"
+            disabled={isAnswer}
             control={
               <CheckboxSmall
                 checked={shelterReach.fbMessenger || false}
@@ -185,6 +208,7 @@ const ReachMethods = () => {
           />
           <FormControlLabel
             label="Telegram"
+            disabled={isAnswer}
             control={
               <CheckboxSmall
                 checked={shelterReach.telegram || false}
@@ -194,9 +218,11 @@ const ReachMethods = () => {
             }
           />
         </FormGroup>
-        <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
-          Required*
-        </FormHelperText>
+        {!isAnswer && (
+          <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
+            Required*
+          </FormHelperText>
+        )}
       </FormControl>
     </div>
   );

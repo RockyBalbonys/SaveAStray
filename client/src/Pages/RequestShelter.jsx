@@ -114,16 +114,19 @@ function RequestShelter() {
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/fetchRequests`, { user })
       .then(function (response) {
-        const { allAnswers, respondent } = response.data;
+        const { allAnswers, respondent, answerKeys } = response.data;
         if (!respondent) {
           setAdoptionRequests(0); // Update state with transformed data
           console.log("No requests at the moment");
         } else {
-          const transformedRequests = allAnswers.map(function (answer) {
+          const transformedRequests = allAnswers.map(function (answer, index) {
             const notificationCreatedAt = new Date(answer.timestamp);
             const formattedTime = formatDistanceToNow(notificationCreatedAt, {
               addSuffix: true,
             });
+            // Extract answers object from answerKeys using the index
+            const answersObjId = answerKeys[index]._id;
+
             return {
               name: answer.firstName,
               time: formattedTime,
@@ -132,6 +135,7 @@ function RequestShelter() {
               respondent: answer.respondent,
               toShelter: answer.toShelter,
               imageURL: answer.dp,
+              answerId: answersObjId,
             };
           });
           setAdoptionRequests(transformedRequests); // Update state with transformed data
@@ -144,10 +148,6 @@ function RequestShelter() {
         setIsLoading(false);
       });
   };
-
-  /*   const handleClick = (redirectTo) => {
-    navigate(redirectTo);
-  }; */
 
   const handleAcceptButton = (request) => {
     const { requestId, approvalStatus } = request;
@@ -207,8 +207,6 @@ function RequestShelter() {
     console.log("Approval Denied: ", request);
   };
 
-  console.log(user);
-
   return (
     <div
       style={{
@@ -254,7 +252,7 @@ function RequestShelter() {
           {adoptionRequests.length > 0 ? (
             adoptionRequests.map((request, index) => (
               /*      request.approvalStatus == 'pending' ? ( */
-              <div
+              <Box
                 key={index}
                 style={{
                   cursor: "pointer",
@@ -272,6 +270,8 @@ function RequestShelter() {
                   width: "100%",
                   marginBottom: "8px",
                 }}
+                component={RouterLink}
+                to={`/questionnaireAnswers/${request.answerId}`}
               >
                 <div
                   style={{
@@ -316,9 +316,7 @@ function RequestShelter() {
                   <Box
                     sx={{
                       display: {
-                        xs: "none",
-                        sm: "none",
-                        md: "flex",
+                        xs: "flex",
                       },
                       alignItems: "center",
                       justifyContent: "flex-end",
@@ -381,42 +379,8 @@ function RequestShelter() {
                       </Button>
                     </Tooltip>
                   </Box>
-
-                  <Box
-                    sx={{
-                      position: "relative",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    <SpeedDial
-                      direction="left"
-                      ariaLabel="SpeedDial basic example"
-                      sx={{
-                        position: "absolute",
-                        bottom: 0,
-                        right: 0,
-                        display: {
-                          xs: "block",
-                          sm: "block",
-                          md: "none",
-                        },
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      icon={<SpeedDialIcon sx={{ color: "white" }} />}
-                    >
-                      {actions.map((action, idx) => (
-                        <SpeedDialAction
-                          key={idx}
-                          icon={action.icon}
-                          tooltipTitle={action.name}
-                        />
-                      ))}
-                    </SpeedDial>
-                  </Box>
                 </Box>
-              </div>
+              </Box>
               /*             ) : null */
             ))
           ) : (

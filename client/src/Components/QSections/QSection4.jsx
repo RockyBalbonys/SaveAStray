@@ -26,7 +26,7 @@ const validOptions = [
   "relatives",
 ];
 
-const QSection4 = () => {
+const QSection4 = ({ isAnswer }) => {
   const { section4, updateSection4 } = useQuestionnaireContext();
   const {
     building,
@@ -76,47 +76,64 @@ const QSection4 = () => {
           id={"building"}
           building={building}
           handleRadioChange={handleValueChange}
+          isAnswer={isAnswer}
         />
-        <RentQuestion id={"rent"} value={rent} onChange={handleValueChange} />
+        <RentQuestion
+          id={"rent"}
+          value={rent}
+          onChange={handleValueChange}
+          isAnswer={isAnswer}
+        />
         <PetsAllowedQuestion
           id={"confirmedPets"}
           value={confirmedPets}
           onChange={handleValueChange}
+          isAnswer={isAnswer}
         />
 
         <LiveWithQuestion
           id={"liveWith"}
           liveWith={liveWith}
           handleCheckboxChange={handleChangeLiveWith}
+          isAnswer={isAnswer}
         />
 
         <HouseholdMembersQuestion
           id={"householdMembers"}
           value={householdMembers}
           onChange={handleValueChange}
+          isAnswer={isAnswer}
         />
         <PetsAllergicQuestion
           id={"isAllergic"}
           value={isAllergic}
           onChange={handleValueChange}
+          isAnswer={isAnswer}
         />
         <SupportiveQuestion
           id={"isSupportive"}
           value={isSupportive}
           onChange={handleValueChange}
+          isAnswer={isAnswer}
         />
         <InputField
           id={"moved"}
           value={moved}
           onChange={handleValueChange}
           label="8. What will happen to your pets if or when you moved?"
+          isAnswer={isAnswer}
         />
       </div>
     </Paper>
   );
 };
 
-const BuildingTypeQuestion = ({ id, building, handleRadioChange }) => {
+const BuildingTypeQuestion = ({
+  id,
+  building,
+  handleRadioChange,
+  isAnswer,
+}) => {
   return (
     <FormControl>
       <label htmlFor={id} className="font-bold">
@@ -127,12 +144,13 @@ const BuildingTypeQuestion = ({ id, building, handleRadioChange }) => {
         onChange={handleRadioChange}
         id={id}
         options={["House", "Condo", "Apartment", "Other"]}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );
 };
 
-const RentQuestion = ({ value, onChange }) => {
+const RentQuestion = ({ value, onChange, isAnswer }) => {
   return (
     <FormControl>
       <label htmlFor="rent" className="font-bold">
@@ -143,12 +161,13 @@ const RentQuestion = ({ value, onChange }) => {
         onChange={onChange}
         id="rent"
         options={["Yes", "No"]}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );
 };
 
-const PetsAllowedQuestion = ({ id, value, onChange }) => {
+const PetsAllowedQuestion = ({ id, value, onChange, isAnswer }) => {
   return (
     <FormControl>
       <label htmlFor={id} className="font-bold">
@@ -160,12 +179,13 @@ const PetsAllowedQuestion = ({ id, value, onChange }) => {
         onChange={onChange}
         id={id}
         options={["Yes", "No", "N/A (We are not renting)"]}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );
 };
 
-const LiveWithQuestion = ({ id, liveWith, handleCheckboxChange }) => {
+const LiveWithQuestion = ({ id, liveWith, handleCheckboxChange, isAnswer }) => {
   return (
     <FormControl>
       <label htmlFor={id} className="font-bold">
@@ -176,12 +196,13 @@ const LiveWithQuestion = ({ id, liveWith, handleCheckboxChange }) => {
         onChange={handleCheckboxChange}
         id={id}
         options={validOptions.map((option) => optionLabels[option])}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );
 };
 
-const HouseholdMembersQuestion = ({ id, value, onChange }) => {
+const HouseholdMembersQuestion = ({ id, value, onChange, isAnswer }) => {
   return (
     <FormControl>
       <label htmlFor={id} className="font-bold">
@@ -192,12 +213,13 @@ const HouseholdMembersQuestion = ({ id, value, onChange }) => {
         onChange={onChange}
         id={id}
         options={["1", "2", "3", "4", "5", "6", "7", "8", "9 and above"]}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );
 };
 
-const PetsAllergicQuestion = ({ id, value, onChange }) => {
+const PetsAllergicQuestion = ({ id, value, onChange, isAnswer }) => {
   return (
     <FormControl>
       <label htmlFor={id} className="font-bold">
@@ -208,12 +230,13 @@ const PetsAllergicQuestion = ({ id, value, onChange }) => {
         onChange={onChange}
         id={id}
         options={["Yes", "No"]}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );
 };
 
-const SupportiveQuestion = ({ id, value, onChange }) => {
+const SupportiveQuestion = ({ id, value, onChange, isAnswer }) => {
   return (
     <FormControl>
       <label htmlFor={id} className="font-bold">
@@ -224,6 +247,7 @@ const SupportiveQuestion = ({ id, value, onChange }) => {
         onChange={onChange}
         id={id}
         options={["Yes", "No"]}
+        isAnswer={isAnswer}
       />
     </FormControl>
   );

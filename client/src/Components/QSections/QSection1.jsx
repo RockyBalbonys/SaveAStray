@@ -6,13 +6,17 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { Input } from "@mui/material";
-import { RadioSmall, paperStyle } from "../../Pages/Questionnaire";
+import {
+  RadioSmall,
+  RadioSmallReadOnly,
+  paperStyle,
+} from "../../Pages/Questionnaire";
 import { useQuestionnaireContext } from "../../hooks/useQuestionnaire";
 import { useParams } from "react-router-dom";
 import { useEffect, memo } from "react";
 import useAuth from "../../hooks/useAuth";
 
-const QSection1 = () => {
+const QSection1 = ({ isAnswer }) => {
   const { section1, updateSection1 } = useQuestionnaireContext();
   const { email, bestDescribe } = section1;
   const { role } = useAuth();
@@ -39,14 +43,22 @@ const QSection1 = () => {
           <label htmlFor="email" className="font-bold sm:w-1/2 lg:w-1/5">
             1. Enter your Email:
           </label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            fullWidth
-          />
-          <FormHelperText sx={{ color: "red" }}>Required*</FormHelperText>
+          {isAnswer ? (
+            <div className="lg:w-full border-b-[1px] border-gray-800 font-bold">
+              <p>{email}</p>
+            </div>
+          ) : (
+            <div className="flex w-full flex-col">
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                fullWidth
+              />
+              <FormHelperText sx={{ color: "red" }}>Required*</FormHelperText>
+            </div>
+          )}
         </div>
         <div className="flex flex-col">
           <FormControl>
@@ -54,10 +66,16 @@ const QSection1 = () => {
               2. Which of the following best describes why you're filling out
               this form?
             </label>
-            <RadioOptions value={bestDescribe} onChange={handleRadioChange} />
-            <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
-              Required*
-            </FormHelperText>
+            <RadioOptions
+              value={bestDescribe}
+              onChange={handleRadioChange}
+              isAnswer={isAnswer}
+            />
+            {!isAnswer && (
+              <FormHelperText sx={{ color: "red", ml: "-.1rem" }}>
+                Required*
+              </FormHelperText>
+            )}
           </FormControl>
         </div>
       </div>
@@ -65,7 +83,7 @@ const QSection1 = () => {
   );
 };
 
-const RadioOptions = ({ value, onChange }) => {
+const RadioOptions = ({ value, onChange, isAnswer }) => {
   return (
     <RadioGroup
       id="best-describe"
@@ -83,6 +101,7 @@ const RadioOptions = ({ value, onChange }) => {
           key={idx}
           label={option.label}
           value={option.label}
+          disabled={isAnswer}
           control={<RadioSmall />}
         />
       ))}

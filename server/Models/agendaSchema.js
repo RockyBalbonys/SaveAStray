@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const agendaSchema = new mongoose.Schema({
   date: Date,
-  //time: String,
+  time: String,
   petName: String,
   pawrentName: String,
   shelterName: String,
