@@ -24,7 +24,6 @@ const GoogleUser = require("./Models/googleUserSchema.js");
 const QuestRes = require("./Models/questResSchema.js");
 const PawrentNotif = require("./Models/pawrentNotif.js");
 const Contact = require("./Models/contactSchema.js");
-const Agenda = require("./Models/agendaSchema.js");
 //db connection >>
 mongoose
   .connect(process.env.DB_URI)
@@ -892,6 +891,9 @@ app.get("/api/shelterInfo/:userId", async (req, res) => {
           isGoogleUser: user instanceof GoogleUser, // This will be true if the user is from GoogleUser collection
         });
       } else {
+        let user =
+          (await GoogleUser.findById(userId)) || (await User.findById(userId));
+
         res.json({
           status: 400,
           email: user.email,
@@ -1249,24 +1251,6 @@ app.post("/api/updatePass", async (req, res) => {
     });
   }
 });
-
-app.get("/api/getEvents", async (req, res) => {
-  const user = req.query.user
-  const events = await Agenda.find({pawrentId: user}) || await Agenda.find({shelterId: user})
-  if (!events) {
-    console.log("no events")
-  } else {
-    console.log("events: ", events)
-  }
-})
-
-
-app.post("/api/addEvent", async (req, res) => {
-  console.log("req.body: ",req.body)
-  res.json({
-    message: "received"
-  })
-})
 
 app.get("/api/fetchContacts/:userId", async (req, res) => {
   const { userId } = req.params;

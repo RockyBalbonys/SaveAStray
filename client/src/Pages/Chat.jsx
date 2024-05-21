@@ -86,7 +86,6 @@ const Chat = () => {
 
   // TODO: handle submit / add event
   const handleSubmitEvent = (e) => {
-    e.preventDefault();
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/api/addEvent`, { event })
       .then((response) => {
@@ -432,6 +431,8 @@ function Messages({
 
   const theme = useTheme();
 
+  const { role } = useAuth();
+
   return (
     <>
       <Box
@@ -467,18 +468,20 @@ function Messages({
             </Box>
 
             {/* Add event button */}
-            <Button
-              sx={{
-                textTransform: "none",
-                color: theme.palette.common.white,
-                borderRadius: "7px",
-              }}
-              variant="contained"
-              endIcon={<AddIcon />}
-              onClick={handleOpen}
-            >
-              Add Event
-            </Button>
+            {role === "Rescue Shelter" && (
+              <Button
+                sx={{
+                  textTransform: "none",
+                  color: theme.palette.common.white,
+                  borderRadius: "7px",
+                }}
+                variant="contained"
+                endIcon={<AddIcon />}
+                onClick={handleOpen}
+              >
+                Add Event
+              </Button>
+            )}
             <AppointmentForm
               open={open}
               handleClose={handleClose}
@@ -815,7 +818,7 @@ function AppointmentForm({
               mt: "32px",
             }}
             variant="contained"
-            onSubmit={handleSubmitEvent}
+            onClick={handleSubmitEvent}
           >
             Submit
           </Button>
