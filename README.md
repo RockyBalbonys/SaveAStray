@@ -1,3 +1,5 @@
+[![SaveAStray](https://github.com/RockyBalbonys/SaveAStray/assets/133654995/f89555b2-e0b8-4adc-b319-c1de201ebc1f)](https://save-a-stray.vercel.app/)
+
 # SaveAStray
 SaveAStray is an innovative online platform designed to streamline the animal adoption journey, addressing the challenges of pet overpopulation and homelessness. By leveraging modern web technologies and adopting a user-centric approach, SaveAStray aims to enhance the adoption experience for shelters and prospective adopters alike.
 
@@ -16,7 +18,8 @@ SaveAStray is an innovative online platform designed to streamline the animal ad
 
 >[!WARNING]
 > - The project simulates the donation process **using PayPal**. No real transactions occur when using it as your donation method. You can use this PayPal sandbox account for testing purposes.
->     - email: sb-e547ic29577616@personal.example.com
+>     - email: sb-e547ic29577616@personal.ex![SaveAStray](https://github.com/RockyBalbonys/SaveAStray/assets/133654995/4222a22a-d23e-4cf4-80bb-0ba6ac7c94c2)
+ample.com
 >     - password: !i?x4X_a
 > - On the other hand, **using G-Cash** for donations involves a real transaction, and your money will be sent to the designated numbers. This feature is for demonstration purposes only, and the developers are not responsible for any donations made using this method.
 
