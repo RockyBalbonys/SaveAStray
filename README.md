@@ -1,11 +1,20 @@
 # SaveAStray
 SaveAStray is an innovative online platform designed to streamline the animal adoption journey, addressing the challenges of pet overpopulation and homelessness. By leveraging modern web technologies and adopting a user-centric approach, SaveAStray aims to enhance the adoption experience for shelters and prospective adopters alike.
 
+>[!IMPORTANT]
+>The backend of this project is hosted on the developers' own server. In order to utilize the whole site, contact the developers so that they could start the server. You can send email to saveastray.lyfie@gmail.com or vergara.jhude.bscs2021@gmail.com.
+
+>[!WARNING]
+> - The project simulates the donation process **using PayPal**. No real transactions occur when using it as your donation method. You can use this PayPal sandbox account for testing purposes.
+>     - email: sb-e547ic29577616@personal.example.com
+>     - password: !i?x4X_a
+> - On the other hand, **using G-Cash** for donations involves a real transaction, and your money will be sent to the designated numbers. This feature is for demonstration purposes only, and the developers are not responsible for any donations made using this method.
+
 ## Key Features
-**Comprehensive Animal Profiles:** Detailed profiles for each animal, including photos and descriptions.
-**Adoption Inquiries:** Easy-to-use inquiry forms to facilitate communication between adopters and shelters.
-**Real-Time Communication:** Integrated messaging system for instant communication between all stakeholders.
-**User-Friendly Portal:** Accessible and intuitive interface for both shelters and prospective adopters.
+- **Comprehensive Animal Profiles:** Detailed profiles for each animal, including photos and descriptions.
+- **Adoption Inquiries:** Easy-to-use inquiry forms to facilitate communication between adopters and shelters.
+- **Real-Time Communication:** Integrated messaging system for instant communication between all stakeholders.
+- **User-Friendly Portal:** Accessible and intuitive interface for both shelters and prospective adopters.
 
 ## Goals
 - Improve adoption rates by streamlining the adoption process.
