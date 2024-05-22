@@ -17,23 +17,19 @@ To get started with SaveAStray, follow these steps:
 
 1. Clone the repository:
 ``` bash
-Copy code
 git clone https://github.com/RockyBalbonys/SaveAStray.git
 ```
 
 2. Navigate the project directory:
 ``` bash
-Copy code
 cd SaveAStray
 ```
 
 3. Install the necessary dependencies:
 ```bash
-Copy code
-npm install
+npm install or npm i
 ```
 4. Start the development server:
 ```bash
-Copy code
 npm start
 ```
