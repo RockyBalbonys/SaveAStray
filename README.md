@@ -1,6 +1,16 @@
 # SaveAStray
 SaveAStray is an innovative online platform designed to streamline the animal adoption journey, addressing the challenges of pet overpopulation and homelessness. By leveraging modern web technologies and adopting a user-centric approach, SaveAStray aims to enhance the adoption experience for shelters and prospective adopters alike.
 
+![Static Badge](https://img.shields.io/badge/ReactJS-%231c1c1b?style=for-the-badge&logo=React&logoColor=%2300ffff) 
+![Static Badge](https://img.shields.io/badge/MongoDB-%231c1c1b?style=for-the-badge&logo=MongoDB&logoColor=%2347A248) 
+![Static Badge](https://img.shields.io/badge/NodeJS-%231c1c1b?style=for-the-badge&logo=Node.JS&logoColor=%235FA04E) 
+![Static Badge](https://img.shields.io/badge/Express-%231c1c1b?style=for-the-badge&logo=EXPRESS&logoColor=WHITE) 
+![Static Badge](https://img.shields.io/badge/Firebase-%231c1c1b?style=for-the-badge&logo=FIREBASE&logoColor=%23FFCA28)
+![Static Badge](https://img.shields.io/badge/figma-%231c1c1b?style=for-the-badge&logo=Figma&logoColor=orange) 
+![Static Badge](https://img.shields.io/badge/socket.io-%231c1c1b?style=for-the-badge&logo=socket.io&logoColor=white) 
+![Static Badge](https://img.shields.io/badge/vercel-%231c1c1b?style=for-the-badge&logo=vercel&logoColor=white)
+![Static Badge](https://img.shields.io/badge/ngrok-%231c1c1b?style=for-the-badge&logo=ngrok&logoColor=%233C84E1)
+
 >[!IMPORTANT]
 >The backend of this project is hosted on the developers' own server. In order to utilize the whole site, contact the developers so that they could start the server. You can send email to saveastray.lyfie@gmail.com or vergara.jhude.bscs2021@gmail.com.
 
