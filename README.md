@@ -12,10 +12,28 @@ SaveAStray is an innovative online platform designed to streamline the animal ad
 - Enhance animal welfare outcomes through better communication and transparency.
 - Create a centralized platform to reduce inefficiencies in current adoption systems.
 
-Installation
+## Installation
 To get started with SaveAStray, follow these steps:
 
-Clone the repository:
+1. Clone the repository:
 ``` bash
 Copy code
-git clone https://github.com/yourusername/SaveAStray.git
+git clone https://github.com/RockyBalbonys/SaveAStray.git
+```
+
+2. Navigate the project directory:
+``` bash
+Copy code
+cd SaveAStray
+```
+
+3. Install the necessary dependencies:
+```bash
+Copy code
+npm install
+```
+4. Start the development server:
+```bash
+Copy code
+npm start
+```
