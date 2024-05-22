@@ -50,8 +50,20 @@ cd SaveAStray
 ```bash
 npm install or npm i
 ```
-4. Start the development server:
-```bash
+
+4. Navigate the project server directory then run it:
+``` bash
+cd server
+```
+``` bash
+npm run dev
+```
+
+5. Navigate the project client directory then run it:
+``` bash
+cd client
+```
+``` bash
 npm run dev
 ```
 
